@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Stone & Gold Light Theme */
+    --background: 60 30% 98%;
+    --foreground: 24 5% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 24 5% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 24 5% 10%;
+
+    --primary: 42 94% 40%;
+    /* Gold/CTA */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 24 5% 90%;
+    --secondary-foreground: 24 5% 10%;
+
+    --muted: 24 5% 96%;
+    --muted-foreground: 24 5% 45%;
+
+    --accent: 42 94% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 30% 98%;
+
+    --border: 24 5% 85%;
+    --input: 24 5% 85%;
+    --ring: 42 94% 40%;
+
+    --radius: 1rem;
+
+    --cta: 42 94% 40%;
+  }
+
+  .dark {
+    /* Deep Onyx & Gold Dark Theme */
+    --background: 220 20% 6%;
+    --foreground: 0 0% 90%;
+
+    --card: 220 20% 8%;
+    --card-foreground: 0 0% 90%;
+
+    --popover: 220 20% 8%;
+    --popover-foreground: 0 0% 90%;
+
+    --primary: 42 94% 45%;
+    /* Sightly brighter Gold for dark mode */
+    --primary-foreground: 220 20% 6%;
+
+    --secondary: 220 20% 12%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 220 20% 12%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 42 94% 45%;
+    --accent-foreground: 220 20% 6%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 90%;
+
+    --border: 220 20% 15%;
+    --input: 220 20% 15%;
+    --ring: 42 94% 45%;
+
+    --cta: 42 94% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Archivo', sans-serif;
+    @apply font-bold tracking-tight;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 text-center;
+  }
+
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-300;
+  }
+
+  .glass-card-light {
+    @apply bg-white/70 backdrop-blur-xl border border-black/5 shadow-xl transition-all duration-300;
+  }
+
+  .btn-premium {
+    @apply relative overflow-hidden px-8 py-4 rounded-xl font-black uppercase tracking-wider transition-all duration-300 cursor-pointer;
+  }
+
+  .btn-premium-primary {
+    @apply bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1;
+  }
+
+  .btn-premium-outline {
+    @apply border-2 border-primary/20 hover:border-primary/50 text-foreground hover:bg-primary/5 hover:-translate-y-1;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-orange-500 to-yellow-600;
+  }
+}
