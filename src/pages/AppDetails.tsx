@@ -34,12 +34,13 @@ const AppDetails = () => {
 
     const { app, isLoading: isAppLoading } = useAppBySlug(slug);
     const { comments, isLoading: isCommentsLoading } = useComments(app?.id);
+    const { showLogin } = useAuth();
 
     usePageTitle(app?.appName || "Loading App...");
 
     const postComment = async () => {
         if (!user || !app) {
-            await login();
+            showLogin();
             return;
         }
 
@@ -108,7 +109,7 @@ const AppDetails = () => {
         <div className="min-h-screen bg-background text-foreground">
             <Header />
 
-            <main className="container mx-auto px-4 py-12 space-y-8">
+            <main className="container mx-auto px-4 pt-16 md:pt-20 pb-12 space-y-4 md:space-y-6">
                 {/* Breadcrumb */}
                 <div className="flex items-center gap-2 text-xs">
                     <Link to="/apps" className="text-muted-foreground hover:text-primary transition-colors">
@@ -124,9 +125,9 @@ const AppDetails = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => navigate('/apps')}
-                        className="rounded-xl hover:bg-primary/10 hover:text-primary text-xs"
+                        className="rounded-xl hover:bg-primary/10 hover:text-primary text-[10px] sm:text-xs"
                     >
-                        <ChevronLeft className="mr-2 w-4 h-4" /> Back to Gallery
+                        <ChevronLeft className="mr-1 sm:mr-2 w-3 h-3 sm:w-4 sm:h-4" /> Back to Gallery
                     </Button>
                     <Button
                         variant="outline"
@@ -142,43 +143,38 @@ const AppDetails = () => {
                 <div className="relative group">
                     <div className="absolute -inset-1 bg-gradient-to-r from-primary/50 to-blue-500/50 rounded-[32px] blur-xl opacity-20"></div>
                     <Card className="relative overflow-hidden border border-white/10 glassmorphism rounded-[32px]">
-                        {/* Cover Photo */}
-                        <div className="w-full h-48 md:h-72 overflow-hidden bg-gradient-to-br from-primary/10 to-blue-500/10 relative">
+                        {/* Premium Cover Photo */}
+                        <div className="w-full h-40 md:h-[250px] lg:h-[300px] overflow-hidden relative">
                             <img
-                                src={app.coverPhoto || "https://i.ibb.co.com/YTN1jtJp/he.jpg"}
-                                alt={app.appName}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                    const target = e.target as HTMLImageElement;
-                                    if (target.src !== "https://i.ibb.co.com/YTN1jtJp/he.jpg") {
-                                        target.src = "https://i.ibb.co.com/YTN1jtJp/he.jpg";
-                                    }
-                                }}
+                                src="/cover-photo.jpg"
+                                alt="App Cover"
+                                className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
                             />
-                            {/* Gradient Overlay for text readability if needed */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
+                            {/* Premium Gradient Overlay for depth and text legibility */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-background via-black/10 to-transparent"></div>
+                            <div className="absolute inset-0 bg-primary/5 mix-blend-overlay"></div>
                         </div>
 
-                        <div className="p-8 md:p-12 -mt-16 md:-mt-24 relative">
-                            <div className="flex flex-col md:flex-row gap-8 items-start md:items-end">
+                        <div className="p-6 md:p-8 -mt-10 md:-mt-12 relative">
+                            <div className="flex flex-col md:flex-row gap-6 items-start md:items-end">
                                 {/* App Icon */}
-                                <div className="w-32 h-32 md:w-40 md:h-40 rounded-[22%] overflow-hidden shadow-2xl border-4 border-card bg-card flex-shrink-0 z-10">
+                                <div className="w-20 h-20 md:w-28 md:h-28 rounded-[22%] overflow-hidden shadow-2xl border-4 border-card bg-card flex-shrink-0 z-10">
                                     {app.icon ? (
                                         <img src={app.icon} alt={app.appName} className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center bg-muted">
-                                            <Sparkles className="w-10 h-10 text-primary/20" />
+                                            <Sparkles className="w-8 h-8 text-primary/20" />
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Title & Status */}
-                                <div className="flex-1 space-y-2 mb-2">
+                                <div className="flex-1 space-y-0.5 mb-1">
                                     {app.status && (
-                                        <Badge variant="outline" className="text-[10px] py-0 h-5 mb-1 bg-background/50 backdrop-blur-md">{app.status.toUpperCase()}</Badge>
+                                        <Badge variant="outline" className="text-[8px] py-0 h-3.5 mb-0.5 bg-background/50 backdrop-blur-md">{app.status.toUpperCase()}</Badge>
                                     )}
                                     {app.appName && (
-                                        <h1 className="text-2xl md:text-5xl font-black leading-tight tracking-tight drop-shadow-sm">{app.appName}</h1>
+                                        <h1 className="text-xl md:text-2xl lg:text-3xl font-black leading-tight tracking-tight drop-shadow-sm">{app.appName}</h1>
                                     )}
                                 </div>
 
@@ -188,9 +184,9 @@ const AppDetails = () => {
                                         <GooglePlayButton url={app.playStoreUrl} />
                                     )}
                                     {app.apkUrl && (
-                                        <Button size="lg" className="h-14 px-8 text-base font-black rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 group" asChild>
+                                        <Button size="lg" className="h-12 md:h-14 px-6 md:px-8 text-sm md:text-base font-black rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 group" asChild>
                                             <a href={app.apkUrl} target="_blank" rel="noopener noreferrer">
-                                                <Download className="mr-3 w-5 h-5 group-hover:animate-bounce" /> Download APK
+                                                <Download className="mr-2 md:mr-3 w-4 h-4 md:w-5 md:h-5 group-hover:animate-bounce" /> Download APK
                                             </a>
                                         </Button>
                                     )}
@@ -202,7 +198,7 @@ const AppDetails = () => {
 
                 {/* About Section */}
                 {app.description && (
-                    <Card className="border-none glassmorphism rounded-[32px] p-8 md:p-12">
+                    <Card className="border-none glassmorphism rounded-[32px] p-6 md:p-8">
                         <h3 className="text-lg md:text-xl font-black mb-6 flex items-center gap-3">
                             <Sparkles className="text-primary w-4 h-4 md:w-5 md:h-5" /> About Application
                         </h3>
@@ -219,14 +215,14 @@ const AppDetails = () => {
                         <Badge variant="outline" className="font-bold text-[10px]">{comments.length} Comments</Badge>
                     </div>
 
-                    <Card className="border-none glassmorphism rounded-[32px] p-8 overflow-hidden">
+                    <Card className="border-none glassmorphism rounded-[32px] p-6 md:p-8 overflow-hidden">
                         <div className="space-y-8">
                             {/* New Comment Input */}
                             <div className="space-y-4">
                                 {!user ? (
                                     <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 text-center">
                                         <p className="font-bold mb-4">Want to share your thoughts?</p>
-                                        <Button onClick={login} variant="outline" className="rounded-xl font-black">LOGIN TO COMMENT</Button>
+                                        <Button onClick={showLogin} variant="outline" className="rounded-xl font-black">LOGIN TO COMMENT</Button>
                                     </div>
                                 ) : (
                                     <div className="flex gap-4 items-start">

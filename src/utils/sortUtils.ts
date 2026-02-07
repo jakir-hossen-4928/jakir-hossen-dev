@@ -1,62 +1,64 @@
-import { AppEntry } from '../lib/db';
+import { AppEntry } from '@/lib/types';
 import { Timestamp } from 'firebase/firestore';
 
+// Enum for sorting options
 export enum SortOption {
   NEWEST = 'newest',
   OLDEST = 'oldest',
-  NAME_ASC = 'name_asc',
-  NAME_DESC = 'name_desc',
+  NAME_AZ = 'name-az',
+  NAME_ZA = 'name-za',
   STATUS = 'status'
 }
 
-export const sortLabels: Record<SortOption, string> = {
+// Labels for sort options
+export const SortOptionLabels: Record<SortOption, string> = {
   [SortOption.NEWEST]: 'Newest First',
   [SortOption.OLDEST]: 'Oldest First',
-  [SortOption.NAME_ASC]: 'A → Z',
-  [SortOption.NAME_DESC]: 'Z → A',
+  [SortOption.NAME_AZ]: 'Name (A-Z)',
+  [SortOption.NAME_ZA]: 'Name (Z-A)',
   [SortOption.STATUS]: 'Status'
 };
 
-// Helper to convert Timestamp to Date
-function toDate(timestamp: Timestamp | Date | undefined): Date {
+// Helper to convert Timestamp, ISO string, or Date to Date object
+function toDate(timestamp: any): Date {
   if (!timestamp) return new Date(0);
   if (timestamp instanceof Date) return timestamp;
-  return timestamp.toDate();
+  if (typeof timestamp === 'string') return new Date(timestamp);
+  // Handle Firestore Timestamp specifically if it leaks through
+  if (typeof timestamp.toDate === 'function') return timestamp.toDate();
+  if (timestamp.seconds !== undefined) return new Timestamp(timestamp.seconds, timestamp.nanoseconds || 0).toDate();
+
+  const date = new Date(timestamp);
+  return isNaN(date.getTime()) ? new Date(0) : date;
 }
 
 // Sort apps based on selected option
-export function sortApps(apps: AppEntry[], sortBy: SortOption): AppEntry[] {
-  const sorted = [...apps];
+export function sortApps(apps: AppEntry[], option: SortOption): AppEntry[] {
+  console.log(`[SortUtils] Sorting ${apps.length} apps with option: ${option}`);
 
-  switch (sortBy) {
-    case SortOption.NEWEST:
-      return sorted.sort((a, b) => {
-        const dateA = toDate(a.createdAt);
-        const dateB = toDate(b.createdAt);
-        return dateB.getTime() - dateA.getTime();
-      });
+  const sorted = [...apps].sort((a, b) => {
+    switch (option) {
+      case SortOption.NEWEST: {
+        const dateA = toDate(a.createdAt).getTime();
+        const dateB = toDate(b.createdAt).getTime();
+        return dateB - dateA;
+      }
+      case SortOption.OLDEST: {
+        const dateA = toDate(a.createdAt).getTime();
+        const dateB = toDate(b.createdAt).getTime();
+        return dateA - dateB;
+      }
+      case SortOption.NAME_AZ:
+        return a.appName.localeCompare(b.appName);
+      case SortOption.NAME_ZA:
+        return b.appName.localeCompare(a.appName);
+      case SortOption.STATUS:
+        return a.status.localeCompare(b.status);
+      default:
+        return 0;
+    }
+  });
 
-    case SortOption.OLDEST:
-      return sorted.sort((a, b) => {
-        const dateA = toDate(a.createdAt);
-        const dateB = toDate(b.createdAt);
-        return dateA.getTime() - dateB.getTime();
-      });
-
-    case SortOption.NAME_ASC:
-      return sorted.sort((a, b) => a.appName.localeCompare(b.appName));
-
-    case SortOption.NAME_DESC:
-      return sorted.sort((a, b) => b.appName.localeCompare(a.appName));
-
-    case SortOption.STATUS:
-      return sorted.sort((a, b) => {
-        // Production first, then testing
-        if (a.status === b.status) return 0;
-        return a.status === 'production' ? -1 : 1;
-      });
-
-    default:
-      return sorted;
-  }
+  console.log(`[SortUtils] Sorting complete. Sorted ${sorted.length} items.`);
+  return sorted;
 }

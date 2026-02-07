@@ -24,6 +24,9 @@ interface AuthContextType {
   login: () => Promise<void>;
   logout: () => Promise<void>;
   isAdmin: boolean;
+  isAuthModalOpen: boolean;
+  setAuthModalOpen: (open: boolean) => void;
+  showLogin: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,6 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAuthModalOpen, setAuthModalOpen] = useState(false);
 
   useEffect(() => {
     let unsubscribeProfile: (() => void) | undefined;
@@ -119,6 +123,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const showLogin = () => {
+    if (!user) {
+      setAuthModalOpen(true);
+    }
+  };
+
+  // Auto-close modal on successful login
+  useEffect(() => {
+    if (user && isAuthModalOpen) {
+      setAuthModalOpen(false);
+    }
+  }, [user, isAuthModalOpen]);
+
   const value = {
     user,
     profile,
@@ -126,6 +143,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     login,
     logout,
     isAdmin: profile?.role === 'admin',
+    isAuthModalOpen,
+    setAuthModalOpen,
+    showLogin,
   };
 
   return (

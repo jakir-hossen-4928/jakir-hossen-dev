@@ -10,7 +10,6 @@ export interface AppEntry {
     appName: string;
     description: string;
     icon?: string;
-    coverPhoto?: string;
     createdAt?: string;
     updatedAt?: string;
 }

@@ -47,13 +47,13 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-border bg-background relative overflow-hidden">
-      <div className="section-container py-16">
-        <div className="flex flex-col items-center gap-10">
+      <div className="section-container py-12 md:py-14">
+        <div className="flex flex-col items-center gap-8">
 
           {/* Subscription Section */}
-          <div className="w-full max-w-md space-y-4 text-center">
-            <h3 className="text-2xl font-black uppercase tracking-tighter text-foreground">Join the Beta Program</h3>
-            <p className="text-muted-foreground text-sm font-medium">
+          <div className="w-full max-w-md space-y-3 text-center">
+            <h3 className="text-lg md:text-xl font-black uppercase tracking-tighter text-foreground">Join the Beta Program</h3>
+            <p className="text-muted-foreground text-xs md:text-sm font-medium">
               Subscribe with your <span className="text-primary font-bold">Google Play Store Email</span> to get instant access to testing builds.
             </p>
             <form onSubmit={handleSubscribe} className="flex gap-2 relative z-10">
@@ -62,11 +62,11 @@ export default function Footer() {
                 placeholder="google.play.email@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-secondary/50 border-input focus:border-primary h-12 rounded-xl"
+                className="bg-secondary/50 border-input focus:border-primary h-11 rounded-xl text-sm"
                 required
               />
-              <Button type="submit" disabled={loading} size="icon" className="h-12 w-12 rounded-xl shrink-0 shadow-lg shadow-primary/20 bg-primary text-primary-foreground hover:bg-primary/90">
-                <Send size={18} className={loading ? "animate-pulse" : ""} />
+              <Button type="submit" disabled={loading} size="icon" className="h-11 w-11 rounded-xl shrink-0 shadow-lg shadow-primary/20 bg-primary text-primary-foreground hover:bg-primary/90">
+                <Send size={16} className={loading ? "animate-pulse" : ""} />
               </Button>
             </form>
           </div>
@@ -74,56 +74,56 @@ export default function Footer() {
           <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent max-w-2xl" />
 
           {/* Social Links */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6">
             <motion.a
               whileHover={{ y: -5, scale: 1.1 }}
               href="https://github.com/jakir-hossen-4928"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer shadow-sm border border-border/50"
+              className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer shadow-sm border border-border/50"
               aria-label="GitHub"
             >
-              <Github size={24} />
+              <Github size={20} />
             </motion.a>
             <motion.a
               whileHover={{ y: -5, scale: 1.1 }}
               href="https://www.linkedin.com/in/jakir-hossen-36b26b244/"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer shadow-sm border border-border/50"
+              className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer shadow-sm border border-border/50"
               aria-label="LinkedIn"
             >
-              <Linkedin size={24} />
+              <Linkedin size={20} />
             </motion.a>
             <motion.a
               whileHover={{ y: -5, scale: 1.1 }}
               href="mailto:mdjakirkhan4928@gmail.com"
-              className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer shadow-sm border border-border/50"
+              className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer shadow-sm border border-border/50"
               aria-label="Email"
             >
-              <Mail size={24} />
+              <Mail size={20} />
             </motion.a>
             <motion.button
               whileHover={{ y: -5, scale: 1.1 }}
               onClick={scrollToTop}
-              className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center transition-all cursor-pointer shadow-lg shadow-primary/20"
+              className="w-12 h-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center transition-all cursor-pointer shadow-lg shadow-primary/20"
               aria-label="Back to top"
             >
-              <ArrowUp size={24} />
+              <ArrowUp size={20} />
             </motion.button>
           </div>
 
           {/* Copyright */}
-          <div className="text-center space-y-3">
-            <div className="flex justify-center gap-6 text-xs font-semibold uppercase tracking-widest opacity-60">
+          <div className="text-center space-y-2">
+            <div className="flex justify-center gap-6 text-[10px] font-semibold uppercase tracking-widest opacity-60">
               <a href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</a>
               <span>•</span>
               <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
             </div>
-            <p className="text-xl font-black text-foreground tracking-tight">
+            <p className="text-base font-black text-foreground tracking-tight uppercase">
               Jakir Hossen
             </p>
-            <p className="text-sm text-muted-foreground font-medium uppercase tracking-widest opacity-60">
+            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-60">
               © {new Date().getFullYear()} All rights reserved. Built with Passion & Precision.
             </p>
           </div>

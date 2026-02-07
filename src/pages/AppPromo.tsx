@@ -12,7 +12,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight, RefreshCw } from 'lucide-react';
+import { Sparkles, ArrowRight } from 'lucide-react';
 import { useApps } from '@/hooks/useApps';
 
 const containerVariants = {
@@ -35,12 +35,11 @@ const itemVariants = {
 };
 
 const AppPromo = () => {
-  usePageTitle("App Gallery");
+  usePageTitle("Play Store Apps");
   const navigate = useNavigate();
   const { apps, isLoading, refetch } = useApps();
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>(SortOption.NEWEST);
-  const [refreshing, setRefreshing] = useState(false);
 
   // Apply search and sort using useMemo for performance
   const filteredApps = useMemo(() => {
@@ -57,22 +56,12 @@ const AppPromo = () => {
     return result;
   }, [apps, searchQuery, sortBy]);
 
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    try {
-      await (refetch ? refetch() : Promise.resolve());
-    } catch (error) {
-      console.error('Error refreshing apps:', error);
-    } finally {
-      setRefreshing(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
       <Header />
 
-      <main className="relative overflow-hidden pt-32 pb-24 min-h-[calc(100vh-80px)]">
+      <main className="relative overflow-hidden pt-16 md:pt-20 pb-20 min-h-[calc(100vh-80px)]">
         {/* Animated Background Orbs */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none overflow-hidden">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full animate-pulse"></div>
@@ -85,63 +74,60 @@ const AppPromo = () => {
           initial="hidden"
           animate="visible"
         >
-          <div className="space-y-16">
+          <div className="space-y-8 md:space-y-10">
             {/* Hero Section */}
-            <section className="text-center max-w-5xl mx-auto space-y-8">
+            <section className="text-center max-w-5xl mx-auto space-y-6">
               <motion.div variants={itemVariants} className="flex justify-center mb-6">
-                <img
-                  src="https://i.ibb.co.com/Vpk8Z8Js/sajuriya-studio-logo.png"
-                  alt="Sajuriya Studio"
-                  className="h-20 w-auto object-contain"
-                />
+                <div className="p-1 rounded-full bg-gradient-to-br from-primary/20 to-blue-500/20 shadow-xl shadow-primary/10">
+                  <div className="bg-white rounded-full p-6 md:p-8 border border-border/50 flex items-center justify-center w-28 h-28 md:w-40 md:h-40 overflow-hidden shadow-inner">
+                    <img
+                      src="https://i.ibb.co.com/Vpk8Z8Js/sajuriya-studio-logo.png"
+                      alt="Sajuriya Studio"
+                      className="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 hover:scale-110"
+                    />
+                  </div>
+                </div>
               </motion.div>
 
               <motion.h1
                 variants={itemVariants}
-                className="text-2xl md:text-5xl font-black tracking-tight"
+                className="text-lg md:text-2xl lg:text-3xl font-black tracking-tight"
               >
                 Sajuriya Studio
               </motion.h1>
 
               {/* Search and Sort Controls */}
-              <motion.div variants={itemVariants} className="flex flex-row items-center justify-center gap-4 pt-8">
+              <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-3 pt-6 w-full max-w-2xl mx-auto">
                 <AppSearch
                   value={searchQuery}
                   onChange={setSearchQuery}
                   placeholder="Search apps..."
                 />
-                <AppSort value={sortBy} onChange={setSortBy} />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleRefresh}
-                  disabled={refreshing}
-                  className="h-12 w-12 rounded-xl"
-                >
-                  <RefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
-                </Button>
+                <div className="shrink-0 w-full md:w-auto">
+                  <AppSort value={sortBy} onChange={setSortBy} />
+                </div>
               </motion.div>
             </section>
 
             {isLoading && apps.length === 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="relative overflow-hidden border border-border/40 bg-card/40 backdrop-blur-sm rounded-[32px] h-[320px]">
-                    <div className="pt-8 pb-4 flex justify-center">
-                      <Skeleton className="w-24 h-24 rounded-[22%]" />
+                  <div key={i} className="relative overflow-hidden border border-border/40 bg-card/40 backdrop-blur-sm rounded-[32px] h-[300px]">
+                    <div className="pt-6 pb-2 flex justify-center">
+                      <Skeleton className="w-20 h-20 rounded-[22%]" />
                     </div>
-                    <div className="p-6 pt-2 space-y-3 flex flex-col items-center">
-                      <Skeleton className="h-4 w-16" />
-                      <Skeleton className="h-6 w-3/4" />
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-5/6" />
-                      <Skeleton className="h-9 w-full rounded-xl mt-2" />
+                    <div className="p-5 pt-2 space-y-2 flex flex-col items-center">
+                      <Skeleton className="h-3 w-12" />
+                      <Skeleton className="h-5 w-3/4" />
+                      <Skeleton className="h-3 w-full" />
+                      <Skeleton className="h-3 w-5/6" />
+                      <Skeleton className="h-8 w-full rounded-xl mt-2" />
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredApps.length === 0 ? (
                   <div className="col-span-full text-center py-20 opacity-50">
                     <p className="font-black uppercase tracking-widest text-xs text-muted-foreground">
@@ -156,11 +142,11 @@ const AppPromo = () => {
                       className="relative group cursor-pointer"
                       onClick={() => navigate(`/apps/${app.slug || app.id}`)}
                     >
-                      <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-[32px] blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-[32px] blur-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
                       <div className="relative overflow-hidden border border-border/40 bg-card/40 backdrop-blur-sm rounded-[32px] hover:border-primary/30 transition-all h-full shadow-sm hover:shadow-md">
                         {/* App Icon Container */}
-                        <div className="pt-8 pb-4 flex justify-center">
-                          <div className="w-24 h-24 rounded-[22%] overflow-hidden shadow-2xl border border-border/10 bg-gradient-to-br from-primary/5 to-blue-500/5">
+                        <div className="pt-6 pb-2 flex justify-center">
+                          <div className="w-20 h-20 rounded-[22%] overflow-hidden shadow-xl border border-border/10 bg-gradient-to-br from-primary/5 to-blue-500/5">
                             {app.icon ? (
                               <img
                                 src={app.icon}
@@ -169,28 +155,28 @@ const AppPromo = () => {
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
-                                <Sparkles className="w-10 h-10 text-primary/20" />
+                                <Sparkles className="w-8 h-8 text-primary/20" />
                               </div>
                             )}
                           </div>
                         </div>
 
                         {/* App Info */}
-                        <div className="p-6 pt-2 space-y-3 text-center">
-                          <div className="flex flex-col items-center gap-2">
+                        <div className="p-5 pt-1 space-y-2 text-center">
+                          <div className="flex flex-col items-center gap-1.5">
                             {app.status && (
-                              <Badge variant="outline" className="text-[10px] py-0 h-5">{app.status.toUpperCase()}</Badge>
+                              <Badge variant="outline" className="text-[8px] py-0 h-4 uppercase tracking-tighter">{app.status.toUpperCase()}</Badge>
                             )}
                             {app.appName && (
-                              <h3 className="text-base md:text-lg font-black leading-tight">{app.appName}</h3>
+                              <h3 className="text-sm md:text-base font-black leading-tight line-clamp-1">{app.appName}</h3>
                             )}
                           </div>
 
                           {app.description && (
                             <div
-                              className="text-[10px] md:text-xs text-muted-foreground line-clamp-2 leading-relaxed h-10"
+                              className="text-[10px] md:text-[11px] text-muted-foreground line-clamp-2 leading-snug h-8"
                               dangerouslySetInnerHTML={{
-                                __html: app.description.replace(/<[^>]*>/g, '').substring(0, 100) + '...'
+                                __html: app.description.replace(/<[^>]*>/g, '').substring(0, 80) + '...'
                               }}
                             />
                           )}
@@ -214,7 +200,7 @@ const AppPromo = () => {
       </main>
 
       <Footer />
-    </div>
+    </div >
   );
 };
 

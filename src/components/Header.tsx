@@ -12,14 +12,14 @@ const navItems = [
   { label: "Experience", href: "/", isHash: true, targetId: "#about" },
   { label: "Projects", href: "/", isHash: true, targetId: "#projects" },
   { label: "Contact", href: "/", isHash: true, targetId: "#contact" },
-  { label: "Mobile App", href: "/apps", isHash: false },
+  { label: "Play Store Apps", href: "/apps", isHash: false },
   { label: "Blog", href: "/blogs", isHash: false },
 ];
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isDark, toggle } = useTheme();
-  const { user, isAdmin, login, logout } = useAuth();
+  const { user, isAdmin, showLogin, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -102,7 +102,7 @@ export default function Header() {
               </button>
             ) : (
               <button
-                onClick={login}
+                onClick={showLogin}
                 className="p-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
                 title="Login with Google"
               >
@@ -178,7 +178,7 @@ export default function Header() {
                   </button>
                 ) : (
                   <button
-                    onClick={() => { login(); setMobileOpen(false); }}
+                    onClick={() => { showLogin(); setMobileOpen(false); }}
                     className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-primary hover:bg-primary/10 rounded-lg transition-colors"
                   >
                     <LogIn size={16} />

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Award, BookOpen, GraduationCap, Calendar, ChevronRight } from "lucide-react";
+import { Award, BookOpen, GraduationCap, Calendar, ChevronRight, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function AboutSection() {
   const profileImage = "https://i.ibb.co.com/LDz6vpPY/Jakir.jpg";
@@ -83,6 +84,29 @@ export default function AboutSection() {
               I am a passionate Frontend Developer based in Dhaka, Bangladesh.
               My expertise lies in building high-performance web applications using React, TypeScript, and Firebase, often integrating automation and AI solutions to solve complex problems.
             </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="pt-2"
+            >
+              <Button
+                asChild
+                className="h-12 px-8 rounded-2xl bg-primary text-primary-foreground font-black uppercase tracking-widest text-[10px] sm:text-xs shadow-xl shadow-primary/20 hover:scale-105 transition-all group border-none"
+              >
+                <a
+                  href="https://drive.google.com/file/d/19rU58Su0m_H-W6K456Fv48dAnbznfhV8/view?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3"
+                >
+                  <FileText size={18} className="group-hover:rotate-12 transition-transform" />
+                  Download My Resume
+                </a>
+              </Button>
+            </motion.div>
 
             {/* Icon Cards (Screenshot Style) */}
             <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 pt-4 max-w-3xl">
@@ -207,6 +231,6 @@ export default function AboutSection() {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 }

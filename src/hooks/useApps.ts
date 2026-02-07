@@ -10,14 +10,19 @@ export function useApps() {
     const { data: apps = [], isLoading, error, refetch } = useQuery({
         queryKey: ['apps'],
         queryFn: async () => {
+            console.log('[useApps] Querying apps...');
             const localApps = await db.apps.toArray();
-            return await syncApps(localApps.length === 0);
+            console.log(`[useApps] Local apps count: ${localApps.length}`);
+            const syncedApps = await syncApps(localApps.length === 0);
+            console.log(`[useApps] Synced apps count: ${syncedApps.length}`);
+            return syncedApps;
         },
         staleTime: 1000 * 60 * 15, // 15 minutes
     });
 
     useEffect(() => {
         const unsubscribe = subscribeToApps((updatedApps) => {
+            console.log(`[useApps] Real-time app update received: ${updatedApps.length} apps`);
             queryClient.setQueryData(['apps'], updatedApps);
         });
         return () => unsubscribe();

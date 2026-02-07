@@ -17,8 +17,18 @@ import { useSubscribers } from '@/hooks/useSubscribers';
 import { useBlogs } from '@/hooks/useBlogs';
 
 const AdminDashboard = () => {
-  usePageTitle("Admin Dashboard");
   const location = useLocation();
+
+  const getAdminTitle = () => {
+    const path = location.pathname;
+    if (path === '/admin/testers') return "Testers Management";
+    if (path === '/admin/subscribers') return "Subscribers Management";
+    if (path === '/admin/blogs') return "Blogs Management";
+    if (path === '/admin/settings') return "Admin Settings";
+    return "Admin Overview";
+  };
+
+  usePageTitle(getAdminTitle());
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   // Use TanStack Query hooks
@@ -109,7 +119,7 @@ const AdminDashboard = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
           >
-            <AdminOverview apps={apps} testers={testers} blogs={blogs} />
+            <AdminOverview apps={apps} testers={testers} subscribers={subscribers} blogs={blogs} />
           </motion.div>
         );
     }

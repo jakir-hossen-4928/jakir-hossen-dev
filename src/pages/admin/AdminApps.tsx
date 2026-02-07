@@ -28,7 +28,6 @@ export const AdminApps: React.FC = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingApp, setEditingApp] = useState<Partial<AppEntry>>({});
     const [isUploadingIcon, setIsUploadingIcon] = useState(false);
-    const [isUploadingCover, setIsUploadingCover] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const editorRef = useRef<DefaultTemplateRef>(null);
 
@@ -57,21 +56,6 @@ export const AdminApps: React.FC = () => {
         }
     };
 
-    const handleCoverUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        setIsUploadingCover(true);
-        try {
-            const url = await uploadToImgBB(file);
-            setEditingApp(prev => ({ ...prev, coverPhoto: url }));
-            toast.success("Cover photo uploaded");
-        } catch (error) {
-            toast.error("Failed to upload cover photo");
-        } finally {
-            setIsUploadingCover(false);
-        }
-    };
 
     const handleSave = async () => {
         if (!editingApp.appName) {
@@ -92,7 +76,6 @@ export const AdminApps: React.FC = () => {
                 playStoreUrl: editingApp.playStoreUrl || '',
                 apkUrl: editingApp.apkUrl || '',
                 icon: editingApp.icon || '',
-                coverPhoto: editingApp.coverPhoto || '',
                 description: htmlDescription,
                 status: editingApp.status || 'testing',
                 createdAt: editingApp.createdAt || new Date().toISOString(),
@@ -134,11 +117,12 @@ export const AdminApps: React.FC = () => {
                             placeholder="Search apps..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
+                            disabled={isUploadingIcon}
                             className="pl-9 h-10 rounded-xl bg-white/5 border-white/10 text-xs font-bold"
                         />
                     </div>
                 </div>
-                <Button onClick={() => handleOpenDialog()} size="sm" className="rounded-xl h-10 font-black uppercase tracking-tight shadow-lg shadow-primary/20 w-full md:w-auto">
+                <Button onClick={() => handleOpenDialog()} disabled={isUploadingIcon} size="sm" className="rounded-xl h-10 font-black uppercase tracking-tight shadow-lg shadow-primary/20 w-full md:w-auto">
                     <Plus size={16} className="mr-2" /> Add App
                 </Button>
             </CardHeader>
@@ -179,10 +163,10 @@ export const AdminApps: React.FC = () => {
                                         </Badge>
                                     </TableCell>
                                     <TableCell className="text-right pr-6 space-x-2">
-                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(app)} className="hover:bg-primary/10 hover:text-primary rounded-lg transition-all">
+                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(app)} disabled={isUploadingIcon} className="hover:bg-primary/10 hover:text-primary rounded-lg transition-all">
                                             <Edit3 size={16} />
                                         </Button>
-                                        <Button variant="ghost" size="icon" onClick={() => handleDelete(app.id)} className="hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-all">
+                                        <Button variant="ghost" size="icon" onClick={() => handleDelete(app.id)} disabled={isUploadingIcon} className="hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-all">
                                             <Trash2 size={16} />
                                         </Button>
                                     </TableCell>
@@ -264,28 +248,6 @@ export const AdminApps: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <Label>Cover Photo</Label>
-                                <div className="flex gap-4 items-center">
-                                    <div className="w-24 h-16 rounded-xl bg-muted border border-white/10 flex items-center justify-center overflow-hidden shrink-0">
-                                        {editingApp.coverPhoto ? (
-                                            <img src={editingApp.coverPhoto} className="w-full h-full object-cover" />
-                                        ) : (
-                                            <ImageIcon className="text-muted-foreground" />
-                                        )}
-                                    </div>
-                                    <div className="flex-1">
-                                        <Input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={handleCoverUpload}
-                                            disabled={isUploadingCover}
-                                            className="cursor-pointer file:cursor-pointer file:text-foreground text-xs"
-                                        />
-                                        {isUploadingCover && <p className="text-xs text-primary mt-1 animate-pulse">Uploading...</p>}
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
                         <div className="flex items-center gap-4 p-4 border rounded-xl bg-muted/20">
@@ -316,7 +278,7 @@ export const AdminApps: React.FC = () => {
 
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                        <Button onClick={handleSave} disabled={isSaving || isUploadingIcon || isUploadingCover}>
+                        <Button onClick={handleSave} disabled={isSaving || isUploadingIcon}>
                             {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Save Changes
                         </Button>

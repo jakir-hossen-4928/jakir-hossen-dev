@@ -1,6 +1,6 @@
 import Fuse from 'fuse.js';
 import type { IFuseOptions } from 'fuse.js';
-import { AppEntry } from '../lib/db';
+import { AppEntry } from '@/lib/types';
 
 // Fuse.js configuration for app search
 export const appSearchOptions: IFuseOptions<AppEntry> = {
@@ -20,14 +20,19 @@ export function createAppSearchIndex(apps: AppEntry[]): Fuse<AppEntry> {
     return new Fuse(apps, appSearchOptions);
 }
 
-// Search apps with fuzzy matching
-export function searchApps(apps: AppEntry[], searchTerm: string): AppEntry[] {
-    if (!searchTerm.trim()) {
+// Main Search function
+export function searchApps(apps: AppEntry[], query: string): AppEntry[] {
+    console.log(`[SearchUtils] Searching ${apps.length} apps with query: "${query}"`);
+
+    if (!query.trim()) {
+        console.log('[SearchUtils] Query is empty, returning all apps.');
         return apps;
     }
 
-    const fuse = createAppSearchIndex(apps);
-    const results = fuse.search(searchTerm);
+    const fuse = new Fuse(apps, appSearchOptions);
+    const results = fuse.search(query);
+
+    console.log(`[SearchUtils] Search complete. Found ${results.length} matches.`);
 
     return results.map(result => result.item);
 }

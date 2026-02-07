@@ -31,7 +31,7 @@ export interface ImgBBResponse {
 }
 
 export const uploadToImgBB = async (file: File): Promise<string> => {
-    const apiKey = import.meta.env.VITE_IMGBB_API_KEY || '5c23cb82888126b4847e335543cb8047'; // Fallback or env
+    const apiKey = import.meta.env.VITE_IMAGE_BB_API_KEY || import.meta.env.VITE_IMGBB_API_KEY || '5c23cb82888126b4847e335543cb8047';
     // Note: It's better to use an ENV variable. For this specific user request, 
     // if they provided one I would use it. If not, I'm adding a note or a default if I had one. 
     // I will assume for now the user might set it or I can use a placeholder.
@@ -49,11 +49,13 @@ export const uploadToImgBB = async (file: File): Promise<string> => {
             body: formData,
         });
 
-        const data: ImgBBResponse = await response.json();
-
-        if (!data.success) {
-            throw new Error('ImgBB upload failed');
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('ImgBB upload error response:', errorText);
+            throw new Error(`ImgBB upload failed: ${response.status} ${errorText}`);
         }
+
+        const data: ImgBBResponse = await response.json();
 
         return data.data.url;
     } catch (error) {

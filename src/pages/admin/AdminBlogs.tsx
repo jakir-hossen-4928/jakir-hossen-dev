@@ -8,7 +8,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Plus, Trash2, Edit3, Loader2, Search, Calendar, Tag } from 'lucide-react';
+import { Plus, Trash2, Edit3, Loader2, Search, Calendar, Tag, ChevronDown, Check } from 'lucide-react';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { db as firestore } from '@/lib/firebase';
 import { doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { DefaultTemplate, DefaultTemplateRef } from '@/richtexteditor/DefaultTemplate';
@@ -32,8 +40,8 @@ export const AdminBlogs: React.FC = () => {
     const { blogs, isLoading } = useBlogs();
 
     const filteredBlogs = blogs.filter(blog =>
-        blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        blog.categories.some(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
+        (blog.title?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (Array.isArray(blog.categories) && blog.categories.some(c => c.toLowerCase().includes(searchTerm.toLowerCase())))
     );
 
     const handleOpenDialog = (blog?: BlogPost) => {
@@ -224,39 +232,73 @@ export const AdminBlogs: React.FC = () => {
                         <div className="space-y-4">
                             <Label className="flex items-center gap-2 text-sm font-black uppercase tracking-widest text-muted-foreground">
                                 <Tag size={14} className="text-primary" />
-                                Select Categories
+                                Categories
                             </Label>
-                            <div className="space-y-6 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
-                                {categoriesData.map(group => (
-                                    <div key={group.slug} className="space-y-3 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">{group.name}</span>
-                                            <Badge
-                                                variant={editingBlog.categories?.includes(group.name) ? 'default' : 'outline'}
-                                                onClick={() => toggleCategory(group.name)}
-                                                className="cursor-pointer text-[8px] font-black uppercase rounded-full h-5"
-                                            >
-                                                Main Category
-                                            </Badge>
+
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className="w-full justify-between h-12 rounded-xl bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20 transition-all font-bold group"
+                                    >
+                                        <div className="flex items-center gap-2 overflow-hidden">
+                                            {editingBlog.categories && editingBlog.categories.length > 0 ? (
+                                                <div className="flex gap-1.5 overflow-hidden">
+                                                    {editingBlog.categories.map(cat => (
+                                                        <Badge key={cat} variant="secondary" className="bg-primary/20 text-primary border-primary/20 text-[10px] whitespace-nowrap">
+                                                            {cat}
+                                                        </Badge>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <span className="text-muted-foreground font-normal">Select categories...</span>
+                                            )}
                                         </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {group.subcategories.map(sub => (
-                                                <Badge
-                                                    key={sub}
-                                                    variant={editingBlog.categories?.includes(sub) ? 'default' : 'secondary'}
-                                                    onClick={() => toggleCategory(sub)}
+                                        <ChevronDown size={16} className="text-muted-foreground group-hover:text-primary transition-colors shrink-0 ml-2" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="start" className="w-[400px] bg-card border-white/10 rounded-2xl p-2 shadow-2xl z-50">
+                                    <div className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 border-b border-white/5 mb-2">
+                                        Blog Categories
+                                    </div>
+                                    <ScrollArea className="h-[400px] pr-4">
+                                        {categoriesData.map((group, gIdx) => (
+                                            <div key={group.slug} className="mb-4 last:mb-0">
+                                                <div
+                                                    onClick={() => toggleCategory(group.name)}
                                                     className={cn(
-                                                        "cursor-pointer text-[9px] font-bold py-1 px-3 rounded-full transition-all",
-                                                        editingBlog.categories?.includes(sub) ? "scale-105" : "hover:bg-white/10"
+                                                        "flex items-center justify-between px-3 py-2 rounded-xl cursor-pointer transition-all mb-1",
+                                                        editingBlog.categories?.includes(group.name)
+                                                            ? "bg-primary/10 text-primary font-bold"
+                                                            : "hover:bg-white/5 text-muted-foreground font-bold"
                                                     )}
                                                 >
-                                                    {sub}
-                                                </Badge>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                                                    <span className="text-[10px] font-black uppercase tracking-wider">{group.name}</span>
+                                                    {editingBlog.categories?.includes(group.name) && <Check size={12} />}
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-1 pl-2">
+                                                    {group.subcategories.map(sub => (
+                                                        <div
+                                                            key={sub}
+                                                            onClick={() => toggleCategory(sub)}
+                                                            className={cn(
+                                                                "flex items-center justify-between px-3 py-1.5 rounded-lg cursor-pointer transition-all text-[11px]",
+                                                                editingBlog.categories?.includes(sub)
+                                                                    ? "bg-white/10 text-foreground font-bold"
+                                                                    : "text-muted-foreground/70 hover:bg-white/5 hover:text-foreground"
+                                                            )}
+                                                        >
+                                                            <span className="truncate">{sub}</span>
+                                                            {editingBlog.categories?.includes(sub) && <Check size={10} className="text-primary" />}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                {gIdx < categoriesData.length - 1 && <DropdownMenuSeparator className="bg-white/5 mt-4" />}
+                                            </div>
+                                        ))}
+                                    </ScrollArea>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
 
                         <div className="flex items-center gap-4 p-4 border rounded-xl bg-muted/20">
