@@ -16,71 +16,78 @@ import BlogGallery from "./pages/BlogGallery";
 import BlogDetails from "./pages/BlogDetails";
 import AuthModal from "./components/AuthModal";
 
+import { useProductionSecurity } from "./hooks/useProductionSecurity";
+
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <ErrorBoundary>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <AuthModal />
-          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/apps" element={<AppPromo />} />
-              <Route path="/apps/:slug" element={<AppDetails />} />
-              <Route path="/blogs" element={<BlogGallery />} />
-              <Route path="/blogs/:slug" element={<BlogDetails />} />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute adminOnly>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/testers"
-                element={
-                  <ProtectedRoute adminOnly>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/subscribers"
-                element={
-                  <ProtectedRoute adminOnly>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/settings"
-                element={
-                  <ProtectedRoute adminOnly>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/blogs"
-                element={
-                  <ProtectedRoute adminOnly>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </ErrorBoundary>
-    </AuthProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  useProductionSecurity();
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <ErrorBoundary>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <AuthModal />
+            <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/apps" element={<AppPromo />} />
+                <Route path="/apps/:slug" element={<AppDetails />} />
+                <Route path="/blogs" element={<BlogGallery />} />
+                <Route path="/blogs/:slug" element={<BlogDetails />} />
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute adminOnly>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/testers"
+                  element={
+                    <ProtectedRoute adminOnly>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/subscribers"
+                  element={
+                    <ProtectedRoute adminOnly>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/settings"
+                  element={
+                    <ProtectedRoute adminOnly>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/blogs"
+                  element={
+                    <ProtectedRoute adminOnly>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </ErrorBoundary>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
+
+};
 
 export default App;

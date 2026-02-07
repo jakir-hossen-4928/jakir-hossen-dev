@@ -21,11 +21,11 @@ const AdminDashboard = () => {
 
   const getAdminTitle = () => {
     const path = location.pathname;
-    if (path === '/admin/testers') return "Testers Management";
-    if (path === '/admin/subscribers') return "Subscribers Management";
-    if (path === '/admin/blogs') return "Blogs Management";
-    if (path === '/admin/settings') return "Admin Settings";
-    return "Admin Overview";
+    if (path === '/admin/testers') return "Manage Testers | Admin Portal";
+    if (path === '/admin/subscribers') return "Manage Subscribers | Admin Portal";
+    if (path === '/admin/blogs') return "Manage Articles | Admin Portal";
+    if (path === '/admin/settings') return "Settings | Admin Portal";
+    return "Overview | Admin Portal";
   };
 
   usePageTitle(getAdminTitle());

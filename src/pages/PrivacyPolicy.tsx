@@ -6,7 +6,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { Shield, Lock, Eye, Server, Globe } from 'lucide-react';
 
 const PrivacyPolicy = () => {
-    usePageTitle("Privacy Policy");
+    usePageTitle("Privacy Policy | Sajuriya Studio");
 
     return (
         <div className="min-h-screen bg-background text-foreground">

@@ -35,7 +35,7 @@ const itemVariants = {
 };
 
 const AppPromo = () => {
-  usePageTitle("Play Store Apps");
+  usePageTitle("My Play Store Apps | Sajuriya Studio");
   const navigate = useNavigate();
   const { apps, isLoading, refetch } = useApps();
   const [searchQuery, setSearchQuery] = useState('');

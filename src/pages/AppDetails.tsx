@@ -36,7 +36,8 @@ const AppDetails = () => {
     const { comments, isLoading: isCommentsLoading } = useComments(app?.id);
     const { showLogin } = useAuth();
 
-    usePageTitle(app?.appName || "Loading App...");
+    const pageTitle = app?.appName || (isAppLoading ? "Loading App..." : "App Not Found | Sajuriya Studio");
+    usePageTitle(pageTitle);
 
     const postComment = async () => {
         if (!user || !app) {

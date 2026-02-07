@@ -34,8 +34,6 @@ function toDate(timestamp: any): Date {
 
 // Sort apps based on selected option
 export function sortApps(apps: AppEntry[], option: SortOption): AppEntry[] {
-  console.log(`[SortUtils] Sorting ${apps.length} apps with option: ${option}`);
-
   const sorted = [...apps].sort((a, b) => {
     switch (option) {
       case SortOption.NEWEST: {
@@ -59,6 +57,5 @@ export function sortApps(apps: AppEntry[], option: SortOption): AppEntry[] {
     }
   });
 
-  console.log(`[SortUtils] Sorting complete. Sorted ${sorted.length} items.`);
   return sorted;
 }
