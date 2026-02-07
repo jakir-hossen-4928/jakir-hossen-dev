@@ -1,80 +1,59 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { db } from '@/lib/firebase';
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { AnimatePresence, motion } from 'framer-motion';
-import { AppEntry, Tester } from '@/lib/types';
 import { AdminOverview } from './admin/AdminOverview';
 import { AdminApps } from './admin/AdminApps';
 import { AdminSubscribers } from './admin/AdminSubscribers';
 import { AdminTesters } from './admin/AdminTesters';
+import { AdminBlogs } from './admin/AdminBlogs';
 import { toast } from 'sonner';
+import { Wifi, WifiOff, Loader2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { useApps } from '@/hooks/useApps';
+import { useTesters } from '@/hooks/useTesters';
+import { useSubscribers } from '@/hooks/useSubscribers';
+import { useBlogs } from '@/hooks/useBlogs';
 
 const AdminDashboard = () => {
   usePageTitle("Admin Dashboard");
   const location = useLocation();
-  const [apps, setApps] = useState<AppEntry[]>([]);
-  const [testers, setTesters] = useState<Tester[]>([]);
-  const [subscribers, setSubscribers] = useState<Tester[]>([]); // Reuse Tester type
-  const [loading, setLoading] = useState(true);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  // Use TanStack Query hooks
+  const { apps, isLoading: appsLoading } = useApps();
+  const { testers, isLoading: testersLoading } = useTesters();
+  const { subscribers, isLoading: subsLoading } = useSubscribers();
+  const { blogs, isLoading: blogsLoading } = useBlogs();
+
+  const isLoading = appsLoading || testersLoading || subsLoading || blogsLoading;
 
   useEffect(() => {
-    // Sync Apps
-    const unsubscribeApps = onSnapshot(collection(db, 'apps'), (snapshot) => {
-      const appsList: AppEntry[] = [];
-      snapshot.forEach((docSnap) => {
-        appsList.push({ id: docSnap.id, ...docSnap.data() } as AppEntry);
-      });
-      setApps(appsList);
-    });
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
 
-    // Sync Testers
-    const qTesters = query(collection(db, 'testers'), orderBy('joinedAt', 'desc'));
-    const unsubscribeTesters = onSnapshot(qTesters, (querySnapshot) => {
-      const testersList: Tester[] = [];
-      querySnapshot.forEach((docSnap) => {
-        testersList.push(docSnap.data() as Tester);
-      });
-      setTesters(testersList);
-    });
-
-    // Sync Subscribers
-    const qSubscribers = query(collection(db, 'subscribers'), orderBy('joinedAt', 'desc'));
-    const unsubscribeSubscribers = onSnapshot(qSubscribers, (querySnapshot) => {
-      const subList: Tester[] = [];
-      querySnapshot.forEach((docSnap) => {
-        subList.push(docSnap.data() as Tester);
-      });
-      setSubscribers(subList);
-      setLoading(false); // Set loading false after initial fetch attempts
-    });
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
     return () => {
-      unsubscribeApps();
-      unsubscribeTesters();
-      unsubscribeSubscribers();
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, []);
 
-  const exportToCSV = (data: any[], filename: string) => {
+  const exportToCSV = <T extends Record<string, any>>(data: T[], filename: string) => {
     if (data.length === 0) {
       toast.error("No data to export.");
       return;
     }
 
-    // Get all unique keys
     const allKeys = Array.from(new Set(data.flatMap(item => Object.keys(item))));
-
-    // Create CSV header
     const header = allKeys.join(',');
 
-    // Create CSV rows
     const rows = data.map(item => {
       return allKeys.map(key => {
         const value = item[key] !== undefined ? item[key] : '';
-        // Escape quotes and wrap in quotes if contains comma
         const stringValue = String(value).replace(/"/g, '""');
         return `"${stringValue}"`;
       }).join(',');
@@ -94,9 +73,6 @@ const AdminDashboard = () => {
   const exportTesters = () => exportToCSV(testers, 'testers_export');
   const exportSubscribers = () => exportToCSV(subscribers, 'subscribers_export');
 
-
-  if (loading) return <div className="flex h-screen items-center justify-center">Loading...</div>;
-
   const renderContent = () => {
     const path = location.pathname;
 
@@ -104,32 +80,61 @@ const AdminDashboard = () => {
       case '/admin/testers':
         return (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <AdminTesters testers={testers} exportTesters={exportTesters} />
+            <AdminTesters exportTesters={exportTesters} />
           </motion.div>
         );
-      case '/admin/subscribers': // New Route
+      case '/admin/subscribers':
         return (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <AdminSubscribers subscribers={subscribers} exportSubscribers={exportSubscribers} />
+            <AdminSubscribers exportSubscribers={exportSubscribers} />
           </motion.div>
         );
-      case '/admin/settings': // Mapped to App Registry
+      case '/admin/blogs':
         return (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
-            <AdminApps apps={apps} />
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <AdminBlogs />
+          </motion.div>
+        );
+      case '/admin/settings':
+        return (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <AdminApps />
           </motion.div>
         );
       default: // /admin -> Overview
         return (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <AdminOverview apps={apps} testers={testers} />
+          <motion.div
+            key="overview"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
+            <AdminOverview apps={apps} testers={testers} blogs={blogs} />
           </motion.div>
         );
     }
   };
 
+  if (isLoading && apps.length === 0) {
+    return (
+      <div className="flex h-screen items-center justify-center flex-col gap-4">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <p className="text-sm font-black uppercase tracking-widest text-muted-foreground">Synchronizing Cloud Data...</p>
+      </div>
+    );
+  }
+
   return (
-    <DashboardLayout>
+    <DashboardLayout apps={apps} testers={testers} subscribers={subscribers} blogs={blogs}>
+      <div className="mb-4 flex items-center justify-end px-4 md:px-8">
+        <Badge variant={isOnline ? "outline" : "destructive"} className="gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest border-white/10">
+          {isOnline ? (
+            <><Wifi className="h-3 w-3 text-emerald-500" /> Cloud Sync Active</>
+          ) : (
+            <><WifiOff className="h-3 w-3 text-red-500" /> Offline Mode</>
+          )}
+        </Badge>
+      </div>
       <AnimatePresence mode="wait">
         {renderContent()}
       </AnimatePresence>

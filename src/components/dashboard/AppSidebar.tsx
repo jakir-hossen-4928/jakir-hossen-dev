@@ -9,7 +9,8 @@ import {
     ChevronRight,
     LogOut,
     Home,
-    Sparkles
+    Sparkles,
+    NotebookPen
 } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
 import { cn } from '@/lib/utils';
@@ -26,7 +27,8 @@ const sidebarItems = [
     { icon: LayoutDashboard, label: 'Overview', href: '/admin' },
     { icon: Users, label: 'Testers', href: '/admin/testers' },
     { icon: Users, label: 'Subscribers', href: '/admin/subscribers' },
-    { icon: Smartphone, label: 'App Registry', href: '/admin/settings' },
+    { icon: NotebookPen, label: 'Blogs', href: '/admin/blogs' },
+    { icon: Smartphone, label: 'Sajuriya Studio', href: '/admin/settings' },
 ];
 
 export const AppSidebar: React.FC<SidebarProps> = ({

@@ -1,0 +1,299 @@
+import React, { useState, useRef } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
+import { Plus, Trash2, Edit3, Loader2, Search, Calendar, Tag } from 'lucide-react';
+import { db as firestore } from '@/lib/firebase';
+import { doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { DefaultTemplate, DefaultTemplateRef } from '@/richtexteditor/DefaultTemplate';
+import { BlogPost } from '@/lib/types';
+import { useBlogs } from '@/hooks/useBlogs';
+import { cn } from '@/lib/utils';
+import categoriesData from '@/data/categories.json';
+
+const THUMBNAIL_COLORS = [
+    'bg-lime-500', 'bg-cyan-500', 'bg-indigo-600', 'bg-pink-500',
+    'bg-orange-500', 'bg-emerald-500', 'bg-blue-600', 'bg-violet-600'
+];
+
+export const AdminBlogs: React.FC = () => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [editingBlog, setEditingBlog] = useState<Partial<BlogPost>>({});
+    const [isSaving, setIsSaving] = useState(false);
+    const editorRef = useRef<DefaultTemplateRef>(null);
+
+    const { blogs, isLoading } = useBlogs();
+
+    const filteredBlogs = blogs.filter(blog =>
+        blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        blog.categories.some(c => c.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
+    const handleOpenDialog = (blog?: BlogPost) => {
+        if (blog) {
+            setEditingBlog({ ...blog });
+        } else {
+            setEditingBlog({
+                status: 'draft',
+                title: '',
+                slug: '',
+                categories: [],
+                date: new Date().toISOString().split('T')[0]
+            });
+        }
+        setIsDialogOpen(true);
+    };
+
+    const handleSave = async () => {
+        if (!editingBlog.title) {
+            toast.error("Title is required");
+            return;
+        }
+
+        setIsSaving(true);
+        try {
+            const htmlDescription = editorRef.current?.getHTML() || editingBlog.description || '';
+            const slug = editingBlog.slug || editingBlog.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-');
+            const blogId = editingBlog.id || slug || Date.now().toString();
+
+            const thumbnailColor = editingBlog.thumbnailColor || THUMBNAIL_COLORS[Math.floor(Math.random() * THUMBNAIL_COLORS.length)];
+
+            const blogData: BlogPost = {
+                id: blogId,
+                slug,
+                title: editingBlog.title,
+                date: editingBlog.date || new Date().toISOString().split('T')[0],
+                categories: editingBlog.categories || [],
+                description: htmlDescription,
+                excerpt: editingBlog.excerpt || htmlDescription.replace(/<[^>]*>/g, '').slice(0, 160) + '...',
+                status: editingBlog.status || 'draft',
+                author: editingBlog.author || 'Jakir Hossen',
+                thumbnailColor,
+                createdAt: editingBlog.createdAt || new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            };
+
+            await setDoc(doc(firestore, 'blogs', blogId), blogData, { merge: true });
+            toast.success(editingBlog.id ? "Blog updated" : "Blog created");
+            setIsDialogOpen(false);
+        } catch (error) {
+            console.error(error);
+            toast.error("Error saving blog");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleDelete = async (blogId: string) => {
+        if (!confirm("Delete this blog post?")) return;
+        try {
+            await deleteDoc(doc(firestore, 'blogs', blogId));
+            toast.success("Blog deleted");
+        } catch (error) {
+            toast.error("Failed to delete");
+        }
+    };
+
+    const toggleCategory = (cat: string) => {
+        const current = editingBlog.categories || [];
+        if (current.includes(cat)) {
+            setEditingBlog(prev => ({ ...prev, categories: current.filter(c => c !== cat) }));
+        } else {
+            setEditingBlog(prev => ({ ...prev, categories: [...current, cat] }));
+        }
+    };
+
+    return (
+        <Card className="border border-white/5 shadow-2xl rounded-2xl overflow-hidden bg-card/30 backdrop-blur-xl">
+            <CardHeader className="flex flex-col md:flex-row items-center justify-between bg-white/[0.02] border-b border-white/5 p-6 md:p-8 gap-4">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto">
+                    <div>
+                        <CardTitle className="text-xl font-black text-foreground">Blog Management</CardTitle>
+                        <CardDescription className="text-muted-foreground/70">Write and publish articles.</CardDescription>
+                    </div>
+                    <div className="relative w-full md:w-64">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Search blogs..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-9 h-10 rounded-xl bg-white/5 border-white/10 text-xs font-bold"
+                        />
+                    </div>
+                </div>
+                <Button onClick={() => handleOpenDialog()} size="sm" className="rounded-xl h-10 font-black uppercase tracking-tight shadow-lg shadow-primary/20 w-full md:w-auto">
+                    <Plus size={16} className="mr-2" /> New Post
+                </Button>
+            </CardHeader>
+            <CardContent className="p-0">
+                {isLoading ? (
+                    <div className="flex items-center justify-center py-20">
+                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                    </div>
+                ) : (
+                    <Table>
+                        <TableHeader className="bg-white/[0.01]">
+                            <TableRow className="hover:bg-transparent border-white/5">
+                                <TableHead className="w-[100px] pl-6 text-[10px] font-black uppercase tracking-widest">Preview</TableHead>
+                                <TableHead className="text-[10px] font-black uppercase tracking-widest">Title</TableHead>
+                                <TableHead className="text-[10px] font-black uppercase tracking-widest">Categories</TableHead>
+                                <TableHead className="text-[10px] font-black uppercase tracking-widest">Status</TableHead>
+                                <TableHead className="text-right pr-6 text-[10px] font-black uppercase tracking-widest">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {filteredBlogs.map(blog => (
+                                <TableRow key={blog.id} className="border-white/5 hover:bg-white/[0.02] transition-colors group">
+                                    <TableCell className="pl-6 py-4">
+                                        <div className={cn("w-16 h-10 rounded-lg flex items-center justify-center p-1 overflow-hidden text-[6px] font-bold text-white text-center shadow-lg", blog.thumbnailColor)}>
+                                            {blog.title}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="font-bold text-foreground">
+                                        <div className="line-clamp-1">{blog.title}</div>
+                                        <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-mono mt-1">
+                                            <Calendar size={10} /> {blog.date}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex flex-wrap gap-1">
+                                            {blog.categories.slice(0, 2).map(cat => (
+                                                <Badge key={cat} variant="outline" className="text-[8px] px-1.5 py-0 bg-white/5 border-white/10">
+                                                    {cat}
+                                                </Badge>
+                                            ))}
+                                            {blog.categories.length > 2 && (
+                                                <span className="text-[8px] text-muted-foreground">+{blog.categories.length - 2}</span>
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant={blog.status === 'published' ? 'default' : 'secondary'} className={cn("font-black uppercase text-[9px]", blog.status === 'published' ? "bg-green-500/20 text-green-400 border-green-500/30" : "")}>
+                                            {blog.status}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-right pr-6 space-x-2">
+                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(blog)} className="hover:bg-primary/10 hover:text-primary rounded-lg transition-all">
+                                            <Edit3 size={16} />
+                                        </Button>
+                                        <Button variant="ghost" size="icon" onClick={() => handleDelete(blog.id)} className="hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-all">
+                                            <Trash2 size={16} />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                )}
+            </CardContent>
+
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-card border-white/10">
+                    <DialogHeader>
+                        <DialogTitle>{editingBlog.id ? 'Edit Blog Post' : 'New Blog Post'}</DialogTitle>
+                        <DialogDescription>Share your thoughts with the world.</DialogDescription>
+                    </DialogHeader>
+
+                    <div className="grid gap-6 py-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <Label>Title</Label>
+                                <Input
+                                    value={editingBlog.title || ''}
+                                    onChange={e => setEditingBlog(prev => ({ ...prev, title: e.target.value }))}
+                                    placeholder="Enter blog title"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Date</Label>
+                                <Input
+                                    type="date"
+                                    value={editingBlog.date || ''}
+                                    onChange={e => setEditingBlog(prev => ({ ...prev, date: e.target.value }))}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <Label className="flex items-center gap-2 text-sm font-black uppercase tracking-widest text-muted-foreground">
+                                <Tag size={14} className="text-primary" />
+                                Select Categories
+                            </Label>
+                            <div className="space-y-6 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
+                                {categoriesData.map(group => (
+                                    <div key={group.slug} className="space-y-3 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">{group.name}</span>
+                                            <Badge
+                                                variant={editingBlog.categories?.includes(group.name) ? 'default' : 'outline'}
+                                                onClick={() => toggleCategory(group.name)}
+                                                className="cursor-pointer text-[8px] font-black uppercase rounded-full h-5"
+                                            >
+                                                Main Category
+                                            </Badge>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {group.subcategories.map(sub => (
+                                                <Badge
+                                                    key={sub}
+                                                    variant={editingBlog.categories?.includes(sub) ? 'default' : 'secondary'}
+                                                    onClick={() => toggleCategory(sub)}
+                                                    className={cn(
+                                                        "cursor-pointer text-[9px] font-bold py-1 px-3 rounded-full transition-all",
+                                                        editingBlog.categories?.includes(sub) ? "scale-105" : "hover:bg-white/10"
+                                                    )}
+                                                >
+                                                    {sub}
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-4 p-4 border rounded-xl bg-muted/20">
+                            <Switch
+                                checked={editingBlog.status === 'published'}
+                                onCheckedChange={(c) => setEditingBlog(prev => ({ ...prev, status: c ? 'published' : 'draft' }))}
+                            />
+                            <div>
+                                <Label>Published</Label>
+                                <p className="text-xs text-muted-foreground">Visible to readers once published</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Description</Label>
+                            <div className="min-h-[300px] border rounded-xl overflow-hidden bg-background/50">
+                                <DefaultTemplate
+                                    ref={editorRef}
+                                    onReady={(methods) => {
+                                        if (editingBlog.description) {
+                                            setTimeout(() => methods.injectHTML(editingBlog.description || ''), 100);
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+                        <Button onClick={handleSave} disabled={isSaving}>
+                            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {editingBlog.id ? 'Update Post' : 'Publish Post'}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </Card>
+    );
+};

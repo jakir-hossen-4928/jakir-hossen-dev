@@ -1,7 +1,7 @@
 import { collection, onSnapshot, query, orderBy, getDocs, doc, getDoc, where } from 'firebase/firestore';
 import { db as firestore } from './firebase';
 import { db, updateCacheMetadata, isCacheStale } from './db';
-import { AppEntry, Comment } from '@/lib/types';
+import { AppEntry, Comment, Tester, Subscriber, BlogPost } from '@/lib/types';
 
 // Sync apps from Firestore to Dexie
 export async function syncApps(force: boolean = false): Promise<AppEntry[]> {
@@ -219,3 +219,223 @@ export async function deleteAppFromCache(appId: string): Promise<void> {
 export async function addCommentToCache(comment: Comment): Promise<void> {
     await db.comments.put(comment);
 }
+
+// Sync testers from Firestore to Dexie
+export async function syncTesters(force: boolean = false): Promise<Tester[]> {
+    const cacheKey = 'testers';
+    const isStale = await isCacheStale(cacheKey, 30); // 30 minutes cache
+
+    // Check if cache is fresh
+    if (!force && !isStale) {
+        const cachedTesters = await db.testers.orderBy('joinedAt').reverse().toArray();
+        if (cachedTesters.length > 0) {
+            console.log('[SyncService] Returning cached testers');
+            return cachedTesters;
+        }
+    }
+
+    // Fetch from Firestore
+    console.log('[SyncService] Fetching testers from Firestore...');
+    try {
+        const testersRef = collection(firestore, 'testers');
+        const q = query(testersRef, orderBy('joinedAt', 'desc'));
+        const snapshot = await getDocs(q);
+
+        const testers: Tester[] = snapshot.docs.map(doc => ({
+            uid: doc.id,
+            ...doc.data()
+        } as Tester));
+
+        console.log(`[SyncService] Fetched ${testers.length} testers from Firestore`);
+
+        // Update Dexie cache atomically
+        await db.transaction('rw', db.testers, db.metadata, async () => {
+            await db.testers.clear();
+            await db.testers.bulkAdd(testers);
+            await updateCacheMetadata(cacheKey);
+        });
+
+        return testers;
+    } catch (error) {
+        console.error('[SyncService] Error fetching testers from Firestore:', error);
+        throw error;
+    }
+}
+
+// Sync subscribers from Firestore to Dexie
+export async function syncSubscribers(force: boolean = false): Promise<Subscriber[]> {
+    const cacheKey = 'subscribers';
+    const isStale = await isCacheStale(cacheKey, 30); // 30 minutes cache
+
+    // Check if cache is fresh
+    if (!force && !isStale) {
+        const cachedSubscribers = await db.subscribers.orderBy('joinedAt').reverse().toArray();
+        if (cachedSubscribers.length > 0) {
+            console.log('[SyncService] Returning cached subscribers');
+            return cachedSubscribers;
+        }
+    }
+
+    // Fetch from Firestore
+    console.log('[SyncService] Fetching subscribers from Firestore...');
+    try {
+        const subscribersRef = collection(firestore, 'subscribers');
+        const q = query(subscribersRef, orderBy('joinedAt', 'desc'));
+        const snapshot = await getDocs(q);
+
+        const subscribers: Subscriber[] = snapshot.docs.map(doc => ({
+            uid: doc.id,
+            ...doc.data()
+        } as Subscriber));
+
+        console.log(`[SyncService] Fetched ${subscribers.length} subscribers from Firestore`);
+
+        // Update Dexie cache atomically
+        await db.transaction('rw', db.subscribers, db.metadata, async () => {
+            await db.subscribers.clear();
+            await db.subscribers.bulkAdd(subscribers);
+            await updateCacheMetadata(cacheKey);
+        });
+
+        return subscribers;
+    } catch (error) {
+        console.error('[SyncService] Error fetching subscribers from Firestore:', error);
+        throw error;
+    }
+}
+
+// Real-time sync for testers
+export function subscribeToTesters(callback: (testers: Tester[]) => void): () => void {
+    const testersRef = collection(firestore, 'testers');
+    const q = query(testersRef, orderBy('joinedAt', 'desc'));
+
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+        const testers: Tester[] = snapshot.docs.map(doc => ({
+            uid: doc.id,
+            ...doc.data()
+        } as Tester));
+
+        // Update cache
+        await db.testers.clear();
+        await db.testers.bulkAdd(testers);
+        await updateCacheMetadata('testers');
+
+        callback(testers);
+    });
+
+    return unsubscribe;
+}
+
+// Real-time sync for subscribers
+export function subscribeToSubscribers(callback: (subscribers: Subscriber[]) => void): () => void {
+    const subscribersRef = collection(firestore, 'subscribers');
+    const q = query(subscribersRef, orderBy('joinedAt', 'desc'));
+
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+        const subscribers: Subscriber[] = snapshot.docs.map(doc => ({
+            uid: doc.id,
+            ...doc.data()
+        } as Subscriber));
+
+        // Update cache
+        await db.subscribers.clear();
+        await db.subscribers.bulkAdd(subscribers);
+        await updateCacheMetadata('subscribers');
+
+        callback(subscribers);
+    });
+
+    return unsubscribe;
+}
+
+// Sync blogs from Firestore to Dexie
+export async function syncBlogs(force: boolean = false): Promise<BlogPost[]> {
+    const cacheKey = 'blogs';
+    const isStale = await isCacheStale(cacheKey, 30); // 30 minutes cache
+
+    // Check if cache is fresh
+    if (!force && !isStale) {
+        const cachedBlogs = await db.blogs.orderBy('date').reverse().toArray();
+        if (cachedBlogs.length > 0) {
+            console.log('[SyncService] Returning cached blogs');
+            return cachedBlogs;
+        }
+    }
+
+    // Fetch from Firestore
+    console.log('[SyncService] Fetching blogs from Firestore...');
+    try {
+        const blogsRef = collection(firestore, 'blogs');
+        const q = query(blogsRef, orderBy('date', 'desc'));
+        const snapshot = await getDocs(q);
+
+        const blogs: BlogPost[] = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                ...data,
+                // Ensure default status if missing
+                status: data.status || 'published',
+                date: data.date || new Date().toISOString().split('T')[0]
+            } as BlogPost;
+        });
+
+        console.log(`[SyncService] Successfully fetched ${blogs.length} blogs from Firestore`);
+
+        // Update Dexie cache atomically
+        await db.transaction('rw', db.blogs, db.metadata, async () => {
+            await db.blogs.clear();
+            await db.blogs.bulkAdd(blogs);
+            await updateCacheMetadata(cacheKey);
+        });
+
+        return blogs;
+    } catch (error) {
+        console.error('[SyncService] Error fetching blogs from Firestore:', error);
+        throw error;
+    }
+}
+
+// Real-time sync for blogs
+export function subscribeToBlogs(callback: (blogs: BlogPost[]) => void): () => void {
+    const blogsRef = collection(firestore, 'blogs');
+    const q = query(blogsRef, orderBy('date', 'desc'));
+
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+        const blogs: BlogPost[] = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        } as BlogPost));
+
+        // Update cache
+        await db.blogs.clear();
+        await db.blogs.bulkAdd(blogs);
+        await updateCacheMetadata('blogs');
+
+        callback(blogs);
+    });
+
+    return unsubscribe;
+}
+
+
+// Add tester to cache
+export async function addTesterToCache(tester: Tester): Promise<void> {
+    await db.testers.put(tester);
+}
+
+// Add subscriber to cache
+export async function addSubscriberToCache(subscriber: Subscriber): Promise<void> {
+    await db.subscribers.put(subscriber);
+}
+
+// Delete tester from cache
+export async function deleteTesterFromCache(uid: string): Promise<void> {
+    await db.testers.delete(uid);
+}
+
+// Delete subscriber from cache
+export async function deleteSubscriberFromCache(uid: string): Promise<void> {
+    await db.subscribers.delete(uid);
+}
+

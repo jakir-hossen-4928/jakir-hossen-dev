@@ -5,22 +5,26 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Plus, Trash2, Edit3, Save, Smartphone, Loader2, UploadCloud, Image as ImageIcon } from 'lucide-react';
-import { db } from '@/lib/firebase';
+import { Search, Plus, Trash2, Edit3, Smartphone, Loader2, UploadCloud, Image as ImageIcon } from 'lucide-react';
+import { db as firestore } from '@/lib/firebase';
 import { doc, setDoc, deleteDoc } from 'firebase/firestore';
 import { uploadToImgBB } from '@/lib/imgbb';
 import { DefaultTemplate, DefaultTemplateRef } from '@/richtexteditor/DefaultTemplate';
 import { AppEntry } from '@/lib/types';
+import { useApps } from '@/hooks/useApps';
 import { cn } from '@/lib/utils';
 
-interface AdminAppsProps {
-    apps: AppEntry[];
-}
+export const AdminApps: React.FC = () => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const { apps, isLoading } = useApps();
 
-export const AdminApps: React.FC<AdminAppsProps> = ({ apps }) => {
+    const filteredApps = apps.filter(app =>
+        app.appName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [editingApp, setEditingApp] = useState<Partial<AppEntry>>({});
     const [isUploadingIcon, setIsUploadingIcon] = useState(false);
@@ -95,7 +99,7 @@ export const AdminApps: React.FC<AdminAppsProps> = ({ apps }) => {
                 updatedAt: new Date().toISOString(),
             };
 
-            await setDoc(doc(db, 'apps', appId), appData, { merge: true });
+            await setDoc(doc(firestore, 'apps', appId), appData, { merge: true });
             toast.success(editingApp.id ? "App updated" : "App created");
             setIsDialogOpen(false);
         } catch (error) {
@@ -109,7 +113,7 @@ export const AdminApps: React.FC<AdminAppsProps> = ({ apps }) => {
     const handleDelete = async (appId: string) => {
         if (!confirm("Delete this app?")) return;
         try {
-            await deleteDoc(doc(db, 'apps', appId));
+            await deleteDoc(doc(firestore, 'apps', appId));
             toast.success("App deleted");
         } catch (error) {
             toast.error("Failed to delete");
@@ -118,58 +122,75 @@ export const AdminApps: React.FC<AdminAppsProps> = ({ apps }) => {
 
     return (
         <Card className="border border-white/5 shadow-2xl rounded-2xl overflow-hidden bg-card/30 backdrop-blur-xl">
-            <CardHeader className="flex flex-row items-center justify-between bg-white/[0.02] border-b border-white/5">
-                <div>
-                    <CardTitle className="text-xl font-black text-foreground">App Registry</CardTitle>
-                    <CardDescription className="text-muted-foreground/70">Manage your applications.</CardDescription>
+            <CardHeader className="flex flex-col md:flex-row items-center justify-between bg-white/[0.02] border-b border-white/5 p-6 md:p-8 gap-4">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto">
+                    <div>
+                        <CardTitle className="text-xl font-black text-foreground">Sajuriya Studio</CardTitle>
+                        <CardDescription className="text-muted-foreground/70">Manage your applications.</CardDescription>
+                    </div>
+                    <div className="relative w-full md:w-64">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                            placeholder="Search apps..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-9 h-10 rounded-xl bg-white/5 border-white/10 text-xs font-bold"
+                        />
+                    </div>
                 </div>
-                <Button onClick={() => handleOpenDialog()} size="sm" className="rounded-xl h-9 font-black uppercase tracking-tight shadow-lg shadow-primary/20">
+                <Button onClick={() => handleOpenDialog()} size="sm" className="rounded-xl h-10 font-black uppercase tracking-tight shadow-lg shadow-primary/20 w-full md:w-auto">
                     <Plus size={16} className="mr-2" /> Add App
                 </Button>
             </CardHeader>
             <CardContent className="p-0">
-                <Table>
-                    <TableHeader className="bg-white/[0.01]">
-                        <TableRow className="hover:bg-transparent border-white/5">
-                            <TableHead className="w-[80px] pl-6 text-[10px] font-black uppercase tracking-widest">Icon</TableHead>
-                            <TableHead className="text-[10px] font-black uppercase tracking-widest">Application</TableHead>
-                            <TableHead className="text-[10px] font-black uppercase tracking-widest">Status</TableHead>
-                            <TableHead className="text-right pr-6 text-[10px] font-black uppercase tracking-widest">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {apps.map(app => (
-                            <TableRow key={app.id} className="border-white/5 hover:bg-white/[0.02] transition-colors group">
-                                <TableCell className="pl-6 py-4">
-                                    <div className="w-12 h-12 rounded-[22%] overflow-hidden bg-muted/30 flex items-center justify-center border border-white/10 shadow-lg">
-                                        {app.icon ? (
-                                            <img src={app.icon} alt={app.appName} className="w-full h-full object-cover" />
-                                        ) : (
-                                            <Smartphone className="w-5 h-5 text-muted-foreground/30" />
-                                        )}
-                                    </div>
-                                </TableCell>
-                                <TableCell className="font-bold text-foreground">
-                                    <div>{app.appName}</div>
-                                    <div className="text-[10px] text-muted-foreground font-mono mt-1">{app.playStoreUrl ? 'Play Store Linked' : 'No Link'}</div>
-                                </TableCell>
-                                <TableCell>
-                                    <Badge variant={app.status === 'production' ? 'default' : 'secondary'} className={cn("font-black uppercase text-[9px]")}>
-                                        {app.status}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell className="text-right pr-6 space-x-2">
-                                    <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(app)} className="hover:bg-primary/10 hover:text-primary rounded-lg transition-all">
-                                        <Edit3 size={16} />
-                                    </Button>
-                                    <Button variant="ghost" size="icon" onClick={() => handleDelete(app.id)} className="hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-all">
-                                        <Trash2 size={16} />
-                                    </Button>
-                                </TableCell>
+                {isLoading ? (
+                    <div className="flex items-center justify-center py-20">
+                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                    </div>
+                ) : (
+                    <Table>
+                        <TableHeader className="bg-white/[0.01]">
+                            <TableRow className="hover:bg-transparent border-white/5">
+                                <TableHead className="w-[80px] pl-6 text-[10px] font-black uppercase tracking-widest">Icon</TableHead>
+                                <TableHead className="text-[10px] font-black uppercase tracking-widest">Application</TableHead>
+                                <TableHead className="text-[10px] font-black uppercase tracking-widest">Status</TableHead>
+                                <TableHead className="text-right pr-6 text-[10px] font-black uppercase tracking-widest">Actions</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {filteredApps.map(app => (
+                                <TableRow key={app.id} className="border-white/5 hover:bg-white/[0.02] transition-colors group">
+                                    <TableCell className="pl-6 py-4">
+                                        <div className="w-12 h-12 rounded-[22%] overflow-hidden bg-muted/30 flex items-center justify-center border border-white/10 shadow-lg">
+                                            {app.icon ? (
+                                                <img src={app.icon} alt={app.appName} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <Smartphone className="w-5 h-5 text-muted-foreground/30" />
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="font-bold text-foreground">
+                                        <div>{app.appName}</div>
+                                        <div className="text-[10px] text-muted-foreground font-mono mt-1">{app.playStoreUrl ? 'Play Store Linked' : 'No Link'}</div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant={app.status === 'production' ? 'default' : 'secondary'} className={cn("font-black uppercase text-[9px]")}>
+                                            {app.status}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-right pr-6 space-x-2">
+                                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(app)} className="hover:bg-primary/10 hover:text-primary rounded-lg transition-all">
+                                            <Edit3 size={16} />
+                                        </Button>
+                                        <Button variant="ghost" size="icon" onClick={() => handleDelete(app.id)} className="hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-all">
+                                            <Trash2 size={16} />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                )}
             </CardContent>
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

@@ -1,0 +1,97 @@
+[
+    {
+        "name": "Architecture & System Design",
+        "slug": "architecture",
+        "subcategories": [
+            "Microservices",
+            "Serverless",
+            "Cloud Native",
+            "Scalability",
+            "API Design (REST/GraphQL)",
+            "Event-Driven Architecture",
+            "Security Best Practices"
+        ]
+    },
+    {
+        "name": "Frontend Engineering",
+        "slug": "frontend",
+        "subcategories": [
+            "React & Next.js",
+            "Vue & Nuxt",
+            "Performance Optimization",
+            "Core Web Vitals",
+            "State Management",
+            "Micro-Frontends",
+            "Web Animation (Framer Motion/GSAP)"
+        ]
+    },
+    {
+        "name": "Mobile & Flutter",
+        "slug": "mobile",
+        "subcategories": [
+            "Flutter Deep Dives",
+            "State Management",
+            "Native Integration",
+            "Package Development",
+            "Cross-Platform Strategy",
+            "Mobile Performance"
+        ]
+    },
+    {
+        "name": "Cloud & DevOps",
+        "slug": "devops",
+        "subcategories": [
+            "AWS Solutions",
+            "CI/CD Pipelines",
+            "Docker & Kubernetes",
+            "Infrastructure as Code",
+            "Monitoring & Logging",
+            "Automation Scripts"
+        ]
+    },
+    {
+        "name": "AI & Future Tech",
+        "slug": "ai",
+        "subcategories": [
+            "LLM Integration",
+            "AI-Driven UX",
+            "RAG Implementation",
+            "Machine Learning Basics",
+            "Agentic Workflows"
+        ]
+    },
+    {
+        "name": "UI/UX & Design",
+        "slug": "design",
+        "subcategories": [
+            "Design Systems",
+            "Motion Design",
+            "Accessibility (A11y)",
+            "User Psychology",
+            "Prototyping",
+            "Figma Workflows"
+        ]
+    },
+    {
+        "name": "Personal & Career",
+        "slug": "career",
+        "subcategories": [
+            "Productivity Hacks",
+            "Engineering Leadership",
+            "Mentorship",
+            "Learning Strategies",
+            "Building a Portfolio",
+            "Side Projects"
+        ]
+    },
+    {
+        "name": "Case Studies",
+        "slug": "case-studies",
+        "subcategories": [
+            "Product Launches",
+            "Performance Audits",
+            "Technical Debt Recovery",
+            "UI Refactors"
+        ]
+    }
+]

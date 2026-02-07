@@ -13,6 +13,7 @@ const navItems = [
   { label: "Projects", href: "/", isHash: true, targetId: "#projects" },
   { label: "Contact", href: "/", isHash: true, targetId: "#contact" },
   { label: "Mobile App", href: "/apps", isHash: false },
+  { label: "Blog", href: "/blogs", isHash: false },
 ];
 
 export default function Header() {
@@ -63,8 +64,8 @@ export default function Header() {
               key={item.label}
               onClick={() => handleNavClick(item)}
               className={`px-3 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-muted ${(location.pathname === item.href && !item.isHash)
-                  ? "text-primary bg-primary/5"
-                  : "text-muted-foreground hover:text-foreground"
+                ? "text-primary bg-primary/5"
+                : "text-muted-foreground hover:text-foreground"
                 }`}
             >
               {item.label}
@@ -145,8 +146,8 @@ export default function Header() {
                   key={item.label}
                   onClick={() => handleNavClick(item)}
                   className={`px-3 py-2.5 text-sm font-medium rounded-lg text-left transition-colors ${(location.pathname === item.href && !item.isHash)
-                      ? "text-primary bg-primary/5"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                    ? "text-primary bg-primary/5"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
                     }`}
                 >
                   {item.label}

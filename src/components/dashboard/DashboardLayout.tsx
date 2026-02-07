@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
 import { AppSidebar } from './AppSidebar';
-import { Menu, Search, Bell, Grid, ChevronRight } from 'lucide-react';
+import { UniversalSearch } from './UniversalSearch';
+import { Menu, Bell, Grid, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLocation } from 'react-router-dom';
+import { AppEntry, Tester, Subscriber, BlogPost } from '@/lib/types';
 
-export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface DashboardLayoutProps {
+    children: React.ReactNode;
+    apps?: AppEntry[];
+    testers?: Tester[];
+    subscribers?: Subscriber[];
+    blogs?: BlogPost[];
+}
+
+export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, apps = [], testers = [], subscribers = [], blogs = [] }) => {
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const location = useLocation();
@@ -13,12 +23,13 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
         const path = location.pathname;
         if (path === '/admin') return 'Overview';
         if (path.includes('testers')) return 'Enrolled Testers';
+        if (path.includes('blogs')) return 'Blog Management';
         if (path.includes('settings')) return 'App Settings';
         return 'Dashboard';
     };
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] text-foreground flex overflow-hidden">
+        <div className="min-h-screen bg-background text-foreground flex overflow-hidden">
             <AppSidebar
                 collapsed={collapsed}
                 setCollapsed={setCollapsed}
@@ -50,16 +61,8 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                     </div>
 
                     <div className="flex items-center gap-2 md:gap-4 shrink-0">
-                        {/* Search Bar (Desktop) */}
-                        <div className="hidden lg:flex items-center gap-2 bg-muted/50 border border-border px-3 py-2 rounded-xl focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
-                            <Search size={16} className="text-muted-foreground" />
-                            <input
-                                type="text"
-                                placeholder="Universal search..."
-                                className="bg-transparent border-none outline-none text-sm w-48 font-medium placeholder:font-normal"
-                            />
-                            <kbd className="text-[10px] font-bold bg-background px-1.5 py-0.5 rounded border border-border text-muted-foreground">⌘K</kbd>
-                        </div>
+                        {/* Universal Search */}
+                        <UniversalSearch apps={apps} testers={testers} subscribers={subscribers} blogs={blogs} />
 
                         <div className="flex items-center gap-1">
                             <button className="p-2.5 hover:bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-all relative">
@@ -74,7 +77,7 @@ export const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({ child
                 </header>
 
                 {/* Dynamic Content Area */}
-                <main className="flex-grow overflow-y-auto p-4 md:p-8 lg:p-10 custom-scrollbar bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+                <main className="flex-grow overflow-y-auto p-4 md:p-8 lg:p-10 custom-scrollbar bg-[radial-gradient(hsl(var(--muted))_1px,transparent_1px)] dark:bg-[radial-gradient(hsl(var(--muted)/0.3)_1px,transparent_1px)] [background-size:16px_16px]">
                     <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
                         {children}
                     </div>

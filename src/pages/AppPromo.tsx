@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { db } from '@/lib/db';
-import { syncApps, subscribeToApps } from '@/lib/syncService';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AppEntry } from '@/lib/types';
 import { searchApps } from '@/utils/searchUtils';
@@ -15,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, RefreshCw } from 'lucide-react';
+import { useApps } from '@/hooks/useApps';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -38,47 +37,14 @@ const itemVariants = {
 const AppPromo = () => {
   usePageTitle("App Gallery");
   const navigate = useNavigate();
-  const [apps, setApps] = useState<AppEntry[]>([]);
-  const [filteredApps, setFilteredApps] = useState<AppEntry[]>([]);
+  const { apps, isLoading, refetch } = useApps();
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>(SortOption.NEWEST);
-  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Initial load: Local-First (Stale-While-Revalidate)
-  useEffect(() => {
-    const loadApps = async () => {
-      try {
-        // 1. Instant load from local DB
-        const localApps = await db.apps.orderBy('createdAt').reverse().toArray();
-        if (localApps.length > 0) {
-          setApps(localApps);
-          setLoading(false); // Show content immediately
-        }
-
-        // 2. Background Sync (checks cache validity internally)
-        const freshApps = await syncApps();
-        setApps(freshApps);
-      } catch (error) {
-        console.error('Error loading apps:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadApps();
-
-    // Subscribe to real-time updates
-    const unsubscribe = subscribeToApps((updatedApps) => {
-      setApps(updatedApps);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  // Apply search and sort
-  useEffect(() => {
-    let result = apps;
+  // Apply search and sort using useMemo for performance
+  const filteredApps = useMemo(() => {
+    let result = [...apps];
 
     // Search
     if (searchQuery.trim()) {
@@ -88,14 +54,13 @@ const AppPromo = () => {
     // Sort
     result = sortApps(result, sortBy);
 
-    setFilteredApps(result);
+    return result;
   }, [apps, searchQuery, sortBy]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      const freshApps = await syncApps(true); // Force refresh
-      setApps(freshApps);
+      await (refetch ? refetch() : Promise.resolve());
     } catch (error) {
       console.error('Error refreshing apps:', error);
     } finally {
@@ -133,17 +98,13 @@ const AppPromo = () => {
 
               <motion.h1
                 variants={itemVariants}
-                className="text-3xl md:text-5xl font-black tracking-tight"
+                className="text-2xl md:text-5xl font-black tracking-tight"
               >
                 Sajuriya Studio
               </motion.h1>
 
-              <motion.p variants={itemVariants} className="text-lg text-muted-foreground max-w-2xl mx-auto font-medium">
-                Explore innovative mobile applications built for efficiency and speed.
-              </motion.p>
-
               {/* Search and Sort Controls */}
-              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
+              <motion.div variants={itemVariants} className="flex flex-row items-center justify-center gap-4 pt-8">
                 <AppSearch
                   value={searchQuery}
                   onChange={setSearchQuery}
@@ -162,19 +123,19 @@ const AppPromo = () => {
               </motion.div>
             </section>
 
-            {loading ? (
+            {isLoading && apps.length === 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="relative overflow-hidden border border-border/40 bg-card/40 backdrop-blur-sm rounded-[32px] h-[320px]">
                     <div className="pt-8 pb-4 flex justify-center">
-                       <Skeleton className="w-24 h-24 rounded-[22%]" />
+                      <Skeleton className="w-24 h-24 rounded-[22%]" />
                     </div>
                     <div className="p-6 pt-2 space-y-3 flex flex-col items-center">
-                       <Skeleton className="h-4 w-16" />
-                       <Skeleton className="h-6 w-3/4" />
-                       <Skeleton className="h-4 w-full" />
-                       <Skeleton className="h-4 w-5/6" />
-                       <Skeleton className="h-9 w-full rounded-xl mt-2" />
+                      <Skeleton className="h-4 w-16" />
+                      <Skeleton className="h-6 w-3/4" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-5/6" />
+                      <Skeleton className="h-9 w-full rounded-xl mt-2" />
                     </div>
                   </div>
                 ))}
@@ -221,13 +182,13 @@ const AppPromo = () => {
                               <Badge variant="outline" className="text-[10px] py-0 h-5">{app.status.toUpperCase()}</Badge>
                             )}
                             {app.appName && (
-                              <h3 className="text-lg font-black leading-tight">{app.appName}</h3>
+                              <h3 className="text-base md:text-lg font-black leading-tight">{app.appName}</h3>
                             )}
                           </div>
 
                           {app.description && (
                             <div
-                              className="text-xs text-muted-foreground line-clamp-2 leading-relaxed h-10"
+                              className="text-[10px] md:text-xs text-muted-foreground line-clamp-2 leading-relaxed h-10"
                               dangerouslySetInnerHTML={{
                                 __html: app.description.replace(/<[^>]*>/g, '').substring(0, 100) + '...'
                               }}

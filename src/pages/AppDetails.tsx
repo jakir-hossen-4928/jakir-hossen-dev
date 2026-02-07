@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { db as firestore } from '@/lib/firebase';
-import { db } from '@/lib/db';
 import { useAuth } from '@/lib/AuthContext';
 import { addDoc, collection, Timestamp } from 'firebase/firestore';
-import { getAppBySlug, syncComments, subscribeToComments, addCommentToCache } from '@/lib/syncService';
+import { addCommentToCache } from '@/lib/syncService';
 import { AppEntry, Comment } from '@/lib/types';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -20,76 +19,23 @@ import {
     MessageSquare,
     Send,
     Sparkles,
-    Share2
+    Share2,
+    Loader2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAppBySlug } from '@/hooks/useApps';
+import { useComments } from '@/hooks/useComments';
 
 const AppDetails = () => {
     const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
     const { user, login } = useAuth();
-
-    const [app, setApp] = useState<AppEntry | null>(null);
-    const [comments, setComments] = useState<Comment[]>([]);
     const [newComment, setNewComment] = useState('');
-    const [loading, setLoading] = useState(true);
+
+    const { app, isLoading: isAppLoading } = useAppBySlug(slug);
+    const { comments, isLoading: isCommentsLoading } = useComments(app?.id);
 
     usePageTitle(app?.appName || "Loading App...");
-
-    // Load app data
-    useEffect(() => {
-        if (!slug) return;
-
-        const loadApp = async () => {
-            try {
-                // 1. Instant load from local DB
-                const cachedApp = await db.apps.where('slug').equals(slug).first();
-                if (cachedApp) {
-                    setApp(cachedApp);
-                    setLoading(false);
-                }
-
-                // 2. Background Sync
-                const appData = await getAppBySlug(slug);
-                if (!appData) {
-                    if (!cachedApp) {
-                        toast.error('App not found');
-                        navigate('/apps');
-                    }
-                    return;
-                }
-                setApp(appData);
-            } catch (error) {
-                console.error('Error loading app:', error);
-                toast.error('Failed to load app');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadApp();
-    }, [slug, navigate]);
-
-    // Load comments with real-time updates
-    useEffect(() => {
-        if (!app?.id) return;
-
-        const loadComments = async () => {
-            const cachedComments = await syncComments(app.id);
-            setComments(cachedComments);
-        };
-
-        loadComments();
-
-        // Subscribe to real-time updates
-        const unsubscribe = subscribeToComments(app.id, (updatedComments) => {
-            setComments(updatedComments);
-        });
-
-        return () => unsubscribe();
-    }, [app?.id]);
-
-
 
     const postComment = async () => {
         if (!user || !app) {
@@ -108,7 +54,7 @@ const AppDetails = () => {
                 userId: user.uid,
                 displayName: user.displayName || user.email || 'Anonymous',
                 content: newComment,
-                timestamp: Timestamp.now() as any
+                timestamp: Timestamp.now()
             };
 
             // Optimistic update to cache
@@ -132,12 +78,13 @@ const AppDetails = () => {
         toast.success('Link copied to clipboard!');
     };
 
-    if (loading) {
+    if (isAppLoading && !app) {
         return (
             <div className="min-h-screen bg-background">
                 <Header />
-                <div className="container mx-auto px-4 py-20 text-center">
-                    <p className="text-muted-foreground">Loading...</p>
+                <div className="container mx-auto px-4 py-20 text-center flex flex-col items-center justify-center gap-4">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                    <p className="text-muted-foreground font-bold tracking-tight uppercase text-xs">Loading App Excellence...</p>
                 </div>
                 <Footer />
             </div>
@@ -145,7 +92,16 @@ const AppDetails = () => {
     }
 
     if (!app) {
-        return null;
+        return (
+            <div className="min-h-screen bg-background">
+                <Header />
+                <div className="container mx-auto px-4 py-20 text-center">
+                    <p className="text-muted-foreground">App not found</p>
+                    <Button onClick={() => navigate('/apps')} className="mt-4">Back to Gallery</Button>
+                </div>
+                <Footer />
+            </div>
+        );
     }
 
     return (
@@ -187,7 +143,7 @@ const AppDetails = () => {
                     <div className="absolute -inset-1 bg-gradient-to-r from-primary/50 to-blue-500/50 rounded-[32px] blur-xl opacity-20"></div>
                     <Card className="relative overflow-hidden border border-white/10 glassmorphism rounded-[32px]">
                         {/* Cover Photo */}
-                        <div className="w-full h-48 md:h-64 overflow-hidden bg-gradient-to-br from-primary/10 to-blue-500/10 relative">
+                        <div className="w-full h-48 md:h-72 overflow-hidden bg-gradient-to-br from-primary/10 to-blue-500/10 relative">
                             <img
                                 src={app.coverPhoto || "https://i.ibb.co.com/YTN1jtJp/he.jpg"}
                                 alt={app.appName}
@@ -203,7 +159,7 @@ const AppDetails = () => {
                             <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
                         </div>
 
-                        <div className="p-8 md:p-12 -mt-20 relative">
+                        <div className="p-8 md:p-12 -mt-16 md:-mt-24 relative">
                             <div className="flex flex-col md:flex-row gap-8 items-start md:items-end">
                                 {/* App Icon */}
                                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-[22%] overflow-hidden shadow-2xl border-4 border-card bg-card flex-shrink-0 z-10">
@@ -222,7 +178,7 @@ const AppDetails = () => {
                                         <Badge variant="outline" className="text-[10px] py-0 h-5 mb-1 bg-background/50 backdrop-blur-md">{app.status.toUpperCase()}</Badge>
                                     )}
                                     {app.appName && (
-                                        <h1 className="text-3xl md:text-5xl font-black leading-tight tracking-tight drop-shadow-sm">{app.appName}</h1>
+                                        <h1 className="text-2xl md:text-5xl font-black leading-tight tracking-tight drop-shadow-sm">{app.appName}</h1>
                                     )}
                                 </div>
 
@@ -247,8 +203,8 @@ const AppDetails = () => {
                 {/* About Section */}
                 {app.description && (
                     <Card className="border-none glassmorphism rounded-[32px] p-8 md:p-12">
-                        <h3 className="text-xl font-black mb-6 flex items-center gap-3">
-                            <Sparkles className="text-primary w-5 h-5" /> About Application
+                        <h3 className="text-lg md:text-xl font-black mb-6 flex items-center gap-3">
+                            <Sparkles className="text-primary w-4 h-4 md:w-5 md:h-5" /> About Application
                         </h3>
                         <div className="prose prose-sm prose-invert max-w-none prose-p:text-muted-foreground prose-p:font-medium prose-p:leading-relaxed" dangerouslySetInnerHTML={{ __html: app.description }} />
                     </Card>
@@ -257,8 +213,8 @@ const AppDetails = () => {
                 {/* Comments Section */}
                 <div className="space-y-8">
                     <div className="flex items-center justify-between px-2">
-                        <h3 className="text-xl font-black flex items-center gap-3">
-                            <MessageSquare className="text-primary" size={20} /> Community Feedback
+                        <h3 className="text-lg md:text-xl font-black flex items-center gap-3">
+                            <MessageSquare className="text-primary" size={18} /> Community Feedback
                         </h3>
                         <Badge variant="outline" className="font-bold text-[10px]">{comments.length} Comments</Badge>
                     </div>
@@ -296,7 +252,11 @@ const AppDetails = () => {
 
                             {/* Comments List */}
                             <div className="space-y-6 pt-8 border-t border-white/5">
-                                {comments.length === 0 ? (
+                                {isCommentsLoading && comments.length === 0 ? (
+                                    <div className="flex justify-center py-10">
+                                        <Loader2 className="w-6 h-6 animate-spin text-primary/30" />
+                                    </div>
+                                ) : comments.length === 0 ? (
                                     <div className="text-center py-10 opacity-30">
                                         <p className="font-black uppercase tracking-widest text-xs">No feedback yet. Be the first!</p>
                                     </div>
@@ -318,12 +278,12 @@ const AppDetails = () => {
                                                     <span className="text-xs text-muted-foreground">
                                                         {comment.timestamp instanceof Date
                                                             ? comment.timestamp.toLocaleDateString()
-                                                            : (comment.timestamp as any)?.toDate?.()
-                                                                ? (comment.timestamp as any).toDate().toLocaleDateString()
+                                                            : typeof comment.timestamp === 'object' && comment.timestamp && 'toDate' in comment.timestamp
+                                                                ? (comment.timestamp as { toDate: () => Date }).toDate().toLocaleDateString()
                                                                 : 'Recently'}
                                                     </span>
+                                                    <p className="text-[11px] md:text-xs text-foreground leading-relaxed">{comment.content}</p>
                                                 </div>
-                                                <p className="text-xs text-foreground leading-relaxed">{comment.content}</p>
                                             </div>
                                         </motion.div>
                                     ))
