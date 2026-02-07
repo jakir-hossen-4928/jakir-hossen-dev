@@ -78,6 +78,14 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
+                <Route
+                  path="/admin/notes"
+                  element={
+                    <ProtectedRoute adminOnly>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Rocket, BookOpen, Users, Mail, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AppEntry, Tester, BlogPost, Subscriber } from '@/lib/types';
+import OptimizedImage from '@/components/ui/OptimizedImage';
 
 interface AdminOverviewProps {
     apps: AppEntry[];
@@ -88,7 +89,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, sub
                                 <CardHeader className="p-4 flex flex-row items-center justify-between bg-gradient-to-br from-white/5 to-transparent">
                                     <div className="flex items-center gap-3">
                                         <div className="w-8 h-8 rounded-lg overflow-hidden bg-muted/20 border border-white/10 shrink-0">
-                                            {app.icon && <img src={app.icon} className="w-full h-full object-cover" />}
+                                            {app.icon && <OptimizedImage src={app.icon} alt={app.appName} className="w-full h-full object-cover" />}
                                         </div>
                                         <div>
                                             <CardTitle className="text-sm font-black text-foreground group-hover:text-primary transition-colors line-clamp-1">{app.appName}</CardTitle>

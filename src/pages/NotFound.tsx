@@ -17,7 +17,7 @@ const NotFound = () => {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header />
 
-      <main className="flex-grow flex items-center justify-center px-4 py-20">
+      <main className="flex-grow flex items-center justify-center px-4 py-20 min-h-[80vh]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

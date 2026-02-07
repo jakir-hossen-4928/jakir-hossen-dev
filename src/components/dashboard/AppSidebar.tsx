@@ -27,6 +27,7 @@ const sidebarItems = [
     { icon: LayoutDashboard, label: 'Overview', href: '/admin' },
     { icon: Users, label: 'Testers', href: '/admin/testers' },
     { icon: Users, label: 'Subscribers', href: '/admin/subscribers' },
+    { icon: NotebookPen, label: 'Notebook', href: '/admin/notes' },
     { icon: NotebookPen, label: 'Blogs', href: '/admin/blogs' },
     { icon: Smartphone, label: 'Sajuriya Studio', href: '/admin/settings' },
 ];

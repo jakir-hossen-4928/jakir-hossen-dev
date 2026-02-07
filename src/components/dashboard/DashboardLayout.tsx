@@ -24,6 +24,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, apps
         if (path === '/admin') return 'Overview';
         if (path.includes('testers')) return 'Enrolled Testers';
         if (path.includes('blogs')) return 'Blog Management';
+        if (path.includes('notes')) return 'My Notebook';
         if (path.includes('settings')) return 'App Settings';
         return 'Dashboard';
     };

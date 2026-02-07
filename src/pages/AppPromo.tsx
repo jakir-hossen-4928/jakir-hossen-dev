@@ -6,14 +6,20 @@ import { searchApps } from '@/utils/searchUtils';
 import { sortApps, SortOption } from '@/utils/sortUtils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import AppSearch from '@/components/AppSearch';
-import AppSort from '@/components/AppSort';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, Search, Filter } from 'lucide-react';
 import { useApps } from '@/hooks/useApps';
+import OptimizedImage from '@/components/ui/OptimizedImage';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -61,7 +67,7 @@ const AppPromo = () => {
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
       <Header />
 
-      <main className="relative overflow-hidden pt-16 md:pt-20 pb-20 min-h-[calc(100vh-80px)]">
+      <main className="relative overflow-hidden pt-24 md:pt-32 pb-20 min-h-[calc(100vh-80px)]">
         {/* Animated Background Orbs */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none overflow-hidden">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full animate-pulse"></div>
@@ -97,20 +103,41 @@ const AppPromo = () => {
               </motion.h1>
 
               {/* Search and Sort Controls */}
-              <motion.div variants={itemVariants} className="flex flex-col md:flex-row items-center justify-center gap-3 pt-6 w-full max-w-2xl mx-auto">
-                <AppSearch
-                  value={searchQuery}
-                  onChange={setSearchQuery}
-                  placeholder="Search apps..."
-                />
-                <div className="shrink-0 w-full md:w-auto">
-                  <AppSort value={sortBy} onChange={setSortBy} />
+              <motion.div variants={itemVariants} className="flex items-center justify-center gap-3 pt-6 w-full max-w-xl mx-auto px-2">
+                <div className="relative flex-grow group">
+                  <div className="absolute inset-0 bg-primary/10 blur-xl group-focus-within:bg-primary/20 transition-all rounded-full opacity-50" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search apps..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10 h-11 md:h-12 rounded-xl bg-background/50 backdrop-blur-sm border-border text-sm font-medium transition-all focus:border-primary/50 focus:ring-1 focus:ring-primary/20 relative z-10"
+                  />
                 </div>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-11 w-11 md:h-12 md:w-12 rounded-xl bg-background/50 backdrop-blur-sm border-border hover:bg-muted/50 hover:border-primary/50 transition-all shrink-0"
+                    >
+                      <Filter className="w-4 h-4 text-muted-foreground" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 rounded-xl bg-popover/95 backdrop-blur-md border-border/50">
+                    <DropdownMenuItem onClick={() => setSortBy(SortOption.NEWEST)}>Newest First</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy(SortOption.OLDEST)}>Oldest First</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy(SortOption.NAME_AZ)}>Name (A-Z)</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy(SortOption.NAME_ZA)}>Name (Z-A)</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy(SortOption.STATUS)}>Status</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </motion.div>
             </section>
 
             {isLoading && apps.length === 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="relative overflow-hidden border border-border/40 bg-card/40 backdrop-blur-sm rounded-[32px] h-[300px]">
                     <div className="pt-6 pb-2 flex justify-center">
@@ -127,7 +154,7 @@ const AppPromo = () => {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                 {filteredApps.length === 0 ? (
                   <div className="col-span-full text-center py-20 opacity-50">
                     <p className="font-black uppercase tracking-widest text-xs text-muted-foreground">
@@ -148,7 +175,7 @@ const AppPromo = () => {
                         <div className="pt-6 pb-2 flex justify-center">
                           <div className="w-20 h-20 rounded-[22%] overflow-hidden shadow-xl border border-border/10 bg-gradient-to-br from-primary/5 to-blue-500/5">
                             {app.icon ? (
-                              <img
+                              <OptimizedImage
                                 src={app.icon}
                                 alt={app.appName}
                                 className="w-full h-full object-cover"
@@ -168,18 +195,11 @@ const AppPromo = () => {
                               <Badge variant="outline" className="text-[8px] py-0 h-4 uppercase tracking-tighter">{app.status.toUpperCase()}</Badge>
                             )}
                             {app.appName && (
-                              <h3 className="text-sm md:text-base font-black leading-tight line-clamp-1">{app.appName}</h3>
+                              <h3 className="text-sm md:text-base font-black leading-tight">{app.appName}</h3>
                             )}
                           </div>
 
-                          {app.description && (
-                            <div
-                              className="text-[10px] md:text-[11px] text-muted-foreground line-clamp-2 leading-snug h-8"
-                              dangerouslySetInnerHTML={{
-                                __html: app.description.replace(/<[^>]*>/g, '').substring(0, 80) + '...'
-                              }}
-                            />
-                          )}
+
 
                           <Button
                             variant="ghost"

@@ -8,6 +8,7 @@ import { AdminApps } from './admin/AdminApps';
 import { AdminSubscribers } from './admin/AdminSubscribers';
 import { AdminTesters } from './admin/AdminTesters';
 import { AdminBlogs } from './admin/AdminBlogs';
+import AdminNotes from './admin/AdminNotes';
 import { toast } from 'sonner';
 import { Wifi, WifiOff, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -24,6 +25,8 @@ const AdminDashboard = () => {
     if (path === '/admin/testers') return "Manage Testers | Admin Portal";
     if (path === '/admin/subscribers') return "Manage Subscribers | Admin Portal";
     if (path === '/admin/blogs') return "Manage Articles | Admin Portal";
+    if (path === '/admin/blogs') return "Manage Articles | Admin Portal";
+    if (path === '/admin/notes') return "My Notebook | Admin Portal";
     if (path === '/admin/settings') return "Settings | Admin Portal";
     return "Overview | Admin Portal";
   };
@@ -103,6 +106,12 @@ const AdminDashboard = () => {
         return (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <AdminBlogs />
+          </motion.div>
+        );
+      case '/admin/notes':
+        return (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <AdminNotes />
           </motion.div>
         );
       case '/admin/settings':

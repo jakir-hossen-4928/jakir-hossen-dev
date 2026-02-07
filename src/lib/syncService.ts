@@ -1,8 +1,8 @@
 import { collection, onSnapshot, query, orderBy, getDocs, doc, getDoc, where } from 'firebase/firestore';
 import { db as firestore } from './firebase';
 import { db, updateCacheMetadata, isCacheStale } from './db';
-import { AppEntry, Comment, Tester, Subscriber, BlogPost } from '@/lib/types';
-import { Timestamp } from 'firebase/firestore';
+import { AppEntry, Comment, Tester, Subscriber, BlogPost, Note } from '@/lib/types';
+import { Timestamp, deleteDoc, setDoc, addDoc } from 'firebase/firestore';
 
 // Helper to convert Firestore Timestamp to ISO string
 function formatTimestamp(timestamp: any): string {
@@ -55,6 +55,19 @@ function mapBlogPost(docId: string, data: any): BlogPost {
         updatedAt: formatTimestamp(data.updatedAt),
         thumbnailColor: data.thumbnailColor || 'bg-primary'
     } as BlogPost;
+}
+
+// Helper to map raw note data
+function mapNote(docId: string, data: any): Note {
+    return {
+        id: docId,
+        title: data.title || '',
+        content: data.content || '',
+        tags: Array.isArray(data.tags) ? data.tags : [],
+        isPinned: data.isPinned || false,
+        createdAt: formatTimestamp(data.createdAt),
+        updatedAt: formatTimestamp(data.updatedAt),
+    } as Note;
 }
 
 // Sync apps from Firestore to Dexie
@@ -513,5 +526,110 @@ export async function deleteTesterFromCache(uid: string): Promise<void> {
 // Delete subscriber from cache
 export async function deleteSubscriberFromCache(uid: string): Promise<void> {
     await db.subscribers.delete(uid);
+}
+
+
+// --- Notes Sync & CRUD ---
+
+// Sync notes from Firestore to Dexie
+export async function syncNotes(force: boolean = false): Promise<Note[]> {
+    const cacheKey = 'notes';
+    const isStale = await isCacheStale(cacheKey, 30);
+
+    console.log(`[SyncService] syncNotes called. force: ${force}, isStale: ${isStale}`);
+
+    if (!force && !isStale) {
+        const cachedNotes = await db.notes.orderBy('createdAt').reverse().toArray();
+        if (cachedNotes.length > 0) {
+            console.log(`[SyncService] Returning ${cachedNotes.length} cached notes`);
+            return cachedNotes;
+        }
+    }
+
+    console.log('[SyncService] Fetching notes from Firestore...');
+    try {
+        const notesRef = collection(firestore, 'notes');
+        const q = query(notesRef, orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+
+        const notes: Note[] = snapshot.docs.map(doc => mapNote(doc.id, doc.data()));
+
+        console.log(`[SyncService] Processed ${notes.length} notes from Firestore`);
+
+        await db.transaction('rw', db.notes, db.metadata, async () => {
+            await db.notes.clear();
+            await db.notes.bulkPut(notes);
+            await updateCacheMetadata(cacheKey);
+        });
+
+        return notes;
+    } catch (error) {
+        console.error('[SyncService] Error fetching notes from Firestore:', error);
+        throw error;
+    }
+}
+
+// Real-time sync for notes
+export function subscribeToNotes(callback: (notes: Note[]) => void): () => void {
+    console.log('[SyncService] subscribeToNotes initialized');
+    const notesRef = collection(firestore, 'notes');
+    const q = query(notesRef, orderBy('createdAt', 'desc'));
+
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+        const notes: Note[] = snapshot.docs.map(doc => mapNote(doc.id, doc.data()));
+        console.log(`[SyncService] subscribeToNotes snapshot update: ${notes.length} notes`);
+
+        await db.transaction('rw', db.notes, db.metadata, async () => {
+            await db.notes.clear();
+            await db.notes.bulkPut(notes);
+            await updateCacheMetadata('notes');
+        });
+
+        callback(notes);
+    });
+
+    return unsubscribe;
+}
+
+// Add a new note
+export async function addNote(note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
+    try {
+        const now = new Date();
+        const noteData = {
+            ...note,
+            createdAt: Timestamp.fromDate(now),
+            updatedAt: Timestamp.fromDate(now)
+        };
+
+        const docRef = await addDoc(collection(firestore, 'notes'), noteData);
+        return docRef.id;
+    } catch (error) {
+        console.error('[SyncService] Error adding note:', error);
+        throw error;
+    }
+}
+
+// Update an existing note
+export async function updateNote(id: string, updates: Partial<Omit<Note, 'id' | 'createdAt' | 'updatedAt'>>): Promise<void> {
+    try {
+        const noteRef = doc(firestore, 'notes', id);
+        await setDoc(noteRef, {
+            ...updates,
+            updatedAt: Timestamp.fromDate(new Date())
+        }, { merge: true });
+    } catch (error) {
+        console.error('[SyncService] Error updating note:', error);
+        throw error;
+    }
+}
+
+// Delete a note
+export async function deleteNote(id: string): Promise<void> {
+    try {
+        await deleteDoc(doc(firestore, 'notes', id));
+    } catch (error) {
+        console.error('[SyncService] Error deleting note:', error);
+        throw error;
+    }
 }
 

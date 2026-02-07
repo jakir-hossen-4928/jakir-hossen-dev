@@ -1,5 +1,5 @@
 import Dexie, { Table } from 'dexie';
-import { AppEntry, Comment, Tester, Subscriber, BlogPost } from '@/lib/types';
+import { AppEntry, Comment, Tester, Subscriber, BlogPost, Note } from '@/lib/types';
 
 export interface CacheMetadata {
     key: string;
@@ -13,6 +13,7 @@ export class AppDatabase extends Dexie {
     testers!: Table<Tester, string>;
     subscribers!: Table<Subscriber, string>;
     blogs!: Table<BlogPost, string>;
+    notes!: Table<Note, string>;
     metadata!: Table<CacheMetadata, string>;
 
     constructor() {
@@ -60,6 +61,17 @@ export class AppDatabase extends Dexie {
             blogs: 'id, slug, title, date, status',
             metadata: 'key, lastSync'
         });
+
+        // Version 6: Add notes
+        this.version(6).stores({
+            apps: 'id, slug, appName, status, createdAt, updatedAt',
+            comments: 'id, appId, userId, timestamp',
+            testers: 'uid, email, displayName, joinedAt',
+            subscribers: 'uid, email, joinedAt',
+            blogs: 'id, slug, title, date, status',
+            notes: 'id, title, createdAt, *tags, isPinned',
+            metadata: 'key, lastSync'
+        });
     }
 }
 
@@ -97,4 +109,9 @@ export async function getCachedSubscribers(): Promise<Subscriber[]> {
 // Helper to get cached blogs
 export async function getCachedBlogs(): Promise<BlogPost[]> {
     return await db.blogs.orderBy('date').reverse().toArray();
+}
+
+// Helper to get cached notes
+export async function getCachedNotes(): Promise<Note[]> {
+    return await db.notes.orderBy('createdAt').reverse().toArray();
 }
