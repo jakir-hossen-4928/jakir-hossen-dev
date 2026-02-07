@@ -26,6 +26,8 @@ import { motion } from 'framer-motion';
 import { useAppBySlug } from '@/hooks/useApps';
 import { useComments } from '@/hooks/useComments';
 
+import { AppDetailSkeleton } from '@/components/skeletons/ContentSkeletons';
+
 const AppDetails = () => {
     const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
@@ -84,10 +86,9 @@ const AppDetails = () => {
         return (
             <div className="min-h-screen bg-background">
                 <Header />
-                <div className="container mx-auto px-4 py-20 text-center flex flex-col items-center justify-center gap-4">
-                    <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                    <p className="text-muted-foreground font-bold tracking-tight uppercase text-xs">Loading App Excellence...</p>
-                </div>
+                <main className="container mx-auto px-4 pt-16 md:pt-20 pb-12">
+                    <AppDetailSkeleton />
+                </main>
                 <Footer />
             </div>
         );
@@ -110,18 +111,10 @@ const AppDetails = () => {
         <div className="min-h-screen bg-background text-foreground">
             <Header />
 
-            <main className="container mx-auto px-4 pt-16 md:pt-20 pb-12 space-y-4 md:space-y-6">
-                {/* Breadcrumb */}
-                <div className="flex items-center gap-2 text-xs">
-                    <Link to="/apps" className="text-muted-foreground hover:text-primary transition-colors">
-                        Apps
-                    </Link>
-                    <ChevronLeft className="w-4 h-4 rotate-180 text-muted-foreground opacity-50" />
-                    <span className="text-foreground font-medium">{app.appName}</span>
-                </div>
+            <main className="container mx-auto px-4 pt-24 md:pt-32 pb-12 space-y-4 md:space-y-6">
 
                 {/* Back Button & Share */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mt-2 md:mt-4">
                     <Button
                         variant="ghost"
                         size="sm"

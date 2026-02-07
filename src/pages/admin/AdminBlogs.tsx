@@ -7,6 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { Plus, Trash2, Edit3, Loader2, Search, Calendar, Tag, ChevronDown, Check } from 'lucide-react';
 import {
@@ -18,10 +19,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { db as firestore } from '@/lib/firebase';
-import { doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { DefaultTemplate, DefaultTemplateRef } from '@/richtexteditor/DefaultTemplate';
 import { BlogPost } from '@/lib/types';
 import { useBlogs } from '@/hooks/useBlogs';
+import { deleteBlogPost } from '@/lib/syncService';
 import { cn } from '@/lib/utils';
 import categoriesData from '@/data/categories.json';
 
@@ -99,13 +101,14 @@ export const AdminBlogs: React.FC = () => {
         }
     };
 
-    const handleDelete = async (blogId: string) => {
-        if (!confirm("Delete this blog post?")) return;
+    const handleDeleteBlog = async (blogId: string) => {
+        if (!confirm("Are you sure you want to delete this blog post?")) return;
         try {
-            await deleteDoc(doc(firestore, 'blogs', blogId));
-            toast.success("Blog deleted");
+            await deleteBlogPost(blogId);
+            toast.success("Blog post deleted successfully");
         } catch (error) {
-            toast.error("Failed to delete");
+            console.error("Error deleting blog:", error);
+            toast.error("Failed to delete blog post");
         }
     };
 
@@ -142,9 +145,45 @@ export const AdminBlogs: React.FC = () => {
             </CardHeader>
             <CardContent className="p-0">
                 {isLoading ? (
-                    <div className="flex items-center justify-center py-20">
-                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                    </div>
+                    <Table>
+                        <TableHeader className="bg-white/[0.01]">
+                            <TableRow className="hover:bg-transparent border-white/5">
+                                <TableHead className="w-[100px] pl-6 text-[10px] font-black uppercase tracking-widest">Preview</TableHead>
+                                <TableHead className="text-[10px] font-black uppercase tracking-widest">Title</TableHead>
+                                <TableHead className="text-[10px] font-black uppercase tracking-widest">Categories</TableHead>
+                                <TableHead className="text-[10px] font-black uppercase tracking-widest">Status</TableHead>
+                                <TableHead className="text-right pr-6 text-[10px] font-black uppercase tracking-widest">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {Array.from({ length: 5 }).map((_, index) => (
+                                <TableRow key={index} className="border-white/5">
+                                    <TableCell className="pl-6 py-4">
+                                        <Skeleton className="w-16 h-10 rounded-lg" />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Skeleton className="h-5 w-48 mb-2" />
+                                        <Skeleton className="h-3 w-24" />
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex gap-1">
+                                            <Skeleton className="h-5 w-16 rounded-full" />
+                                            <Skeleton className="h-5 w-16 rounded-full" />
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Skeleton className="h-5 w-20 rounded-full" />
+                                    </TableCell>
+                                    <TableCell className="text-right pr-6">
+                                        <div className="flex justify-end gap-2">
+                                            <Skeleton className="w-9 h-9 rounded-lg" />
+                                            <Skeleton className="w-9 h-9 rounded-lg" />
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
                 ) : (
                     <Table>
                         <TableHeader className="bg-white/[0.01]">
@@ -191,7 +230,7 @@ export const AdminBlogs: React.FC = () => {
                                         <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(blog)} className="hover:bg-primary/10 hover:text-primary rounded-lg transition-all">
                                             <Edit3 size={16} />
                                         </Button>
-                                        <Button variant="ghost" size="icon" onClick={() => handleDelete(blog.id)} className="hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-all">
+                                        <Button variant="ghost" size="icon" onClick={() => handleDeleteBlog(blog.id)} className="hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-all">
                                             <Trash2 size={16} />
                                         </Button>
                                     </TableCell>
@@ -203,34 +242,36 @@ export const AdminBlogs: React.FC = () => {
             </CardContent>
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-card border-white/10">
-                    <DialogHeader>
+                <DialogContent className="w-[95vw] sm:max-w-4xl h-[calc(100dvh-2rem)] sm:h-auto sm:max-h-[85vh] bg-card border-white/10 p-0 sm:p-6 gap-0 sm:gap-4 flex flex-col overflow-hidden pb-[env(safe-area-inset-bottom)]">
+                    <DialogHeader className="p-6 sm:p-0 border-b sm:border-0 border-white/5">
                         <DialogTitle>{editingBlog.id ? 'Edit Blog Post' : 'New Blog Post'}</DialogTitle>
                         <DialogDescription>Share your thoughts with the world.</DialogDescription>
                     </DialogHeader>
 
-                    <div className="grid gap-6 py-4">
+                    <div className="flex-1 px-6 py-4 sm:p-0 overflow-y-auto space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label>Title</Label>
+                                <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Title</Label>
                                 <Input
                                     value={editingBlog.title || ''}
                                     onChange={e => setEditingBlog(prev => ({ ...prev, title: e.target.value }))}
                                     placeholder="Enter blog title"
+                                    className="h-12 rounded-xl bg-white/5 border-white/10"
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label>Date</Label>
+                                <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Date</Label>
                                 <Input
                                     type="date"
                                     value={editingBlog.date || ''}
                                     onChange={e => setEditingBlog(prev => ({ ...prev, date: e.target.value }))}
+                                    className="h-12 rounded-xl bg-white/5 border-white/10"
                                 />
                             </div>
                         </div>
 
                         <div className="space-y-4">
-                            <Label className="flex items-center gap-2 text-sm font-black uppercase tracking-widest text-muted-foreground">
+                            <Label className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground">
                                 <Tag size={14} className="text-primary" />
                                 Categories
                             </Label>
@@ -244,11 +285,14 @@ export const AdminBlogs: React.FC = () => {
                                         <div className="flex items-center gap-2 overflow-hidden">
                                             {editingBlog.categories && editingBlog.categories.length > 0 ? (
                                                 <div className="flex gap-1.5 overflow-hidden">
-                                                    {editingBlog.categories.map(cat => (
+                                                    {editingBlog.categories.slice(0, 2).map(cat => (
                                                         <Badge key={cat} variant="secondary" className="bg-primary/20 text-primary border-primary/20 text-[10px] whitespace-nowrap">
                                                             {cat}
                                                         </Badge>
                                                     ))}
+                                                    {editingBlog.categories.length > 2 && (
+                                                        <span className="text-[10px] text-muted-foreground">+{editingBlog.categories.length - 2}</span>
+                                                    )}
                                                 </div>
                                             ) : (
                                                 <span className="text-muted-foreground font-normal">Select categories...</span>
@@ -257,11 +301,11 @@ export const AdminBlogs: React.FC = () => {
                                         <ChevronDown size={16} className="text-muted-foreground group-hover:text-primary transition-colors shrink-0 ml-2" />
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="start" className="w-[400px] bg-card border-white/10 rounded-2xl p-2 shadow-2xl z-50">
+                                <DropdownMenuContent align="start" className="w-[calc(100vw-3rem)] sm:w-[400px] bg-card border-white/10 rounded-2xl p-2 shadow-2xl z-50">
                                     <div className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 border-b border-white/5 mb-2">
                                         Blog Categories
                                     </div>
-                                    <ScrollArea className="h-[400px] pr-4">
+                                    <ScrollArea className="h-[300px] sm:h-[400px] pr-4">
                                         {categoriesData.map((group, gIdx) => (
                                             <div key={group.slug} className="mb-4 last:mb-0">
                                                 <div
@@ -276,7 +320,7 @@ export const AdminBlogs: React.FC = () => {
                                                     <span className="text-[10px] font-black uppercase tracking-wider">{group.name}</span>
                                                     {editingBlog.categories?.includes(group.name) && <Check size={12} />}
                                                 </div>
-                                                <div className="grid grid-cols-2 gap-1 pl-2">
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 pl-2">
                                                     {group.subcategories.map(sub => (
                                                         <div
                                                             key={sub}
@@ -301,20 +345,20 @@ export const AdminBlogs: React.FC = () => {
                             </DropdownMenu>
                         </div>
 
-                        <div className="flex items-center gap-4 p-4 border rounded-xl bg-muted/20">
+                        <div className="flex items-center gap-4 p-4 border rounded-xl bg-muted/20 border-white/5">
                             <Switch
                                 checked={editingBlog.status === 'published'}
                                 onCheckedChange={(c) => setEditingBlog(prev => ({ ...prev, status: c ? 'published' : 'draft' }))}
                             />
                             <div>
-                                <Label>Published</Label>
-                                <p className="text-xs text-muted-foreground">Visible to readers once published</p>
+                                <Label className="font-bold">Published</Label>
+                                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Visible to readers once published</p>
                             </div>
                         </div>
 
                         <div className="space-y-2">
-                            <Label>Description</Label>
-                            <div className="min-h-[300px] border rounded-xl overflow-hidden bg-background/50">
+                            <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Description</Label>
+                            <div className="min-h-[300px] sm:min-h-[400px] border border-white/5 rounded-xl overflow-hidden bg-background/50">
                                 <DefaultTemplate
                                     ref={editorRef}
                                     onReady={(methods) => {
@@ -327,9 +371,9 @@ export const AdminBlogs: React.FC = () => {
                         </div>
                     </div>
 
-                    <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                        <Button onClick={handleSave} disabled={isSaving}>
+                    <DialogFooter className="p-6 sm:p-0 border-t sm:border-0 border-white/5 gap-2 sm:gap-0 mt-auto">
+                        <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="rounded-xl h-12 font-black uppercase tracking-tight">Cancel</Button>
+                        <Button onClick={handleSave} disabled={isSaving} className="rounded-xl h-12 font-black uppercase tracking-tight shadow-lg shadow-primary/20">
                             {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {editingBlog.id ? 'Update Post' : 'Publish Post'}
                         </Button>

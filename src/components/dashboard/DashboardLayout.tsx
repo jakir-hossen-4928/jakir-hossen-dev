@@ -4,7 +4,7 @@ import { UniversalSearch } from './UniversalSearch';
 import { Menu, Bell, Grid, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLocation } from 'react-router-dom';
-import { AppEntry, Tester, Subscriber, BlogPost } from '@/lib/types';
+import { AppEntry, Tester, Subscriber, BlogPost, Note } from '@/lib/types';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -12,9 +12,10 @@ interface DashboardLayoutProps {
     testers?: Tester[];
     subscribers?: Subscriber[];
     blogs?: BlogPost[];
+    notes?: Note[];
 }
 
-export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, apps = [], testers = [], subscribers = [], blogs = [] }) => {
+export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, apps = [], testers = [], subscribers = [], blogs = [], notes = [] }) => {
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const location = useLocation();
@@ -22,7 +23,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, apps
     const getPageTitle = () => {
         const path = location.pathname;
         if (path === '/admin') return 'Overview';
-        if (path.includes('testers')) return 'Enrolled Testers';
+        if (path.includes('testers')) return 'Users Management';
         if (path.includes('blogs')) return 'Blog Management';
         if (path.includes('notes')) return 'My Notebook';
         if (path.includes('settings')) return 'App Settings';
@@ -63,7 +64,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, apps
 
                     <div className="flex items-center gap-2 md:gap-4 shrink-0">
                         {/* Universal Search */}
-                        <UniversalSearch apps={apps} testers={testers} subscribers={subscribers} blogs={blogs} />
+                        <UniversalSearch apps={apps} testers={testers} subscribers={subscribers} blogs={blogs} notes={notes} />
 
                         <div className="flex items-center gap-1">
                             <button className="p-2.5 hover:bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-all relative">

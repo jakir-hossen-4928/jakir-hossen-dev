@@ -1,7 +1,7 @@
 import { collection, onSnapshot, query, orderBy, getDocs, doc, getDoc, where } from 'firebase/firestore';
 import { db as firestore } from './firebase';
 import { db, updateCacheMetadata, isCacheStale } from './db';
-import { AppEntry, Comment, Tester, Subscriber, BlogPost, Note } from '@/lib/types';
+import { AppEntry, Comment, Tester, Subscriber, BlogPost, Note, BookmarkFolder, BookmarkLink } from '@/lib/types';
 import { Timestamp, deleteDoc, setDoc, addDoc } from 'firebase/firestore';
 
 // Helper to convert Firestore Timestamp to ISO string
@@ -68,6 +68,29 @@ function mapNote(docId: string, data: any): Note {
         createdAt: formatTimestamp(data.createdAt),
         updatedAt: formatTimestamp(data.updatedAt),
     } as Note;
+}
+
+// Helper to map raw folder data
+function mapBookmarkFolder(docId: string, data: any): BookmarkFolder {
+    return {
+        id: docId,
+        name: data.name || '',
+        parentId: data.parentId || null,
+        createdAt: formatTimestamp(data.createdAt),
+        updatedAt: formatTimestamp(data.updatedAt),
+    } as BookmarkFolder;
+}
+
+// Helper to map raw link data
+function mapBookmarkLink(docId: string, data: any): BookmarkLink {
+    return {
+        id: docId,
+        title: data.title || '',
+        url: data.url || '',
+        folderId: data.folderId || null,
+        createdAt: formatTimestamp(data.createdAt),
+        updatedAt: formatTimestamp(data.updatedAt),
+    } as BookmarkLink;
 }
 
 // Sync apps from Firestore to Dexie
@@ -296,6 +319,32 @@ export async function deleteAppFromCache(appId: string): Promise<void> {
     await db.comments.where('appId').equals(appId).delete();
 }
 
+// Delete app from Firestore and Cache (CASCADE)
+export async function deleteApp(appId: string): Promise<void> {
+    try {
+        console.log(`[SyncService] Starting cascade delete for app: ${appId}`);
+
+        // 1. Delete all comments in sub-collection
+        const commentsRef = collection(firestore, 'apps', appId, 'comments');
+        const commentsSnapshot = await getDocs(commentsRef);
+
+        const commentDeletions = commentsSnapshot.docs.map(doc => deleteDoc(doc.ref));
+        await Promise.all(commentDeletions);
+        console.log(`[SyncService] Deleted ${commentDeletions.length} comments for app: ${appId}`);
+
+        // 2. Delete the app itself from Firestore
+        await deleteDoc(doc(firestore, 'apps', appId));
+
+        // 3. Delete from local cache
+        await deleteAppFromCache(appId);
+
+        console.log(`[SyncService] App ${appId} deleted successfully`);
+    } catch (error) {
+        console.error('[SyncService] Error in cascade deleteApp:', error);
+        throw error;
+    }
+}
+
 // Add comment to cache
 export async function addCommentToCache(comment: Comment): Promise<void> {
     console.log(`[SyncService] Adding comment to cache: ${comment.id}`);
@@ -507,6 +556,17 @@ export function subscribeToBlogs(callback: (blogs: BlogPost[]) => void): () => v
     return unsubscribe;
 }
 
+// Delete blog post from Firestore and Cache
+export async function deleteBlogPost(id: string): Promise<void> {
+    try {
+        await deleteDoc(doc(firestore, 'blogs', id));
+        await db.blogs.delete(id);
+    } catch (error) {
+        console.error('[SyncService] Error deleting blog post:', error);
+        throw error;
+    }
+}
+
 
 // Add tester to cache
 export async function addTesterToCache(tester: Tester): Promise<void> {
@@ -627,9 +687,136 @@ export async function updateNote(id: string, updates: Partial<Omit<Note, 'id' | 
 export async function deleteNote(id: string): Promise<void> {
     try {
         await deleteDoc(doc(firestore, 'notes', id));
+        await db.notes.delete(id);
     } catch (error) {
         console.error('[SyncService] Error deleting note:', error);
         throw error;
     }
 }
 
+// --- Bookmark Folders & Links Sync & CRUD ---
+
+// Sync bookmark folders
+export async function syncBookmarkFolders(force: boolean = false): Promise<BookmarkFolder[]> {
+    const cacheKey = 'bookmarkFolders';
+    const isStale = await isCacheStale(cacheKey, 30);
+
+    if (!force && !isStale) {
+        const cached = await db.bookmarkFolders.orderBy('createdAt').reverse().toArray();
+        if (cached.length > 0) return cached;
+    }
+
+    try {
+        const ref = collection(firestore, 'bookmarkFolders');
+        const q = query(ref, orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        const folders = snapshot.docs.map(doc => mapBookmarkFolder(doc.id, doc.data()));
+
+        await db.transaction('rw', db.bookmarkFolders, db.metadata, async () => {
+            await db.bookmarkFolders.clear();
+            await db.bookmarkFolders.bulkPut(folders);
+            await updateCacheMetadata(cacheKey);
+        });
+
+        return folders;
+    } catch (error) {
+        console.error('[SyncService] Error syncing bookmark folders:', error);
+        throw error;
+    }
+}
+
+// Sync bookmark links
+export async function syncBookmarkLinks(force: boolean = false): Promise<BookmarkLink[]> {
+    const cacheKey = 'bookmarkLinks';
+    const isStale = await isCacheStale(cacheKey, 30);
+
+    if (!force && !isStale) {
+        const cached = await db.bookmarkLinks.orderBy('createdAt').reverse().toArray();
+        if (cached.length > 0) return cached;
+    }
+
+    try {
+        const ref = collection(firestore, 'bookmarkLinks');
+        const q = query(ref, orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        const links = snapshot.docs.map(doc => mapBookmarkLink(doc.id, doc.data()));
+
+        await db.transaction('rw', db.bookmarkLinks, db.metadata, async () => {
+            await db.bookmarkLinks.clear();
+            await db.bookmarkLinks.bulkPut(links);
+            await updateCacheMetadata(cacheKey);
+        });
+
+        return links;
+    } catch (error) {
+        console.error('[SyncService] Error syncing bookmark links:', error);
+        throw error;
+    }
+}
+
+// CRUD for Folders
+export async function addBookmarkFolder(folder: Omit<BookmarkFolder, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
+    const now = new Date();
+    const docRef = await addDoc(collection(firestore, 'bookmarkFolders'), {
+        ...folder,
+        createdAt: Timestamp.fromDate(now),
+        updatedAt: Timestamp.fromDate(now)
+    });
+    return docRef.id;
+}
+
+export async function updateBookmarkFolder(id: string, updates: Partial<Omit<BookmarkFolder, 'id' | 'createdAt' | 'updatedAt'>>): Promise<void> {
+    await setDoc(doc(firestore, 'bookmarkFolders', id), {
+        ...updates,
+        updatedAt: Timestamp.fromDate(new Date())
+    }, { merge: true });
+}
+
+export async function deleteBookmarkFolder(id: string): Promise<void> {
+    try {
+        // 1. Get all child folders and links
+        const foldersRef = collection(firestore, 'bookmarkFolders');
+        const linksRef = collection(firestore, 'bookmarkLinks');
+
+        const [childFolders, childLinks] = await Promise.all([
+            getDocs(query(foldersRef, where('parentId', '==', id))),
+            getDocs(query(linksRef, where('folderId', '==', id)))
+        ]);
+
+        // 2. Recursively delete child folders
+        const folderDeletions = childFolders.docs.map(doc => deleteBookmarkFolder(doc.id));
+
+        // 3. Delete child links
+        const linkDeletions = childLinks.docs.map(doc => deleteDoc(doc.ref));
+
+        // 4. Delete the folder itself
+        const deleteSelf = deleteDoc(doc(firestore, 'bookmarkFolders', id));
+
+        await Promise.all([...folderDeletions, ...linkDeletions, deleteSelf]);
+    } catch (error) {
+        console.error('[SyncService] Error in recursive deleteBookmarkFolder:', error);
+        throw error;
+    }
+}
+
+// CRUD for Links
+export async function addBookmarkLink(link: Omit<BookmarkLink, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
+    const now = new Date();
+    const docRef = await addDoc(collection(firestore, 'bookmarkLinks'), {
+        ...link,
+        createdAt: Timestamp.fromDate(now),
+        updatedAt: Timestamp.fromDate(now)
+    });
+    return docRef.id;
+}
+
+export async function updateBookmarkLink(id: string, updates: Partial<Omit<BookmarkLink, 'id' | 'createdAt' | 'updatedAt'>>): Promise<void> {
+    await setDoc(doc(firestore, 'bookmarkLinks', id), {
+        ...updates,
+        updatedAt: Timestamp.fromDate(new Date())
+    }, { merge: true });
+}
+
+export async function deleteBookmarkLink(id: string): Promise<void> {
+    await deleteDoc(doc(firestore, 'bookmarkLinks', id));
+}

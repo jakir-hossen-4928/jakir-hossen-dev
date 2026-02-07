@@ -12,6 +12,8 @@ import { toast } from 'sonner';
 import { useBlogs } from '@/hooks/useBlogs';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
+import { BlogDetailSkeleton } from '@/components/skeletons/ContentSkeletons';
+
 const BlogDetails = () => {
     const { slug } = useParams<{ slug: string }>();
     const { blogs, isLoading } = useBlogs();
@@ -22,8 +24,12 @@ const BlogDetails = () => {
 
     if (isLoading && !blog) {
         return (
-            <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
-                <Loader2 className="w-10 h-10 animate-spin text-primary" />
+            <div className="min-h-screen bg-background text-foreground">
+                <Header />
+                <main className="pb-12 pt-28 md:pt-32 px-4 md:px-8">
+                    <BlogDetailSkeleton />
+                </main>
+                <Footer />
             </div>
         );
     }
@@ -59,7 +65,7 @@ const BlogDetails = () => {
     return (
         <div className="min-h-screen bg-background text-foreground">
             <Header />
-            <main className="pb-12 pt-24 md:pt-28 px-4 md:px-8">
+            <main className="pb-12 pt-28 md:pt-32 px-4 md:px-8">
                 {/* Background Decoration */}
                 <div className="fixed inset-0 pointer-events-none -z-10">
                     <div className={cn("absolute top-0 left-0 w-full h-[50vh] opacity-10 blur-3xl", blog.thumbnailColor || 'bg-primary')} />
@@ -74,12 +80,6 @@ const BlogDetails = () => {
                     >
                         {/* Header Details */}
                         <div className="space-y-6">
-                            <Link to="/blogs" className="group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-2">
-                                <div className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-primary/10 transition-all">
-                                    <ChevronLeft size={14} />
-                                </div>
-                                <span className="text-[9px] uppercase font-black tracking-widest">Back to Library</span>
-                            </Link>
 
                             <div className="flex flex-wrap gap-2.5">
                                 {blog.categories.map(cat => (

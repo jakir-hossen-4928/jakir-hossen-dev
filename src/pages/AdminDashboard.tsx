@@ -9,6 +9,7 @@ import { AdminSubscribers } from './admin/AdminSubscribers';
 import { AdminTesters } from './admin/AdminTesters';
 import { AdminBlogs } from './admin/AdminBlogs';
 import AdminNotes from './admin/AdminNotes';
+import AdminLinks from './admin/AdminLinks';
 import { toast } from 'sonner';
 import { Wifi, WifiOff, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -16,17 +17,20 @@ import { useApps } from '@/hooks/useApps';
 import { useTesters } from '@/hooks/useTesters';
 import { useSubscribers } from '@/hooks/useSubscribers';
 import { useBlogs } from '@/hooks/useBlogs';
+import { Note } from '@/lib/types';
+import { syncNotes } from '@/lib/syncService';
 
 const AdminDashboard = () => {
   const location = useLocation();
 
   const getAdminTitle = () => {
     const path = location.pathname;
-    if (path === '/admin/testers') return "Manage Testers | Admin Portal";
+    if (path === '/admin/testers') return "Manage Users | Admin Portal";
     if (path === '/admin/subscribers') return "Manage Subscribers | Admin Portal";
     if (path === '/admin/blogs') return "Manage Articles | Admin Portal";
     if (path === '/admin/blogs') return "Manage Articles | Admin Portal";
     if (path === '/admin/notes') return "My Notebook | Admin Portal";
+    if (path === '/admin/links') return "Link Manager | Admin Portal";
     if (path === '/admin/settings') return "Settings | Admin Portal";
     return "Overview | Admin Portal";
   };
@@ -40,7 +44,25 @@ const AdminDashboard = () => {
   const { subscribers, isLoading: subsLoading } = useSubscribers();
   const { blogs, isLoading: blogsLoading } = useBlogs();
 
-  const isLoading = appsLoading || testersLoading || subsLoading || blogsLoading;
+  // Fetch notes
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [notesLoading, setNotesLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const initialNotes = await syncNotes();
+        setNotes(initialNotes);
+      } catch (error) {
+        console.error("Failed to fetch notes:", error);
+      } finally {
+        setNotesLoading(false);
+      }
+    };
+    fetchNotes();
+  }, []);
+
+  const isLoading = appsLoading || testersLoading || subsLoading || blogsLoading || notesLoading;
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -114,6 +136,12 @@ const AdminDashboard = () => {
             <AdminNotes />
           </motion.div>
         );
+      case '/admin/links':
+        return (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <AdminLinks />
+          </motion.div>
+        );
       case '/admin/settings':
         return (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
@@ -128,7 +156,7 @@ const AdminDashboard = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
           >
-            <AdminOverview apps={apps} testers={testers} subscribers={subscribers} blogs={blogs} />
+            <AdminOverview apps={apps} testers={testers} subscribers={subscribers} blogs={blogs} notes={notes} />
           </motion.div>
         );
     }
@@ -144,7 +172,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <DashboardLayout apps={apps} testers={testers} subscribers={subscribers} blogs={blogs}>
+    <DashboardLayout apps={apps} testers={testers} subscribers={subscribers} blogs={blogs} notes={notes}>
       <div className="mb-4 flex items-center justify-end px-4 md:px-8">
         <Badge variant={isOnline ? "outline" : "destructive"} className="gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest border-white/10">
           {isOnline ? (

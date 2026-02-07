@@ -193,7 +193,7 @@ const AdminNotes = () => {
                                 <Plus className="w-4 h-4" /> <span className="hidden sm:inline">New Note</span><span className="sm:hidden">New</span>
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className={`${isFullscreen ? 'w-screen h-screen max-w-none rounded-none m-0' : 'w-[95vw] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl h-[95vh] sm:h-[90vh]'} flex flex-col p-0 gap-0 overflow-hidden border-2 border-yellow-400 dark:border-yellow-500`}>
+                        <DialogContent className={`${isFullscreen ? 'w-screen h-screen max-w-none rounded-none m-0 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]' : 'w-[95vw] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl h-[95vh] sm:h-[90vh]'} flex flex-col p-0 gap-0 overflow-hidden border-2 border-yellow-400 dark:border-yellow-500`}>
                             <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-yellow-400/30 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950/20 dark:to-amber-950/20 sticky top-0 z-10">
                                 <DialogHeader className="p-0 space-y-0">
                                     <DialogTitle className="text-lg sm:text-xl flex items-center gap-2">

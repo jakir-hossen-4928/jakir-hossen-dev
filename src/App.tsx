@@ -15,6 +15,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import BlogGallery from "./pages/BlogGallery";
 import BlogDetails from "./pages/BlogDetails";
 import AuthModal from "./components/AuthModal";
+import ScrollToTop from "./components/ScrollToTop";
 
 import { useProductionSecurity } from "./hooks/useProductionSecurity";
 
@@ -32,6 +33,7 @@ const App = () => {
             <Sonner />
             <AuthModal />
             <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+              <ScrollToTop />
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/apps" element={<AppPromo />} />
@@ -80,6 +82,14 @@ const App = () => {
                 />
                 <Route
                   path="/admin/notes"
+                  element={
+                    <ProtectedRoute adminOnly>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/links"
                   element={
                     <ProtectedRoute adminOnly>
                       <AdminDashboard />

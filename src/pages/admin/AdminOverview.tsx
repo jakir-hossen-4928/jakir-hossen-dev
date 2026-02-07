@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Rocket, BookOpen, Users, Mail, Clock } from 'lucide-react';
+import { Rocket, BookOpen, Users, Mail, NotebookPen } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { AppEntry, Tester, BlogPost, Subscriber } from '@/lib/types';
+import { AppEntry, Tester, BlogPost, Subscriber, Note } from '@/lib/types';
 import OptimizedImage from '@/components/ui/OptimizedImage';
 
 interface AdminOverviewProps {
@@ -11,11 +11,11 @@ interface AdminOverviewProps {
     testers: Tester[];
     subscribers: Subscriber[];
     blogs?: BlogPost[];
+    notes?: Note[];
 }
 
-export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, subscribers, blogs = [] }) => {
-    const liveCount = apps.filter(app => app.status === 'production').length;
-    const testingCount = apps.filter(app => app.status === 'testing').length;
+export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, subscribers, blogs = [], notes = [] }) => {
+    const totalAppsCount = apps.length;
 
     return (
         <div className="space-y-6 md:space-y-10">
@@ -24,24 +24,14 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, sub
                 <Card className="bg-primary/5 border-primary/20 backdrop-blur-md relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
-                        <CardTitle className="text-[10px] uppercase text-muted-foreground font-black tracking-widest">Live Hub</CardTitle>
+                        <CardTitle className="text-[10px] uppercase text-muted-foreground font-black tracking-widest">Live Apps</CardTitle>
                         <Rocket size={14} className="text-primary/40" />
                     </CardHeader>
                     <CardContent className="p-4 pt-0">
-                        <p className="text-3xl font-black text-foreground">{liveCount}</p>
+                        <p className="text-3xl font-black text-foreground">{totalAppsCount}</p>
                     </CardContent>
                 </Card>
 
-                <Card className="bg-amber-500/5 border-amber-500/20 backdrop-blur-md relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
-                        <CardTitle className="text-[10px] uppercase text-muted-foreground font-black tracking-widest">Coming Soon</CardTitle>
-                        <Clock size={14} className="text-amber-500/40" />
-                    </CardHeader>
-                    <CardContent className="p-4 pt-0">
-                        <p className="text-3xl font-black text-foreground">{testingCount}</p>
-                    </CardContent>
-                </Card>
 
                 <Card className="bg-blue-500/5 border-blue-500/20 backdrop-blur-md relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -57,7 +47,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, sub
                 <Card className="bg-orange-500/5 border-orange-500/20 backdrop-blur-md relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
-                        <CardTitle className="text-[10px] uppercase text-muted-foreground font-black tracking-widest">Active Testers</CardTitle>
+                        <CardTitle className="text-[10px] uppercase text-muted-foreground font-black tracking-widest">Total Users</CardTitle>
                         <Users size={14} className="text-orange-500/40" />
                     </CardHeader>
                     <CardContent className="p-4 pt-0">
@@ -73,6 +63,17 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, sub
                     </CardHeader>
                     <CardContent className="p-4 pt-0">
                         <p className="text-3xl font-black text-foreground">{subscribers.length}</p>
+                    </CardContent>
+                </Card>
+
+                <Card className="bg-yellow-500/5 border-yellow-500/20 backdrop-blur-md relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
+                        <CardTitle className="text-[10px] uppercase text-muted-foreground font-black tracking-widest">Notebook</CardTitle>
+                        <NotebookPen size={14} className="text-yellow-500/40" />
+                    </CardHeader>
+                    <CardContent className="p-4 pt-0">
+                        <p className="text-3xl font-black text-foreground">{notes.length}</p>
                     </CardContent>
                 </Card>
             </div>

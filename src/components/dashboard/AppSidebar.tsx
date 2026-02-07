@@ -10,7 +10,8 @@ import {
     LogOut,
     Home,
     Sparkles,
-    NotebookPen
+    NotebookPen,
+    Link2
 } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
 import { cn } from '@/lib/utils';
@@ -25,10 +26,11 @@ interface SidebarProps {
 
 const sidebarItems = [
     { icon: LayoutDashboard, label: 'Overview', href: '/admin' },
-    { icon: Users, label: 'Testers', href: '/admin/testers' },
+    { icon: Users, label: 'Users', href: '/admin/testers' },
     { icon: Users, label: 'Subscribers', href: '/admin/subscribers' },
     { icon: NotebookPen, label: 'Notebook', href: '/admin/notes' },
     { icon: NotebookPen, label: 'Blogs', href: '/admin/blogs' },
+    { icon: Link2, label: 'Link Manager', href: '/admin/links' },
     { icon: Smartphone, label: 'Sajuriya Studio', href: '/admin/settings' },
 ];
 

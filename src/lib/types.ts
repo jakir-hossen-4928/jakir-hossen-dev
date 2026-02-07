@@ -1,5 +1,6 @@
 export type AppStatus = 'production' | 'testing';
 export type BlogStatus = 'published' | 'draft';
+export type UserRole = 'user' | 'admin';
 
 export interface AppEntry {
     id: string;
@@ -21,6 +22,16 @@ export interface Tester {
     displayName: string;
     joinedAt: string;
     appId?: string;
+}
+
+export interface UserProfile {
+    uid: string;
+    email: string | null;
+    displayName: string | null;
+    photoURL: string | null;
+    role: UserRole;
+    createdAt?: string;
+    lastSignIn?: string;
 }
 
 export interface Comment {
@@ -61,4 +72,32 @@ export interface Note {
     createdAt: string;
     updatedAt: string;
     isPinned?: boolean;
+}
+
+export interface RoleChangeLog {
+    id: string;
+    targetUserId: string;
+    targetUserEmail: string;
+    adminId: string;
+    adminEmail: string;
+    oldRole: UserRole;
+    newRole: UserRole;
+    timestamp: string;
+}
+
+export interface BookmarkFolder {
+    id: string;
+    name: string;
+    parentId: string | null;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface BookmarkLink {
+    id: string;
+    title: string;
+    url: string;
+    folderId: string | null;
+    createdAt: string;
+    updatedAt: string;
 }

@@ -7,15 +7,17 @@ import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { Search, Plus, Trash2, Edit3, Smartphone, Loader2, UploadCloud, Image as ImageIcon } from 'lucide-react';
 import { db as firestore } from '@/lib/firebase';
-import { doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 import { uploadToImgBB } from '@/lib/imgbb';
 import { DefaultTemplate, DefaultTemplateRef } from '@/richtexteditor/DefaultTemplate';
 import { AppEntry } from '@/lib/types';
 import { useApps } from '@/hooks/useApps';
 import { cn } from '@/lib/utils';
+import { deleteApp } from '@/lib/syncService';
 
 export const AdminApps: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -96,7 +98,7 @@ export const AdminApps: React.FC = () => {
     const handleDelete = async (appId: string) => {
         if (!confirm("Delete this app?")) return;
         try {
-            await deleteDoc(doc(firestore, 'apps', appId));
+            await deleteApp(appId);
             toast.success("App deleted");
         } catch (error) {
             toast.error("Failed to delete");
@@ -128,9 +130,38 @@ export const AdminApps: React.FC = () => {
             </CardHeader>
             <CardContent className="p-0">
                 {isLoading ? (
-                    <div className="flex items-center justify-center py-20">
-                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                    </div>
+                    <Table>
+                        <TableHeader className="bg-white/[0.01]">
+                            <TableRow className="hover:bg-transparent border-white/5">
+                                <TableHead className="w-[80px] pl-6 text-[10px] font-black uppercase tracking-widest">Icon</TableHead>
+                                <TableHead className="text-[10px] font-black uppercase tracking-widest">Application</TableHead>
+                                <TableHead className="text-[10px] font-black uppercase tracking-widest">Status</TableHead>
+                                <TableHead className="text-right pr-6 text-[10px] font-black uppercase tracking-widest">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {Array.from({ length: 5 }).map((_, index) => (
+                                <TableRow key={index} className="border-white/5">
+                                    <TableCell className="pl-6 py-4">
+                                        <Skeleton className="w-12 h-12 rounded-[22%]" />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Skeleton className="h-5 w-40 mb-2" />
+                                        <Skeleton className="h-3 w-24" />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Skeleton className="h-5 w-20 rounded-full" />
+                                    </TableCell>
+                                    <TableCell className="text-right pr-6">
+                                        <div className="flex justify-end gap-2">
+                                            <Skeleton className="w-9 h-9 rounded-lg" />
+                                            <Skeleton className="w-9 h-9 rounded-lg" />
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
                 ) : (
                     <Table>
                         <TableHeader className="bg-white/[0.01]">

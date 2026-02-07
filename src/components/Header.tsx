@@ -42,7 +42,10 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <header
+      className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border"
+      style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+    >
       <div className="section-container flex items-center justify-between h-20">
         {/* Logo */}
         <Link

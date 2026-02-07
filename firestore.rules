@@ -4,7 +4,9 @@ service cloud.firestore {
     
     // Helper function to check if user is admin
     function isAdmin() {
-      return request.auth != null && (request.auth.token.admin == true || request.auth.token.email == 'mdjakirkhan4928@gmail.com');
+      return request.auth != null && 
+             (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' || 
+              request.auth.token.email == 'mdjakirkhan4928@gmail.com');
     }
     
     // Helper function to check if user is authenticated
@@ -50,9 +52,49 @@ service cloud.firestore {
         (resource.data.uid == request.auth.uid || isAdmin());
     }
 
-    // Users collection
+    // Users collection - strict admin control for role management
     match /users/{userId} {
-      allow read, write: if isAuthenticated() && request.auth.uid == userId;
+      // Admins can read all users
+      allow read: if isAdmin();
+      
+      // Users can create their own profile on sign-up (role must be 'user')
+      allow create: if isAuthenticated() && 
+                      request.auth.uid == userId &&
+                      request.resource.data.role == 'user';
+      
+      // Users can read and update their own profile (but not their role)
+      allow read, update: if isAuthenticated() && 
+                            request.auth.uid == userId &&
+                            (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']));
+      
+      // Only admins can update roles, and they cannot update their own role
+      allow update: if isAdmin() && 
+                      request.auth.uid != userId &&
+                      request.resource.data.role in ['user', 'admin'];
+    }
+
+    // Role change logs - admin read only, system writes
+    match /roleChanges/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+    }
+
+    // Subscribers collection
+    match /subscribers/{subscriberId} {
+      allow read: if isAdmin();
+      allow create: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // Blogs collection
+    match /blogs/{blogId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Notes collection - admin only
+    match /notes/{noteId} {
+      allow read, write: if isAdmin();
     }
     
     // Deny all other access

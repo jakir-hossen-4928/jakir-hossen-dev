@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Search, Smartphone, Users, Mail, NotebookPen } from 'lucide-react';
-import { AppEntry, Tester, Subscriber, BlogPost } from '@/lib/types';
+import { Search, Smartphone, Users, Mail, NotebookPen, BookMarked } from 'lucide-react';
+import { AppEntry, Tester, Subscriber, BlogPost, Note } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 interface UniversalSearchProps {
@@ -11,17 +11,18 @@ interface UniversalSearchProps {
     testers: Tester[];
     subscribers: Subscriber[];
     blogs: BlogPost[];
+    notes: Note[];
 }
 
 interface SearchResult {
-    type: 'app' | 'tester' | 'subscriber' | 'blog';
+    type: 'app' | 'tester' | 'subscriber' | 'blog' | 'note';
     id: string;
     title: string;
     subtitle?: string;
     path: string;
 }
 
-export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers, subscribers, blogs }) => {
+export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers, subscribers, blogs, notes }) => {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<SearchResult[]>([]);
@@ -94,9 +95,24 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
             }
         });
 
+        // Search notes
+        notes.forEach(note => {
+            if (note.title?.toLowerCase().includes(searchTerm) ||
+                note.content?.toLowerCase().includes(searchTerm) ||
+                note.tags?.some(tag => tag.toLowerCase().includes(searchTerm))) {
+                allResults.push({
+                    type: 'note',
+                    id: note.id,
+                    title: note.title,
+                    subtitle: note.tags?.slice(0, 3).join(', ') || 'No tags',
+                    path: '/admin/notes'
+                });
+            }
+        });
+
         setResults(allResults.slice(0, 10)); // Limit to 10 results
         setSelectedIndex(0);
-    }, [query, apps, testers, subscribers, blogs]);
+    }, [query, apps, testers, subscribers, blogs, notes]);
 
     // Handle keyboard navigation
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -126,6 +142,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
             case 'tester': return <Users className="w-4 h-4 text-blue-500" />;
             case 'subscriber': return <Mail className="w-4 h-4 text-green-500" />;
             case 'blog': return <NotebookPen className="w-4 h-4 text-orange-500" />;
+            case 'note': return <BookMarked className="w-4 h-4 text-yellow-500" />;
             default: return <Search className="w-4 h-4" />;
         }
     };
@@ -133,9 +150,10 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
     const getTypeLabel = (type: string) => {
         switch (type) {
             case 'app': return 'App';
-            case 'tester': return 'Tester';
+            case 'tester': return 'User';
             case 'subscriber': return 'Subscriber';
             case 'blog': return 'Blog';
+            case 'note': return 'Note';
             default: return '';
         }
     };
@@ -162,7 +180,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            placeholder="Search apps, testers, blogs..."
+                            placeholder="Search apps, users, blogs, notes..."
                             className="border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-base"
                             autoFocus
                         />
@@ -211,7 +229,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
                         {!query && (
                             <div className="p-8 text-center text-muted-foreground text-sm">
                                 <p className="font-medium mb-2">Quick Search</p>
-                                <p className="text-xs">Search across apps, testers, and subscribers</p>
+                                <p className="text-xs">Search across apps, users, blogs, and notes</p>
                             </div>
                         )}
                     </div>
