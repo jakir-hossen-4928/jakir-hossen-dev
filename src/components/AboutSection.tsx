@@ -158,9 +158,9 @@ export default function AboutSection() {
                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 border border-primary/10">
                   {/* <Award size={32} /> */}
                   <img
-                    src="myschool.jpg"
-                    alt="FCI Logo"
-                    className="w-full rounded-full  h-full object-contain"
+                    src="myschool.png"
+                    alt="MySchool Logo"
+                    className="w-full rounded-[2rem]  h-full object-contain"
                   />
 
                 </div>

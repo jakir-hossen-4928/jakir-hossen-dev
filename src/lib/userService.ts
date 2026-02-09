@@ -75,13 +75,13 @@ export const updateUserRole = async (
     if (targetUserId === currentAdminId) {
         throw new Error('You cannot change your own role');
     }
-
     try {
         const userRef = doc(db, 'users', targetUserId);
+        const normalizedRole = newRole.trim() as UserRole;
 
         // Update the user's role
         await updateDoc(userRef, {
-            role: newRole,
+            role: normalizedRole,
         });
 
         // Log the role change for audit trail

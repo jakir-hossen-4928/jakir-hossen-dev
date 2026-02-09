@@ -52,7 +52,7 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
 
         const matchesRole =
             roleFilter === 'all' ||
-            user.role === roleFilter;
+            user.role?.trim() === roleFilter;
 
         return matchesSearch && matchesRole;
     });
@@ -108,8 +108,8 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
         );
     };
 
-    const adminCount = users.filter(u => u.role === 'admin').length;
-    const userCount = users.filter(u => u.role === 'user').length;
+    const adminCount = users.filter(u => u.role?.trim() === 'admin').length;
+    const userCount = users.filter(u => u.role?.trim() === 'user').length;
 
     return (
         <>
@@ -215,7 +215,7 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
                                                             </div>
                                                         ) : (
                                                             <Select
-                                                                value={user.role}
+                                                                value={user.role?.trim()}
                                                                 onValueChange={(value) => handleRoleChangeClick(user, value as UserRole)}
                                                             >
                                                                 <SelectTrigger className="w-[100px] h-8 text-xs">

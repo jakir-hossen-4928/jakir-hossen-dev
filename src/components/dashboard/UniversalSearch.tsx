@@ -160,7 +160,16 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
 
     return (
         <>
-            {/* Trigger Button */}
+            {/* Trigger Button - Search Icon for Mobile */}
+            <button
+                onClick={() => setOpen(true)}
+                className="lg:hidden p-2.5 hover:bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-all"
+                aria-label="Search"
+            >
+                <Search size={20} />
+            </button>
+
+            {/* Trigger Button - Full Search Bar for Desktop */}
             <button
                 onClick={() => setOpen(true)}
                 className="hidden lg:flex items-center gap-2 bg-muted/50 border border-border px-3 py-2 rounded-xl hover:bg-muted transition-all cursor-pointer w-64"

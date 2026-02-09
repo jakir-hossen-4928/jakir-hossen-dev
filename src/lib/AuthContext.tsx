@@ -55,7 +55,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Listen for profile changes immediately to catch existing data
         unsubscribeProfile = onSnapshot(userRef, async (docSnap) => {
           if (docSnap.exists()) {
-            setProfile(docSnap.data() as UserProfile);
+            const data = docSnap.data() as UserProfile;
+            if (data.role) data.role = data.role.trim() as 'user' | 'admin';
+            setProfile(data);
             setLoading(false);
           } else {
             // If profile doesn't exist, create it once
@@ -142,7 +144,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loading,
     login,
     logout,
-    isAdmin: profile?.role === 'admin',
+    isAdmin: profile?.role?.trim() === 'admin',
     isAuthModalOpen,
     setAuthModalOpen,
     showLogin,

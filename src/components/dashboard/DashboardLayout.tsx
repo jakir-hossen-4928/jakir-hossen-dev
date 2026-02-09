@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AppSidebar } from './AppSidebar';
 import { UniversalSearch } from './UniversalSearch';
-import { Menu, Bell, Grid, ChevronRight } from 'lucide-react';
+import { Menu, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLocation } from 'react-router-dom';
 import { AppEntry, Tester, Subscriber, BlogPost, Note } from '@/lib/types';
@@ -67,13 +67,6 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, apps
                         <UniversalSearch apps={apps} testers={testers} subscribers={subscribers} blogs={blogs} notes={notes} />
 
                         <div className="flex items-center gap-1">
-                            <button className="p-2.5 hover:bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-all relative">
-                                <Bell size={20} />
-                                <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-primary rounded-full border-2 border-card shadow-sm shadow-primary/40"></span>
-                            </button>
-                            <button className="p-2.5 hover:bg-muted rounded-xl text-muted-foreground hover:text-foreground transition-all">
-                                <Grid size={20} />
-                            </button>
                         </div>
                     </div>
                 </header>
