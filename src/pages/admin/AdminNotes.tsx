@@ -32,6 +32,11 @@ const AdminNotes = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const editorRef = useRef<DefaultTemplateRef>(null);
+    const viewEditorRef = useRef<DefaultTemplateRef>(null);
+
+    // View Modal State
+    const [viewNote, setViewNote] = useState<Note | null>(null);
+    const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
 
     useEffect(() => {
         const fetchNotes = async () => {
@@ -123,6 +128,16 @@ const AdminNotes = () => {
         });
         setTagInput('');
         setIsFullscreen(false);
+    };
+
+    const openViewDialog = (note: Note) => {
+        setViewNote(note);
+        setIsViewDialogOpen(true);
+        setTimeout(() => {
+            if (viewEditorRef.current) {
+                viewEditorRef.current.injectMarkdown(note.content);
+            }
+        }, 100);
     };
 
     const openEditDialog = (note: Note) => {
@@ -278,6 +293,59 @@ const AdminNotes = () => {
                 </div>
             </div>
 
+            {/* View Note Dialog */}
+            <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+                <DialogContent className="w-[95vw] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl h-[90vh] flex flex-col p-0 gap-0 overflow-hidden border-2 border-yellow-400 dark:border-yellow-500">
+                    <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-yellow-400/30 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950/20 dark:to-amber-950/20 sticky top-0 z-10">
+                        <DialogHeader className="p-0 space-y-0">
+                            <DialogTitle className="text-lg sm:text-xl flex items-center gap-2">
+                                <span className="text-yellow-600 dark:text-yellow-400">📖</span>
+                                {viewNote?.title}
+                            </DialogTitle>
+                        </DialogHeader>
+                        <Button variant="ghost" size="icon" onClick={() => setIsViewDialogOpen(false)} className="h-9 w-9 sm:h-10 sm:w-10 hover:bg-yellow-100 dark:hover:bg-yellow-900/30">
+                            <X className="h-4 w-4" />
+                        </Button>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
+                        <div className="min-h-[300px] sm:min-h-[400px] rounded-lg overflow-hidden relative border-2 border-yellow-400/50 dark:border-yellow-500/50 shadow-sm">
+                            <DefaultTemplate
+                                ref={viewEditorRef}
+                                className="h-full min-h-[300px] sm:min-h-[400px]"
+                                readOnly={true}
+                                onReady={() => {
+                                    if (viewNote?.content) {
+                                        viewEditorRef.current?.injectMarkdown(viewNote.content);
+                                    }
+                                }}
+                            />
+                        </div>
+
+                        <div className="flex flex-wrap gap-2">
+                            {viewNote?.tags?.map(tag => (
+                                <Badge key={tag} className="gap-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-200 border-yellow-300 dark:border-yellow-700">
+                                    #{tag}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Footer with Edit Button */}
+                    <div className="p-4 sm:p-6 border-t border-yellow-400/30 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950/20 dark:to-amber-950/20 flex justify-end gap-2 sticky bottom-0">
+                        <Button
+                            onClick={() => {
+                                setIsViewDialogOpen(false);
+                                if (viewNote) openEditDialog(viewNote);
+                            }}
+                            className="gap-2 bg-yellow-500 hover:bg-yellow-600 text-white min-h-[44px] shadow-lg shadow-yellow-500/20"
+                        >
+                            <Edit className="w-4 h-4" /> Edit Note
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
             {loading ? (
                 <div className="flex items-center justify-center p-12">
                     <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -306,7 +374,7 @@ const AdminNotes = () => {
                             >
                                 <Card
                                     className="group hover:shadow-xl transition-all duration-300 border-2 border-gray-200 dark:border-gray-700 hover:border-yellow-400 dark:hover:border-yellow-500 cursor-pointer h-full flex flex-col hover:scale-[1.02] active:scale-[0.98]"
-                                    onClick={() => openEditDialog(note)}
+                                    onClick={() => openViewDialog(note)}
                                 >
                                     <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                                         <div className="space-y-1 pr-8">
@@ -340,7 +408,19 @@ const AdminNotes = () => {
                                                 </Badge>
                                             )}
                                         </div>
-                                        <div className="flex justify-end pt-2 opacity-0 group-hover:opacity-100 transition-opacity border-t border-yellow-200 dark:border-yellow-800 mt-auto">
+                                        <div className="flex justify-end pt-2 opacity-0 group-hover:opacity-100 transition-opacity border-t border-yellow-200 dark:border-yellow-800 mt-auto gap-2">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-9 sm:h-8 min-h-[44px] sm:min-h-0 text-yellow-600 hover:text-yellow-700 hover:bg-yellow-100 dark:text-yellow-400 dark:hover:text-yellow-300 dark:hover:bg-yellow-900/30"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openEditDialog(note);
+                                                }}
+                                            >
+                                                <Edit className="w-4 h-4 sm:w-3.5 sm:h-3.5 mr-1.5" />
+                                                <span className="text-sm">Edit</span>
+                                            </Button>
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
