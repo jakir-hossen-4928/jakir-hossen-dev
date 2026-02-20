@@ -19,8 +19,8 @@ export const AdminSubscribers: React.FC<AdminSubscribersProps> = ({ exportSubscr
     );
 
     return (
-        <Card className="border border-white/5 shadow-2xl rounded-2xl md:rounded-[32px] overflow-hidden h-full flex flex-col min-h-[400px] bg-card/30 backdrop-blur-2xl">
-            <CardHeader className="pb-6 md:pb-8 border-b border-white/5 flex flex-col md:flex-row items-center justify-between bg-white/[0.02] px-6 md:px-8 gap-4">
+        <Card className="border border-border shadow-2xl rounded-2xl md:rounded-[32px] overflow-hidden h-full flex flex-col min-h-[400px] bg-card/30 backdrop-blur-2xl">
+            <CardHeader className="pb-6 md:pb-8 border-b border-border flex flex-col md:flex-row items-center justify-between bg-white/[0.02] px-6 md:px-8 gap-4">
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto">
                     <div className="space-y-1 text-left">
                         <CardTitle className="text-lg md:text-xl font-black text-foreground">Newsletter Subscribers</CardTitle>
@@ -32,11 +32,11 @@ export const AdminSubscribers: React.FC<AdminSubscribersProps> = ({ exportSubscr
                             placeholder="Search email..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-9 h-10 rounded-xl bg-white/5 border-white/10 text-xs font-bold"
+                            className="pl-9 h-10 rounded-xl bg-muted/50 border-border text-xs font-bold focus-visible:ring-primary/20"
                         />
                     </div>
                 </div>
-                <Button variant="outline" size="sm" onClick={exportSubscribers} className="rounded-xl border-white/10 bg-white/5 hover:bg-white/10 font-black text-[10px] md:text-xs h-9 md:h-10 px-3 md:px-4 shrink-0 uppercase tracking-widest transition-all w-full md:w-auto">
+                <Button variant="outline" size="sm" onClick={exportSubscribers} className="rounded-xl border-border bg-muted/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 font-black text-[10px] md:text-xs h-9 md:h-10 px-3 md:px-4 shrink-0 uppercase tracking-widest transition-all w-full md:w-auto">
                     <Download className="mr-2 w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Export CSV
                 </Button>
             </CardHeader>
@@ -59,7 +59,7 @@ export const AdminSubscribers: React.FC<AdminSubscribersProps> = ({ exportSubscr
                                     <TableRow><TableCell colSpan={2} className="text-center py-24 text-muted-foreground/20"><Users size={48} className="mx-auto mb-4 opacity-50" /><p className="font-black uppercase tracking-widest text-[10px]">No subscribers found</p></TableCell></TableRow>
                                 ) : (
                                     filteredSubscribers.map((sub) => (
-                                        <TableRow key={sub.uid} className="border-b border-white/5 last:border-none hover:bg-white/[0.02] transition-colors group text-left">
+                                        <TableRow key={sub.uid} className="border-b border-border last:border-none hover:bg-white/[0.02] transition-colors group text-left">
                                             <TableCell className="pl-6 md:pl-8 py-4 font-bold text-xs md:text-sm tracking-tight text-foreground">{sub.email}</TableCell>
                                             <TableCell className="text-right pr-6 md:pr-8 py-4 font-black text-[10px] md:text-xs text-muted-foreground/50 whitespace-nowrap">{new Date(sub.joinedAt).toLocaleDateString()}</TableCell>
                                         </TableRow>

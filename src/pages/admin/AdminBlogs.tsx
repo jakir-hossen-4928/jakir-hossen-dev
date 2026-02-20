@@ -122,8 +122,8 @@ export const AdminBlogs: React.FC = () => {
     };
 
     return (
-        <Card className="border border-white/5 shadow-2xl rounded-2xl overflow-hidden bg-card/30 backdrop-blur-xl">
-            <CardHeader className="flex flex-col md:flex-row items-center justify-between bg-white/[0.02] border-b border-white/5 p-6 md:p-8 gap-4">
+        <Card className="border border-border shadow-2xl rounded-2xl overflow-hidden bg-card/30 backdrop-blur-xl">
+            <CardHeader className="flex flex-col md:flex-row items-center justify-between bg-white/[0.02] border-b border-border p-6 md:p-8 gap-4">
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto">
                     <div>
                         <CardTitle className="text-xl font-black text-foreground">Blog Management</CardTitle>
@@ -135,11 +135,11 @@ export const AdminBlogs: React.FC = () => {
                             placeholder="Search blogs..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-9 h-10 rounded-xl bg-white/5 border-white/10 text-xs font-bold"
+                            className="pl-9 h-10 rounded-xl bg-muted/50 border-border text-xs font-bold focus-visible:ring-primary/20"
                         />
                     </div>
                 </div>
-                <Button onClick={() => handleOpenDialog()} size="sm" className="rounded-xl h-10 font-black uppercase tracking-tight shadow-lg shadow-primary/20 w-full md:w-auto">
+                <Button onClick={() => handleOpenDialog()} size="sm" className="rounded-xl h-10 font-black uppercase tracking-tight shadow-lg shadow-primary/20 w-full md:w-auto bg-primary hover:bg-primary/90">
                     <Plus size={16} className="mr-2" /> New Post
                 </Button>
             </CardHeader>
@@ -147,7 +147,7 @@ export const AdminBlogs: React.FC = () => {
                 {isLoading ? (
                     <Table>
                         <TableHeader className="bg-white/[0.01]">
-                            <TableRow className="hover:bg-transparent border-white/5">
+                            <TableRow className="hover:bg-transparent border-border">
                                 <TableHead className="w-[100px] pl-6 text-[10px] font-black uppercase tracking-widest">Preview</TableHead>
                                 <TableHead className="text-[10px] font-black uppercase tracking-widest">Title</TableHead>
                                 <TableHead className="text-[10px] font-black uppercase tracking-widest">Categories</TableHead>
@@ -157,7 +157,7 @@ export const AdminBlogs: React.FC = () => {
                         </TableHeader>
                         <TableBody>
                             {Array.from({ length: 5 }).map((_, index) => (
-                                <TableRow key={index} className="border-white/5">
+                                <TableRow key={index} className="border-border">
                                     <TableCell className="pl-6 py-4">
                                         <Skeleton className="w-16 h-10 rounded-lg" />
                                     </TableCell>
@@ -187,7 +187,7 @@ export const AdminBlogs: React.FC = () => {
                 ) : (
                     <Table>
                         <TableHeader className="bg-white/[0.01]">
-                            <TableRow className="hover:bg-transparent border-white/5">
+                            <TableRow className="hover:bg-transparent border-border">
                                 <TableHead className="w-[100px] pl-6 text-[10px] font-black uppercase tracking-widest">Preview</TableHead>
                                 <TableHead className="text-[10px] font-black uppercase tracking-widest">Title</TableHead>
                                 <TableHead className="text-[10px] font-black uppercase tracking-widest">Categories</TableHead>
@@ -197,7 +197,7 @@ export const AdminBlogs: React.FC = () => {
                         </TableHeader>
                         <TableBody>
                             {filteredBlogs.map(blog => (
-                                <TableRow key={blog.id} className="border-white/5 hover:bg-white/[0.02] transition-colors group">
+                                <TableRow key={blog.id} className="border-border hover:bg-white/[0.02] transition-colors group">
                                     <TableCell className="pl-6 py-4">
                                         <div className={cn("w-16 h-10 rounded-lg flex items-center justify-center p-1 overflow-hidden text-[6px] font-bold text-white text-center shadow-lg", blog.thumbnailColor)}>
                                             {blog.title}
@@ -212,7 +212,7 @@ export const AdminBlogs: React.FC = () => {
                                     <TableCell>
                                         <div className="flex flex-wrap gap-1">
                                             {blog.categories.slice(0, 2).map(cat => (
-                                                <Badge key={cat} variant="outline" className="text-[8px] px-1.5 py-0 bg-white/5 border-white/10">
+                                                <Badge key={cat} variant="outline" className="text-[8px] px-1.5 py-0 bg-muted border-border">
                                                     {cat}
                                                 </Badge>
                                             ))}
@@ -243,7 +243,7 @@ export const AdminBlogs: React.FC = () => {
 
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogContent className="w-[95vw] sm:max-w-4xl h-[calc(100dvh-2rem)] sm:h-auto sm:max-h-[85vh] bg-card border-white/10 p-0 sm:p-6 gap-0 sm:gap-4 flex flex-col overflow-hidden pb-[env(safe-area-inset-bottom)]">
-                    <DialogHeader className="p-6 sm:p-0 border-b sm:border-0 border-white/5">
+                    <DialogHeader className="p-6 sm:p-0 border-b sm:border-0 border-border">
                         <DialogTitle>{editingBlog.id ? 'Edit Blog Post' : 'New Blog Post'}</DialogTitle>
                         <DialogDescription>Share your thoughts with the world.</DialogDescription>
                     </DialogHeader>
@@ -256,7 +256,7 @@ export const AdminBlogs: React.FC = () => {
                                     value={editingBlog.title || ''}
                                     onChange={e => setEditingBlog(prev => ({ ...prev, title: e.target.value }))}
                                     placeholder="Enter blog title"
-                                    className="h-12 rounded-xl bg-white/5 border-white/10"
+                                    className="h-12 rounded-xl bg-muted/50 border-border"
                                 />
                             </div>
                             <div className="space-y-2">
@@ -265,7 +265,7 @@ export const AdminBlogs: React.FC = () => {
                                     type="date"
                                     value={editingBlog.date || ''}
                                     onChange={e => setEditingBlog(prev => ({ ...prev, date: e.target.value }))}
-                                    className="h-12 rounded-xl bg-white/5 border-white/10"
+                                    className="h-12 rounded-xl bg-muted/50 border-border"
                                 />
                             </div>
                         </div>
@@ -280,7 +280,7 @@ export const AdminBlogs: React.FC = () => {
                                 <DropdownMenuTrigger asChild>
                                     <Button
                                         variant="outline"
-                                        className="w-full justify-between h-12 rounded-xl bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20 transition-all font-bold group"
+                                        className="w-full justify-between h-12 rounded-xl bg-muted/50 border-border hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all font-bold group"
                                     >
                                         <div className="flex items-center gap-2 overflow-hidden">
                                             {editingBlog.categories && editingBlog.categories.length > 0 ? (
@@ -302,7 +302,7 @@ export const AdminBlogs: React.FC = () => {
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="start" className="w-[calc(100vw-3rem)] sm:w-[400px] bg-card border-white/10 rounded-2xl p-2 shadow-2xl z-50">
-                                    <div className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 border-b border-white/5 mb-2">
+                                    <div className="px-3 py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 border-b border-border mb-2">
                                         Blog Categories
                                     </div>
                                     <ScrollArea className="h-[300px] sm:h-[400px] pr-4">
@@ -345,7 +345,7 @@ export const AdminBlogs: React.FC = () => {
                             </DropdownMenu>
                         </div>
 
-                        <div className="flex items-center gap-4 p-4 border rounded-xl bg-muted/20 border-white/5">
+                        <div className="flex items-center gap-4 p-4 border rounded-xl bg-muted/20 border-border">
                             <Switch
                                 checked={editingBlog.status === 'published'}
                                 onCheckedChange={(c) => setEditingBlog(prev => ({ ...prev, status: c ? 'published' : 'draft' }))}
@@ -358,7 +358,7 @@ export const AdminBlogs: React.FC = () => {
 
                         <div className="space-y-2">
                             <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Description</Label>
-                            <div className="min-h-[300px] sm:min-h-[400px] border border-white/5 rounded-xl overflow-hidden bg-background/50">
+                            <div className="min-h-[300px] sm:min-h-[400px] border border-border rounded-xl overflow-hidden bg-background/50">
                                 <DefaultTemplate
                                     ref={editorRef}
                                     onReady={(methods) => {
@@ -371,7 +371,7 @@ export const AdminBlogs: React.FC = () => {
                         </div>
                     </div>
 
-                    <DialogFooter className="p-6 sm:p-0 border-t sm:border-0 border-white/5 gap-2 sm:gap-0 mt-auto">
+                    <DialogFooter className="p-6 sm:p-0 border-t sm:border-0 border-border gap-2 sm:gap-0 mt-auto">
                         <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="rounded-xl h-12 font-black uppercase tracking-tight">Cancel</Button>
                         <Button onClick={handleSave} disabled={isSaving} className="rounded-xl h-12 font-black uppercase tracking-tight shadow-lg shadow-primary/20">
                             {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

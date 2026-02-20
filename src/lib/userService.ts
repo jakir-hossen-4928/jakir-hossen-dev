@@ -27,7 +27,10 @@ export const getAllUsers = async (): Promise<UserProfile[]> => {
  * @param callback Function to call when users change
  * @returns Unsubscribe function
  */
-export const subscribeToUsers = (callback: (users: UserProfile[]) => void): (() => void) => {
+export const subscribeToUsers = (
+    callback: (users: UserProfile[]) => void,
+    onError?: (error: any) => void
+): (() => void) => {
     const usersRef = collection(db, 'users');
 
     return onSnapshot(
@@ -41,7 +44,11 @@ export const subscribeToUsers = (callback: (users: UserProfile[]) => void): (() 
         },
         (error) => {
             console.error('Error in users subscription:', error);
-            toast.error('Failed to sync users');
+            if (onError) {
+                onError(error);
+            } else {
+                toast.error('Failed to sync users');
+            }
         }
     );
 };

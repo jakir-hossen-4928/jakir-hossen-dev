@@ -50,9 +50,10 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
             user.displayName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.email?.toLowerCase().includes(searchTerm.toLowerCase());
 
+        const normalizedUserRole = user.role?.toLowerCase().trim() || 'user';
         const matchesRole =
             roleFilter === 'all' ||
-            user.role?.trim() === roleFilter;
+            normalizedUserRole === roleFilter.toLowerCase();
 
         return matchesSearch && matchesRole;
     });
@@ -90,8 +91,9 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
         }
     };
 
-    const getRoleBadge = (role: UserRole, isCurrentUser: boolean) => {
-        if (role === 'admin') {
+    const getRoleBadge = (role: string = 'user', isCurrentUser: boolean) => {
+        const normalizedRole = role.toLowerCase().trim();
+        if (normalizedRole === 'admin') {
             return (
                 <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/30 font-black text-[10px] uppercase flex items-center gap-1">
                     <Crown className="w-3 h-3" />
@@ -113,8 +115,8 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
 
     return (
         <>
-            <Card className="border border-white/5 shadow-2xl rounded-2xl md:rounded-[32px] overflow-hidden h-full flex flex-col min-h-[400px] bg-card/30 backdrop-blur-2xl">
-                <CardHeader className="pb-6 md:pb-8 border-b border-white/5 flex flex-col md:flex-row items-center justify-between bg-white/[0.02] px-6 md:px-8 gap-4">
+            <Card className="border border-border shadow-2xl rounded-2xl md:rounded-[32px] overflow-hidden h-full flex flex-col min-h-[400px] bg-card/30 backdrop-blur-2xl">
+                <CardHeader className="pb-6 md:pb-8 border-b border-border flex flex-col md:flex-row items-center justify-between bg-white/[0.02] px-6 md:px-8 gap-4">
                     <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto">
                         <div className="space-y-1 text-left">
                             <CardTitle className="text-lg md:text-xl font-black text-foreground flex items-center gap-2">
@@ -132,11 +134,11 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
                                     placeholder="Search name or email..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="pl-9 h-10 rounded-xl bg-white/5 border-white/10 text-xs font-bold"
+                                    className="pl-9 h-10 rounded-xl bg-muted/50 border-border text-xs font-bold focus-visible:ring-primary/20"
                                 />
                             </div>
                             <Select value={roleFilter} onValueChange={(value) => setRoleFilter(value as RoleFilter)}>
-                                <SelectTrigger className="w-[120px] h-10 rounded-xl bg-white/5 border-white/10 text-xs font-bold">
+                                <SelectTrigger className="w-[120px] h-10 rounded-xl bg-muted/50 border-border text-xs font-bold">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -151,7 +153,7 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
                         variant="outline"
                         size="sm"
                         onClick={exportTesters}
-                        className="rounded-xl border-white/10 bg-white/5 hover:bg-white/10 font-black text-[10px] md:text-xs h-9 md:h-10 px-3 md:px-4 shrink-0 uppercase tracking-widest transition-all w-full md:w-auto"
+                        className="rounded-xl border-border bg-muted/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 font-black text-[10px] md:text-xs h-9 md:h-10 px-3 md:px-4 shrink-0 uppercase tracking-widest transition-all w-full md:w-auto"
                     >
                         <Download className="mr-2 w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Export
                     </Button>
@@ -193,7 +195,7 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
                                                 <TableRow
                                                     key={user.uid}
                                                     className={cn(
-                                                        "border-b border-white/5 last:border-none hover:bg-white/[0.02] transition-colors group text-left",
+                                                        "border-b border-border last:border-none hover:bg-white/[0.02] transition-colors group text-left",
                                                         isCurrentUser && "bg-primary/5"
                                                     )}
                                                 >

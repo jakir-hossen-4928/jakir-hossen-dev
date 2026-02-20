@@ -168,7 +168,7 @@ export default function AboutSection() {
                     <h4 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">Front-end Developer (CMS Platforms)</h4>
                   </div>
                   <h5 className="text-base sm:text-lg font-bold text-muted-foreground flex items-center gap-2">
-                    Softvance <ChevronRight size={14} className="text-primary" /> Dhaka, Bangladesh
+                    Softvance Delta<ChevronRight size={14} className="text-primary" /> Dhaka, Bangladesh
                   </h5>
                   <p className="text-sm sm:text-base text-muted-foreground font-medium opacity-80 leading-relaxed pt-1">
                     Specializing in custom CMS platforms and premium frontend experiences, utilizing React and modern web technologies to deliver high-scale digital solutions.

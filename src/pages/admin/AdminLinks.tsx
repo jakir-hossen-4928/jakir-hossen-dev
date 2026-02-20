@@ -380,7 +380,7 @@ const AdminLinks = () => {
         }
 
         return (
-            <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center p-2 group-hover:bg-white/10 transition-colors overflow-hidden">
+            <div className="w-12 h-12 rounded-xl bg-muted/50 border border-border flex items-center justify-center p-2 group-hover:bg-muted transition-colors overflow-hidden">
                 <img
                     src={faviconUrl}
                     alt={title}
@@ -413,7 +413,7 @@ const AdminLinks = () => {
                         size="icon"
                         onClick={handleExport}
                         title="Export Bookmarks"
-                        className="bg-emerald-500/5 hover:bg-emerald-500/10 border-emerald-500/20"
+                        className="bg-emerald-500/5 hover:bg-emerald-500/20 border-emerald-500/20 transition-all"
                     >
                         <Download className="w-4 h-4 text-emerald-500" />
                     </Button>
@@ -422,7 +422,7 @@ const AdminLinks = () => {
                         size="icon"
                         onClick={() => document.getElementById('bookmark-import')?.click()}
                         title="Import Bookmarks"
-                        className="bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/20"
+                        className="bg-blue-500/5 hover:bg-blue-500/20 border-blue-500/20 transition-all"
                     >
                         <Upload className="w-4 h-4 text-blue-500" />
                     </Button>
@@ -440,7 +440,7 @@ const AdminLinks = () => {
                             setEditingFolder({ name: '' });
                             setIsFolderDialogOpen(true);
                         }}
-                        className="bg-primary/5 hover:bg-primary/10 border-primary/20"
+                        className="bg-primary/5 hover:bg-primary/20 border-primary/20 transition-all"
                     >
                         <FolderPlus className="w-4 h-4 text-primary" />
                     </Button>
@@ -457,7 +457,7 @@ const AdminLinks = () => {
             </div>
 
             {/* Breadcrumbs */}
-            <div className="flex items-center gap-2 px-4 py-2 bg-card/30 backdrop-blur-md rounded-xl border border-white/10 overflow-x-auto no-scrollbar">
+            <div className="flex items-center gap-2 px-4 py-2 bg-card/30 backdrop-blur-md rounded-xl border border-border overflow-x-auto no-scrollbar">
                 <Button
                     variant="ghost"
                     size="sm"
@@ -562,7 +562,7 @@ const AdminLinks = () => {
                                 transition={{ duration: 0.2 }}
                             >
                                 <Card
-                                    className="group hover:shadow-xl transition-all border-white/5 bg-card/50 cursor-pointer h-[120px] relative flex flex-col justify-center overflow-hidden"
+                                    className="group hover:shadow-xl transition-all border-border bg-card/50 cursor-pointer h-[120px] relative flex flex-col justify-center overflow-hidden"
                                     onClick={() => setCurrentFolderId(folder.id)}
                                 >
                                     <div className="absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 transition-opacity">
@@ -618,7 +618,7 @@ const AdminLinks = () => {
                                 transition={{ duration: 0.2 }}
                             >
                                 <Card
-                                    className="group hover:shadow-xl transition-all border-white/5 bg-card/50 cursor-pointer h-[120px] relative flex flex-col justify-center overflow-hidden"
+                                    className="group hover:shadow-xl transition-all border-border bg-card/50 cursor-pointer h-[120px] relative flex flex-col justify-center overflow-hidden"
                                     onClick={() => window.open(link.url, '_blank')}
                                 >
                                     <div className="absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 transition-opacity">
@@ -664,7 +664,7 @@ const AdminLinks = () => {
             )}
 
             {!loading && filteredFolders.length === 0 && filteredLinks.length === 0 && searchQuery && (
-                <div className="text-center py-20 px-4 bg-card/20 rounded-3xl border border-dashed border-white/10">
+                <div className="text-center py-20 px-4 bg-card/20 rounded-3xl border border-dashed border-border">
                     <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center mx-auto mb-4">
                         <Search className="w-8 h-8 text-muted-foreground/30" />
                     </div>

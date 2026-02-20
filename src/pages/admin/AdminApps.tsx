@@ -106,8 +106,8 @@ export const AdminApps: React.FC = () => {
     };
 
     return (
-        <Card className="border border-white/5 shadow-2xl rounded-2xl overflow-hidden bg-card/30 backdrop-blur-xl">
-            <CardHeader className="flex flex-col md:flex-row items-center justify-between bg-white/[0.02] border-b border-white/5 p-6 md:p-8 gap-4">
+        <Card className="border border-border shadow-2xl rounded-2xl overflow-hidden bg-card/30 backdrop-blur-xl">
+            <CardHeader className="flex flex-col md:flex-row items-center justify-between bg-white/[0.02] border-b border-border p-6 md:p-8 gap-4">
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto">
                     <div>
                         <CardTitle className="text-xl font-black text-foreground">Sajuriya Studio</CardTitle>
@@ -120,11 +120,11 @@ export const AdminApps: React.FC = () => {
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             disabled={isUploadingIcon}
-                            className="pl-9 h-10 rounded-xl bg-white/5 border-white/10 text-xs font-bold"
+                            className="pl-9 h-10 rounded-xl bg-muted/50 border-border text-xs font-bold focus-visible:ring-primary/20"
                         />
                     </div>
                 </div>
-                <Button onClick={() => handleOpenDialog()} disabled={isUploadingIcon} size="sm" className="rounded-xl h-10 font-black uppercase tracking-tight shadow-lg shadow-primary/20 w-full md:w-auto">
+                <Button onClick={() => handleOpenDialog()} disabled={isUploadingIcon} size="sm" className="rounded-xl h-10 font-black uppercase tracking-tight shadow-lg shadow-primary/20 w-full md:w-auto bg-primary hover:bg-primary/90">
                     <Plus size={16} className="mr-2" /> Add App
                 </Button>
             </CardHeader>
@@ -132,7 +132,7 @@ export const AdminApps: React.FC = () => {
                 {isLoading ? (
                     <Table>
                         <TableHeader className="bg-white/[0.01]">
-                            <TableRow className="hover:bg-transparent border-white/5">
+                            <TableRow className="hover:bg-transparent border-border">
                                 <TableHead className="w-[80px] pl-6 text-[10px] font-black uppercase tracking-widest">Icon</TableHead>
                                 <TableHead className="text-[10px] font-black uppercase tracking-widest">Application</TableHead>
                                 <TableHead className="text-[10px] font-black uppercase tracking-widest">Status</TableHead>
@@ -141,7 +141,7 @@ export const AdminApps: React.FC = () => {
                         </TableHeader>
                         <TableBody>
                             {Array.from({ length: 5 }).map((_, index) => (
-                                <TableRow key={index} className="border-white/5">
+                                <TableRow key={index} className="border-border">
                                     <TableCell className="pl-6 py-4">
                                         <Skeleton className="w-12 h-12 rounded-[22%]" />
                                     </TableCell>
@@ -165,7 +165,7 @@ export const AdminApps: React.FC = () => {
                 ) : (
                     <Table>
                         <TableHeader className="bg-white/[0.01]">
-                            <TableRow className="hover:bg-transparent border-white/5">
+                            <TableRow className="hover:bg-transparent border-border">
                                 <TableHead className="w-[80px] pl-6 text-[10px] font-black uppercase tracking-widest">Icon</TableHead>
                                 <TableHead className="text-[10px] font-black uppercase tracking-widest">Application</TableHead>
                                 <TableHead className="text-[10px] font-black uppercase tracking-widest">Status</TableHead>
@@ -174,7 +174,7 @@ export const AdminApps: React.FC = () => {
                         </TableHeader>
                         <TableBody>
                             {filteredApps.map(app => (
-                                <TableRow key={app.id} className="border-white/5 hover:bg-white/[0.02] transition-colors group">
+                                <TableRow key={app.id} className="border-border hover:bg-white/[0.02] transition-colors group">
                                     <TableCell className="pl-6 py-4">
                                         <div className="w-12 h-12 rounded-[22%] overflow-hidden bg-muted/30 flex items-center justify-center border border-white/10 shadow-lg">
                                             {app.icon ? (

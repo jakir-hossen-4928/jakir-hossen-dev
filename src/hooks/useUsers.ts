@@ -11,18 +11,26 @@ export const useUsers = () => {
         setIsLoading(true);
         setError(null);
 
-        const unsubscribe = subscribeToUsers((fetchedUsers) => {
-            setUsers(fetchedUsers);
-            setIsLoading(false);
-        });
-
-        // Handle errors
-        const errorTimeout = setTimeout(() => {
-            if (isLoading) {
-                setError('Failed to load users');
+        const unsubscribe = subscribeToUsers(
+            (fetchedUsers) => {
+                setUsers(fetchedUsers);
+                setIsLoading(false);
+                setError(null);
+            },
+            (err) => {
+                console.error('useUsers hook error:', err);
+                setError(err.message || 'Failed to sync users. Check permissions.');
                 setIsLoading(false);
             }
-        }, 10000); // 10 second timeout
+        );
+
+        // Handle fallback timeout for general connectivity issues
+        const errorTimeout = setTimeout(() => {
+            if (isLoading && !error) {
+                setError('Failed to load users (Timeout)');
+                setIsLoading(false);
+            }
+        }, 15000); // Increased to 15 seconds
 
         return () => {
             unsubscribe();

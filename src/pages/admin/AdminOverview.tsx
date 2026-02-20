@@ -21,7 +21,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, sub
         <div className="space-y-6 md:space-y-10">
             {/* Stats Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                <Card className="bg-primary/5 border-primary/20 backdrop-blur-md relative overflow-hidden group">
+                <Card className="bg-primary/5 border-primary/40 backdrop-blur-md relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
                         <CardTitle className="text-[10px] uppercase text-muted-foreground font-black tracking-widest">Live Apps</CardTitle>
@@ -33,7 +33,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, sub
                 </Card>
 
 
-                <Card className="bg-blue-500/5 border-blue-500/20 backdrop-blur-md relative overflow-hidden group">
+                <Card className="bg-blue-500/5 border-blue-500/40 backdrop-blur-md relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
                         <CardTitle className="text-[10px] uppercase text-muted-foreground font-black tracking-widest">Articles</CardTitle>
@@ -44,7 +44,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, sub
                     </CardContent>
                 </Card>
 
-                <Card className="bg-orange-500/5 border-orange-500/20 backdrop-blur-md relative overflow-hidden group">
+                <Card className="bg-orange-500/5 border-orange-500/40 backdrop-blur-md relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
                         <CardTitle className="text-[10px] uppercase text-muted-foreground font-black tracking-widest">Total Users</CardTitle>
@@ -55,7 +55,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, sub
                     </CardContent>
                 </Card>
 
-                <Card className="bg-emerald-500/5 border-emerald-500/20 backdrop-blur-md relative overflow-hidden group">
+                <Card className="bg-emerald-500/5 border-emerald-500/40 backdrop-blur-md relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
                         <CardTitle className="text-[10px] uppercase text-muted-foreground font-black tracking-widest">Subscribers</CardTitle>
@@ -66,7 +66,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, sub
                     </CardContent>
                 </Card>
 
-                <Card className="bg-yellow-500/5 border-yellow-500/20 backdrop-blur-md relative overflow-hidden group">
+                <Card className="bg-yellow-500/5 border-yellow-500/40 backdrop-blur-md relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
                         <CardTitle className="text-[10px] uppercase text-muted-foreground font-black tracking-widest">Notebook</CardTitle>
@@ -86,7 +86,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, sub
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {apps.slice(0, 3).map(app => (
-                            <Card key={app.id} className="border border-white/5 shadow-xl overflow-hidden bg-card/40 backdrop-blur-xl hover:border-primary/40 transition-all group">
+                            <Card key={app.id} className="border border-border shadow-xl overflow-hidden bg-card/40 backdrop-blur-xl hover:border-primary/40 transition-all group">
                                 <CardHeader className="p-4 flex flex-row items-center justify-between bg-gradient-to-br from-white/5 to-transparent">
                                     <div className="flex items-center gap-3">
                                         <div className="w-8 h-8 rounded-lg overflow-hidden bg-muted/20 border border-white/10 shrink-0">
