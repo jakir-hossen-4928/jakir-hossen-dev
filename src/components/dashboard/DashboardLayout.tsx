@@ -15,8 +15,10 @@ interface DashboardLayoutProps {
     notes?: Note[];
 }
 
+import { useUserPreferences } from '@/hooks/useUserPreferences';
+
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, apps = [], testers = [], subscribers = [], blogs = [], notes = [] }) => {
-    const [collapsed, setCollapsed] = useState(false);
+    const { sidebarCollapsed, setSidebarCollapsed } = useUserPreferences();
     const [mobileOpen, setMobileOpen] = useState(false);
     const location = useLocation();
 
@@ -33,15 +35,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, apps
     return (
         <div className="min-h-screen bg-background text-foreground flex overflow-hidden">
             <AppSidebar
-                collapsed={collapsed}
-                setCollapsed={setCollapsed}
+                collapsed={sidebarCollapsed}
+                setCollapsed={setSidebarCollapsed}
                 mobileOpen={mobileOpen}
                 setMobileOpen={setMobileOpen}
             />
 
             <div className={cn(
                 "flex-grow flex flex-col transition-all duration-500 min-w-0",
-                collapsed ? "md:pl-20" : "md:pl-72"
+                sidebarCollapsed ? "md:pl-20" : "md:pl-72"
             )}>
                 {/* Top Header */}
                 <header className="h-16 md:h-20 bg-card/80 backdrop-blur-xl border-b border-border sticky top-0 z-30 flex items-center justify-between px-4 md:px-6 shrink-0">
