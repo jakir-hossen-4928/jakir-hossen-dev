@@ -59,7 +59,7 @@ export default function Header() {
       className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border"
       style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
     >
-      <div className="section-container flex items-center justify-between h-20">
+      <div className="section-container flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
         <Link
           to="/"
@@ -135,12 +135,7 @@ export default function Header() {
                     </DropdownMenuItem>
                   )}
 
-                  <DropdownMenuItem className="rounded-xl cursor-not-allowed opacity-50 py-2.5 flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground">
-                      <Settings size={16} />
-                    </div>
-                    <span className="font-bold text-xs tracking-tight">Settings</span>
-                  </DropdownMenuItem>
+
 
                   <DropdownMenuSeparator className="bg-border/50 mx-1" />
                   <DropdownMenuItem
@@ -230,7 +225,7 @@ export default function Header() {
 
             <div className="flex flex-col h-full relative z-10">
               {/* Sidebar Header */}
-              <div className="flex items-center justify-between px-8 pt-12 pb-10">
+              <div className="flex items-center justify-between px-6 pt-8 pb-6">
                 <div className="flex flex-col gap-1">
                   <Link
                     to="/"

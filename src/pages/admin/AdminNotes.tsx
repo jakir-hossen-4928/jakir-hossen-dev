@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, Plus, Save, Trash2, X, Edit, Loader2, Pin, PinOff, Tag, Maximize2, Minimize2 } from 'lucide-react';
+import { Search, Plus, Save, Trash2, X, Edit, Loader2, Pin, PinOff, Maximize2, Minimize2 } from 'lucide-react';
 import { Note } from '@/lib/types';
 import { syncNotes, subscribeToNotes, addNote, updateNote, deleteNote } from '@/lib/syncService';
 import { toast } from 'sonner';
@@ -25,10 +25,8 @@ const AdminNotes = () => {
     const [currentNote, setCurrentNote] = useState<Partial<Note>>({
         title: '',
         content: '',
-        tags: [],
         isPinned: false
     });
-    const [tagInput, setTagInput] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const editorRef = useRef<DefaultTemplateRef>(null);
@@ -74,7 +72,6 @@ const AdminNotes = () => {
             const noteData = {
                 ...currentNote,
                 content: content,
-                tags: currentNote.tags || [],
                 isPinned: currentNote.isPinned || false
             };
 
@@ -123,58 +120,42 @@ const AdminNotes = () => {
         setCurrentNote({
             title: '',
             content: '',
-            tags: [],
             isPinned: false
         });
-        setTagInput('');
         setIsFullscreen(false);
     };
 
     const openViewDialog = (note: Note) => {
+        console.debug("[AdminNotes] Opening view dialog for note:", note.id);
         setViewNote(note);
         setIsViewDialogOpen(true);
+        // Backup injection
         setTimeout(() => {
             if (viewEditorRef.current) {
+                console.debug("[AdminNotes] Backup injection for View dialog");
                 viewEditorRef.current.injectMarkdown(note.content);
             }
-        }, 100);
+        }, 200);
     };
 
     const openEditDialog = (note: Note) => {
+        console.debug("[AdminNotes] Opening edit dialog for note:", note.id);
         setCurrentNote(note);
         setIsDialogOpen(true);
-        // Small timeout to allow dialog to render before injecting content
+        // Backup injection
         setTimeout(() => {
             if (editorRef.current) {
+                console.debug("[AdminNotes] Backup injection for Edit dialog");
                 editorRef.current.injectMarkdown(note.content);
             }
-        }, 100);
+        }, 200);
     };
 
-    const handleAddTag = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' && tagInput.trim()) {
-            e.preventDefault();
-            if (!currentNote.tags?.includes(tagInput.trim())) {
-                setCurrentNote(prev => ({
-                    ...prev,
-                    tags: [...(prev.tags || []), tagInput.trim()]
-                }));
-            }
-            setTagInput('');
-        }
-    };
 
-    const removeTag = (tagToRemove: string) => {
-        setCurrentNote(prev => ({
-            ...prev,
-            tags: prev.tags?.filter(tag => tag !== tagToRemove)
-        }));
-    };
 
     const filteredNotes = notes.filter(note =>
         note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        note.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        note.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        note.content.toLowerCase().includes(searchQuery.toLowerCase())
     ).sort((a, b) => {
         if (a.isPinned === b.isPinned) {
             return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
@@ -246,38 +227,16 @@ const AdminNotes = () => {
                                             ref={editorRef}
                                             className="h-full min-h-[300px] sm:min-h-[400px]"
                                             onChange={(markdown) => setCurrentNote(prev => ({ ...prev, content: markdown }))}
-                                            onReady={() => {
+                                            onReady={(methods) => {
+                                                console.debug("[AdminNotes] Edit editor ready, content available:", !!currentNote.content);
                                                 if (currentNote.content) {
-                                                    editorRef.current?.injectMarkdown(currentNote.content);
+                                                    methods.injectMarkdown(currentNote.content);
                                                 }
                                             }}
                                         />
                                     </div>
 
-                                    <div className="space-y-3 p-4 bg-yellow-50/50 dark:bg-yellow-950/10 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                                        <div className="flex items-center gap-2 text-sm font-medium text-yellow-700 dark:text-yellow-400">
-                                            <Tag className="w-4 h-4" />
-                                            <span>Tags</span>
-                                        </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {currentNote.tags?.map(tag => (
-                                                <Badge key={tag} className="gap-1 bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-900/50 dark:hover:bg-yellow-900 text-yellow-800 dark:text-yellow-200 border-yellow-300 dark:border-yellow-700">
-                                                    #{tag}
-                                                    <X
-                                                        className="w-3 h-3 cursor-pointer hover:text-red-600 transition-colors"
-                                                        onClick={() => removeTag(tag)}
-                                                    />
-                                                </Badge>
-                                            ))}
-                                        </div>
-                                        <Input
-                                            placeholder="Add tag (press Enter)"
-                                            value={tagInput}
-                                            onChange={(e) => setTagInput(e.target.value)}
-                                            onKeyDown={handleAddTag}
-                                            className="border-2 border-yellow-400 dark:border-yellow-500 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-400/20 bg-white dark:bg-gray-950 text-sm rounded-lg px-3 py-2"
-                                        />
-                                    </div>
+
                                 </div>
                             </div>
 
@@ -314,21 +273,16 @@ const AdminNotes = () => {
                                 ref={viewEditorRef}
                                 className="h-full min-h-[300px] sm:min-h-[400px]"
                                 readOnly={true}
-                                onReady={() => {
+                                onReady={(methods) => {
+                                    console.debug("[AdminNotes] View editor ready, content available:", !!viewNote?.content);
                                     if (viewNote?.content) {
-                                        viewEditorRef.current?.injectMarkdown(viewNote.content);
+                                        methods.injectMarkdown(viewNote.content);
                                     }
                                 }}
                             />
                         </div>
 
-                        <div className="flex flex-wrap gap-2">
-                            {viewNote?.tags?.map(tag => (
-                                <Badge key={tag} className="gap-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-200 border-yellow-300 dark:border-yellow-700">
-                                    #{tag}
-                                </Badge>
-                            ))}
-                        </div>
+
                     </div>
 
                     {/* Footer with Edit Button */}
@@ -396,18 +350,7 @@ const AdminNotes = () => {
                                         <p className="text-sm text-muted-foreground line-clamp-4 flex-1 whitespace-pre-line">
                                             {note.content}
                                         </p>
-                                        <div className="flex flex-wrap gap-1.5 pt-2">
-                                            {note.tags.slice(0, 3).map(tag => (
-                                                <Badge key={tag} className="text-[10px] sm:text-xs px-2 py-0.5 h-5 sm:h-6 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-200 border border-yellow-300 dark:border-yellow-700">
-                                                    #{tag}
-                                                </Badge>
-                                            ))}
-                                            {note.tags.length > 3 && (
-                                                <Badge className="text-[10px] sm:text-xs px-2 py-0.5 h-5 sm:h-6 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-200 border border-yellow-300 dark:border-yellow-700">
-                                                    +{note.tags.length - 3}
-                                                </Badge>
-                                            )}
-                                        </div>
+
                                         <div className="flex justify-end pt-2 opacity-0 group-hover:opacity-100 transition-opacity border-t border-yellow-200 dark:border-yellow-800 mt-auto gap-2">
                                             <Button
                                                 variant="ghost"

@@ -475,22 +475,27 @@ function EditorContent({
   const methods = useMemo<DefaultTemplateRef>(
     () => ({
       injectMarkdown: (content: string) => {
+        console.debug("[DefaultTemplate] injectMarkdown called with content length:", content?.length);
         setTimeout(() => {
           if (editor) {
+            console.debug("[DefaultTemplate] editor.update with markdown content");
             editor.update(() => {
               commandsRef.current.importFromMarkdown(content, { immediate: true, preventFocus: true });
             });
+          } else {
+            console.warn("[DefaultTemplate] editor is null during injectMarkdown");
           }
-        }, 100); // Small delay to ensure editor is ready
+        }, 150);
       },
       injectHTML: (content: string) => {
+        console.debug("[DefaultTemplate] injectHTML called");
         setTimeout(() => {
           if (editor) {
             editor.update(() => {
               commandsRef.current.importFromHTML(content, { preventFocus: true });
             });
           }
-        }, 100);
+        }, 150);
       },
       getMarkdown: () => commandsRef.current.exportToMarkdown(),
       getHTML: () => commandsRef.current.exportToHTML(),
@@ -518,6 +523,7 @@ function EditorContent({
     document.addEventListener("keydown", handleKeyDown);
 
     if (!readyRef.current) {
+      console.debug("[DefaultTemplate] Editor ready, calling onReady");
       readyRef.current = true;
       onReady?.(methods);
     }

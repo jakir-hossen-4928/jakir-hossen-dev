@@ -28,7 +28,7 @@ export default function AboutSection() {
               <div className="absolute inset-4 border-2 border-blue-500/10 rounded-[3rem] translate-x-4 -translate-y-4 sm:translate-x-6 sm:-translate-y-6 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-700" />
 
               {/* Image Container */}
-              <div className="relative w-[85%] h-[85%] rounded-[2.5rem] overflow-hidden border-4 border-card shadow-2xl bg-muted z-10">
+              <div className="relative w-[85%] h-[85%] rounded-[2.5rem] overflow-hidden border-4 border-card shadow-2xl bg-white z-10">
                 <img
                   src={profileImage}
                   alt="Jakir Hossen"
@@ -153,9 +153,39 @@ export default function AboutSection() {
               viewport={{ once: true }}
               className="group relative"
             >
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500/10 to-primary/10 rounded-[2.5rem] blur opacity-0 group-hover:opacity-100 transition duration-500" />
+              <div className="relative bg-card border border-border p-6 sm:p-12 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-8 md:gap-10 hover:border-primary/20 transition-all text-left">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-white flex items-center justify-center shrink-0 transition-all duration-500 border border-border/50 overflow-hidden p-2 shadow-sm">
+                  <img
+                    src="softvance.png"
+                    alt="Softvance Logo"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="flex-1 space-y-3">
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                    <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-500 text-[9px] font-black uppercase tracking-widest whitespace-nowrap">Feb 2026 - Present</span>
+                    <h4 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">Front-end Developer (CMS Platforms)</h4>
+                  </div>
+                  <h5 className="text-base sm:text-lg font-bold text-muted-foreground flex items-center gap-2">
+                    Softvance <ChevronRight size={14} className="text-primary" /> Dhaka, Bangladesh
+                  </h5>
+                  <p className="text-sm sm:text-base text-muted-foreground font-medium opacity-80 leading-relaxed pt-1">
+                    Specializing in custom CMS platforms and premium frontend experiences, utilizing React and modern web technologies to deliver high-scale digital solutions.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="group relative"
+            >
               <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/10 to-orange-500/10 rounded-[2.5rem] blur opacity-0 group-hover:opacity-100 transition duration-500" />
               <div className="relative bg-card border border-border p-6 sm:p-12 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-8 md:gap-10 hover:border-primary/20 transition-all text-left">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 border border-primary/10">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-white flex items-center justify-center shrink-0 transition-all duration-500 border border-border/50 overflow-hidden p-2 shadow-sm">
                   {/* <Award size={32} /> */}
                   <img
                     src="myschool.png"

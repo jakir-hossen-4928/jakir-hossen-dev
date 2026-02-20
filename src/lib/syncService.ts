@@ -63,7 +63,6 @@ function mapNote(docId: string, data: any): Note {
         id: docId,
         title: data.title || '',
         content: data.content || '',
-        tags: Array.isArray(data.tags) ? data.tags : [],
         isPinned: data.isPinned || false,
         createdAt: formatTimestamp(data.createdAt),
         updatedAt: formatTimestamp(data.updatedAt),
