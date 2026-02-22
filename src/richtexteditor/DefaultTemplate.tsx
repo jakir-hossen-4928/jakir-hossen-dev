@@ -23,6 +23,8 @@ import {
 import { CommandPalette } from "./CommandPalette";
 import { createPortal } from "react-dom";
 import { defaultTheme } from "./theme";
+import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
+import { ALL_MARKDOWN_TRANSFORMERS } from "@lexkit/editor";
 import "./styles.css";
 
 type TableConfig = {
@@ -455,7 +457,14 @@ function EditorContent({
   const [content, setContent] = useState({ html: "", markdown: "" });
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const commandsRef = useRef<EditorCommands>(commands);
+  const modeRef = useRef<EditorMode>(mode);
+  const contentRef = useRef(content);
   const readyRef = useRef(false);
+
+  useEffect(() => {
+    modeRef.current = mode;
+    contentRef.current = content;
+  }, [mode, content]);
 
   // Markdown Change Listener
   useEffect(() => {
@@ -476,6 +485,7 @@ function EditorContent({
     () => ({
       injectMarkdown: (content: string) => {
         console.debug("[DefaultTemplate] injectMarkdown called with content length:", content?.length);
+        setContent(prev => ({ ...prev, markdown: content }));
         setTimeout(() => {
           if (editor) {
             console.debug("[DefaultTemplate] editor.update with markdown content");
@@ -489,6 +499,7 @@ function EditorContent({
       },
       injectHTML: (content: string) => {
         console.debug("[DefaultTemplate] injectHTML called");
+        setContent(prev => ({ ...prev, html: content }));
         setTimeout(() => {
           if (editor) {
             editor.update(() => {
@@ -497,8 +508,14 @@ function EditorContent({
           }
         }, 150);
       },
-      getMarkdown: () => commandsRef.current.exportToMarkdown(),
-      getHTML: () => commandsRef.current.exportToHTML(),
+      getMarkdown: () => {
+        if (modeRef.current === "markdown") return contentRef.current.markdown;
+        return commandsRef.current.exportToMarkdown();
+      },
+      getHTML: () => {
+        if (modeRef.current === "html") return contentRef.current.html;
+        return commandsRef.current.exportToHTML();
+      },
     }),
     [editor],
   );
@@ -541,6 +558,7 @@ function EditorContent({
 
   const handleMarkdownChange = (markdown: string) => {
     setContent((prev) => ({ ...prev, markdown }));
+    onChange?.(markdown);
   };
 
   const handleModeChange = async (newMode: EditorMode) => {
@@ -598,6 +616,7 @@ function EditorContent({
               placeholder={!readOnly ? <div className="lexkit-placeholder">Start typing...</div> : null}
               ErrorBoundary={ErrorBoundary}
             />
+            <MarkdownShortcutPlugin transformers={ALL_MARKDOWN_TRANSFORMERS} />
           </div>
           {!readOnly && <FloatingToolbarRenderer />}
         </div>

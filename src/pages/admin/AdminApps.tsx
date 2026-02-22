@@ -8,7 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
+import { confirmToast } from '@/components/ui/ConfirmToast';
 import { Search, Plus, Trash2, Edit3, Smartphone, Loader2, UploadCloud, Image as ImageIcon } from 'lucide-react';
 import { db as firestore } from '@/lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
@@ -95,14 +96,16 @@ export const AdminApps: React.FC = () => {
         }
     };
 
-    const handleDelete = async (appId: string) => {
-        if (!confirm("Delete this app?")) return;
-        try {
-            await deleteApp(appId);
-            toast.success("App deleted");
-        } catch (error) {
-            toast.error("Failed to delete");
-        }
+    const handleDeleteApp = async (appId: string) => {
+        confirmToast("Delete this app?", async () => {
+            try {
+                await deleteApp(appId);
+                toast.success("App deleted");
+            } catch (error) {
+                console.error("Error deleting app:", error);
+                toast.error("Failed to delete");
+            }
+        });
     };
 
     return (
@@ -197,7 +200,7 @@ export const AdminApps: React.FC = () => {
                                         <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(app)} disabled={isUploadingIcon} className="hover:bg-primary/10 hover:text-primary rounded-lg transition-all">
                                             <Edit3 size={16} />
                                         </Button>
-                                        <Button variant="ghost" size="icon" onClick={() => handleDelete(app.id)} disabled={isUploadingIcon} className="hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-all">
+                                        <Button variant="ghost" size="icon" onClick={() => handleDeleteApp(app.id)} disabled={isUploadingIcon} className="hover:bg-red-500/10 hover:text-red-400 rounded-lg transition-all">
                                             <Trash2 size={16} />
                                         </Button>
                                     </TableCell>

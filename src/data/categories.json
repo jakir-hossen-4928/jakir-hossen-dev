@@ -93,5 +93,37 @@
             "Technical Debt Recovery",
             "UI Refactors"
         ]
+    },
+    {
+        "name": "Databases & Storage",
+        "slug": "databases",
+        "subcategories": [
+            "Supabase",
+            "PostgreSQL",
+            "Firebase",
+            "NoSQL",
+            "Database Design",
+            "Caching Strategies"
+        ]
+    },
+    {
+        "name": "Security & Auth",
+        "slug": "security",
+        "subcategories": [
+            "Authentication",
+            "OAuth & SSO",
+            "Web Security",
+            "Data Privacy"
+        ]
+    },
+    {
+        "name": "Tools & Workflows",
+        "slug": "tools",
+        "subcategories": [
+            "GitHub & Git",
+            "CMS Platforms",
+            "Development Environments",
+            "Terminal Mastery"
+        ]
     }
 ]

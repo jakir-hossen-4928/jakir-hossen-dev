@@ -8,7 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
+import { confirmToast } from '@/components/ui/ConfirmToast';
 import { Plus, Trash2, Edit3, Loader2, Search, Calendar, Tag, ChevronDown, Check } from 'lucide-react';
 import {
     DropdownMenu,
@@ -102,14 +103,15 @@ export const AdminBlogs: React.FC = () => {
     };
 
     const handleDeleteBlog = async (blogId: string) => {
-        if (!confirm("Are you sure you want to delete this blog post?")) return;
-        try {
-            await deleteBlogPost(blogId);
-            toast.success("Blog post deleted successfully");
-        } catch (error) {
-            console.error("Error deleting blog:", error);
-            toast.error("Failed to delete blog post");
-        }
+        confirmToast("Are you sure you want to delete this blog post?", async () => {
+            try {
+                await deleteBlogPost(blogId);
+                toast.success("Blog post deleted successfully");
+            } catch (error) {
+                console.error("Error deleting blog:", error);
+                toast.error("Failed to delete blog post");
+            }
+        });
     };
 
     const toggleCategory = (cat: string) => {
@@ -208,6 +210,9 @@ export const AdminBlogs: React.FC = () => {
                                         <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-mono mt-1">
                                             <Calendar size={10} /> {blog.date}
                                         </div>
+                                        <div className="text-[9px] text-muted-foreground font-mono mt-0.5 truncate max-w-[200px]" title={blog.slug}>
+                                            /{blog.slug}
+                                        </div>
                                     </TableCell>
                                     <TableCell>
                                         <div className="flex flex-wrap gap-1">
@@ -249,17 +254,34 @@ export const AdminBlogs: React.FC = () => {
                     </DialogHeader>
 
                     <div className="flex-1 px-6 py-4 sm:p-0 overflow-y-auto space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div className="space-y-2">
                                 <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Title</Label>
                                 <Input
                                     value={editingBlog.title || ''}
-                                    onChange={e => setEditingBlog(prev => ({ ...prev, title: e.target.value }))}
+                                    onChange={e => {
+                                        const newTitle = e.target.value;
+                                        setEditingBlog(prev => ({
+                                            ...prev,
+                                            title: newTitle,
+                                            // Only auto-generate slug if it's a new post or we're actively editing the title and want it linked
+                                            ...(!prev.id ? { slug: newTitle.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-') } : {})
+                                        }));
+                                    }}
                                     placeholder="Enter blog title"
                                     className="h-12 rounded-xl bg-muted/50 border-border"
                                 />
                             </div>
                             <div className="space-y-2">
+                                <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Slug</Label>
+                                <Input
+                                    value={editingBlog.slug || ''}
+                                    onChange={e => setEditingBlog(prev => ({ ...prev, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') }))}
+                                    placeholder="editable-blog-slug"
+                                    className="h-12 rounded-xl bg-muted/50 border-border font-mono text-xs"
+                                />
+                            </div>
+                            <div className="space-y-2 lg:col-span-1 md:col-span-2">
                                 <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Date</Label>
                                 <Input
                                     type="date"

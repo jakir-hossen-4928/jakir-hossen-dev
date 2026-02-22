@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 import { useBlogs } from '@/hooks/useBlogs';
 import { usePageTitle } from '@/hooks/usePageTitle';
 
@@ -104,10 +104,7 @@ const BlogDetails = () => {
                                     <Calendar size={14} className="text-primary/60" />
                                     <span className="tabular-nums">{new Date(blog.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <Clock size={14} className="text-primary/60" />
-                                    <span>{Math.ceil(blog.description.length / 500)} min read</span>
-                                </div>
+
                                 <button
                                     onClick={handleShare}
                                     className="flex items-center gap-2 hover:text-primary transition-all ml-auto bg-white/5 px-3 py-1.5 rounded-full border border-white/5"

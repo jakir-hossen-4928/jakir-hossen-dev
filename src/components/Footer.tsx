@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowUp, Github, Linkedin, Mail, Send } from "lucide-react";
 import { db } from '@/lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 

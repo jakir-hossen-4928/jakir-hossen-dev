@@ -72,8 +72,8 @@ export const AppSidebar: React.FC<SidebarProps> = ({
                         </div>
                         {!collapsed && (
                             <div className="flex flex-col animate-in fade-in slide-in-from-left-4 duration-500">
-                                <span className="font-black text-xl tracking-tighter leading-none">Console</span>
-                                <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground mt-0.5">Pro Max Admin</span>
+                                <span className="font-black text-xl tracking-tighter leading-none">Sajuriya</span>
+                                <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground mt-0.5">Studio</span>
                             </div>
                         )}
                     </div>

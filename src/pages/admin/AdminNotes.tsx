@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Plus, Save, Trash2, X, Edit, Loader2, Pin, PinOff, Maximize2, Minimize2 } from 'lucide-react';
 import { Note } from '@/lib/types';
 import { syncNotes, subscribeToNotes, addNote, updateNote, deleteNote } from '@/lib/syncService';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
+import { confirmToast } from '@/components/ui/ConfirmToast';
 import {
     Dialog,
     DialogContent,
@@ -94,7 +95,7 @@ const AdminNotes = () => {
 
     const handleDelete = async (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
-        if (confirm("Are you sure you want to delete this note?")) {
+        confirmToast("Are you sure you want to delete this note?", async () => {
             try {
                 await deleteNote(id);
                 toast.success("Note deleted");
@@ -102,7 +103,7 @@ const AdminNotes = () => {
                 console.error("Error deleting note:", error);
                 toast.error("Failed to delete note");
             }
-        }
+        });
     };
 
     const handlePinToggle = async (note: Note, e: React.MouseEvent) => {

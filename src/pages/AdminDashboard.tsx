@@ -10,7 +10,7 @@ import { AdminTesters } from './admin/AdminTesters';
 import { AdminBlogs } from './admin/AdminBlogs';
 import AdminNotes from './admin/AdminNotes';
 import AdminLinks from './admin/AdminLinks';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 import { Wifi, WifiOff, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useApps } from '@/hooks/useApps';

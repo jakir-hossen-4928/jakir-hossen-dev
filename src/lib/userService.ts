@@ -1,7 +1,7 @@
 import { collection, doc, updateDoc, getDocs, onSnapshot, addDoc, Timestamp } from 'firebase/firestore';
 import { db } from './firebase';
 import { UserProfile, UserRole, RoleChangeLog } from './types';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 
 /**
  * Get all users from Firestore

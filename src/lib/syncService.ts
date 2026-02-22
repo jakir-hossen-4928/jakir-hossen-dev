@@ -587,6 +587,17 @@ export async function deleteSubscriberFromCache(uid: string): Promise<void> {
     await db.subscribers.delete(uid);
 }
 
+// Delete subscriber from Firestore and Cache
+export async function deleteSubscriber(uid: string): Promise<void> {
+    try {
+        await deleteDoc(doc(firestore, 'subscribers', uid));
+        await deleteSubscriberFromCache(uid);
+    } catch (error) {
+        console.error('[SyncService] Error deleting subscriber:', error);
+        throw error;
+    }
+}
+
 
 // --- Notes Sync & CRUD ---
 

@@ -3,9 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Download, Users, Search, Loader2 } from 'lucide-react';
+import { Download, Users, Search, Loader2, Trash2 } from 'lucide-react';
 import { useSubscribers } from '@/hooks/useSubscribers';
-
+import { deleteSubscriber } from '@/lib/syncService';
+import { confirmToast } from '@/components/ui/ConfirmToast';
+import { toast } from 'react-toastify';
 interface AdminSubscribersProps {
     exportSubscribers: () => void;
 }
@@ -17,6 +19,18 @@ export const AdminSubscribers: React.FC<AdminSubscribersProps> = ({ exportSubscr
     const filteredSubscribers = subscribers.filter(sub =>
         sub.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const handleDelete = async (uid: string) => {
+        confirmToast("Are you sure you want to delete this subscriber?", async () => {
+            try {
+                await deleteSubscriber(uid);
+                toast.success('Subscriber deleted');
+            } catch (error) {
+                console.error('Error deleting subscriber:', error);
+                toast.error('Failed to delete subscriber');
+            }
+        });
+    };
 
     return (
         <Card className="border border-border shadow-2xl rounded-2xl md:rounded-[32px] overflow-hidden h-full flex flex-col min-h-[400px] bg-card/30 backdrop-blur-2xl">
@@ -51,17 +65,23 @@ export const AdminSubscribers: React.FC<AdminSubscribersProps> = ({ exportSubscr
                             <TableHeader className="bg-white/[0.01]">
                                 <TableRow className="border-none hover:bg-transparent">
                                     <TableHead className="font-black text-[9px] md:text-[10px] uppercase tracking-widest pl-6 md:pl-8 py-5 text-muted-foreground/50">Email</TableHead>
-                                    <TableHead className="font-black text-[9px] md:text-[10px] uppercase tracking-widest py-5 text-right pr-6 md:pr-8 text-muted-foreground/50">Joined At</TableHead>
+                                    <TableHead className="font-black text-[9px] md:text-[10px] uppercase tracking-widest py-5 text-right text-muted-foreground/50">Joined At</TableHead>
+                                    <TableHead className="font-black text-[9px] md:text-[10px] uppercase tracking-widest py-5 text-right pr-6 md:pr-8 text-muted-foreground/50">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {filteredSubscribers.length === 0 ? (
-                                    <TableRow><TableCell colSpan={2} className="text-center py-24 text-muted-foreground/20"><Users size={48} className="mx-auto mb-4 opacity-50" /><p className="font-black uppercase tracking-widest text-[10px]">No subscribers found</p></TableCell></TableRow>
+                                    <TableRow><TableCell colSpan={3} className="text-center py-24 text-muted-foreground/20"><Users size={48} className="mx-auto mb-4 opacity-50" /><p className="font-black uppercase tracking-widest text-[10px]">No subscribers found</p></TableCell></TableRow>
                                 ) : (
                                     filteredSubscribers.map((sub) => (
                                         <TableRow key={sub.uid} className="border-b border-border last:border-none hover:bg-white/[0.02] transition-colors group text-left">
                                             <TableCell className="pl-6 md:pl-8 py-4 font-bold text-xs md:text-sm tracking-tight text-foreground">{sub.email}</TableCell>
-                                            <TableCell className="text-right pr-6 md:pr-8 py-4 font-black text-[10px] md:text-xs text-muted-foreground/50 whitespace-nowrap">{new Date(sub.joinedAt).toLocaleDateString()}</TableCell>
+                                            <TableCell className="text-right py-4 font-black text-[10px] md:text-xs text-muted-foreground/50 whitespace-nowrap">{new Date(sub.joinedAt).toLocaleDateString()}</TableCell>
+                                            <TableCell className="text-right pr-6 md:pr-8 py-4">
+                                                <Button variant="ghost" size="icon" onClick={() => handleDelete(sub.uid)} className="h-8 w-8 text-destructive hover:text-red-600 hover:bg-red-500/10 transition-colors">
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </TableCell>
                                         </TableRow>
                                     ))
                                 )}

@@ -15,7 +15,8 @@ import {
     updateBookmarkLink,
     deleteBookmarkLink
 } from '@/lib/syncService';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
+import { confirmToast } from '@/components/ui/ConfirmToast';
 import {
     Dialog,
     DialogContent,
@@ -303,7 +304,7 @@ const AdminLinks = () => {
     };
 
     const handleDeleteFolder = async (id: string) => {
-        if (confirm("Delete this folder and all its sub-items?")) {
+        confirmToast("Delete this folder and all its sub-items?", async () => {
             try {
                 await deleteBookmarkFolder(id);
 
@@ -318,24 +319,29 @@ const AdminLinks = () => {
                 setFolders(prev => prev.filter(f => !allIdsToDelete.includes(f.id)));
                 setLinks(prev => prev.filter(l => !allIdsToDelete.includes(l.folderId || '')));
 
+                if (currentFolderId === id) {
+                    setCurrentFolderId(null);
+                }
+
                 toast.success("Folder and all sub-items deleted");
             } catch (error) {
-                console.error(error);
+                console.error("Error deleting folder:", error);
                 toast.error("Failed to delete folder");
             }
-        }
+        });
     };
 
     const handleDeleteLink = async (id: string) => {
-        if (confirm("Delete this link?")) {
+        confirmToast("Delete this link?", async () => {
             try {
                 await deleteBookmarkLink(id);
                 setLinks(prev => prev.filter(l => l.id !== id));
                 toast.success("Link deleted");
             } catch (error) {
+                console.error("Error deleting link:", error);
                 toast.error("Failed to delete link");
             }
-        }
+        });
     };
 
     const currentPath = React.useMemo(() => {

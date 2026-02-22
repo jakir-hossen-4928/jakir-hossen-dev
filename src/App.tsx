@@ -1,5 +1,6 @@
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -30,7 +31,7 @@ const App = () => {
         <ErrorBoundary>
           <TooltipProvider>
             <Toaster />
-            <Sonner />
+            <ToastContainer theme="dark" position="bottom-right" />
             <AuthModal />
             <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <ScrollToTop />

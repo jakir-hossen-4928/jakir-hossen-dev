@@ -24,7 +24,8 @@ import { useUsers } from '@/hooks/useUsers';
 import { useAuth } from '@/lib/AuthContext';
 import { updateUserRole } from '@/lib/userService';
 import { UserProfile, UserRole } from '@/lib/types';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
+import { confirmToast } from '@/components/ui/ConfirmToast';
 import { cn } from '@/lib/utils';
 
 interface AdminTestersProps {
@@ -36,11 +37,7 @@ type RoleFilter = 'all' | 'admin' | 'user';
 export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [roleFilter, setRoleFilter] = useState<RoleFilter>('all');
-    const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
-    const [newRole, setNewRole] = useState<UserRole>('user');
     const [isUpdating, setIsUpdating] = useState(false);
-    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-
     const { users, isLoading, error } = useUsers();
     const { profile } = useAuth();
 
@@ -58,39 +55,6 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
         return matchesSearch && matchesRole;
     });
 
-    const handleRoleChangeClick = (user: UserProfile, role: UserRole) => {
-        if (user.uid === profile?.uid) {
-            toast.error('You cannot change your own role');
-            return;
-        }
-
-        setSelectedUser(user);
-        setNewRole(role);
-        setShowConfirmDialog(true);
-    };
-
-    const handleConfirmRoleChange = async () => {
-        if (!selectedUser || !profile) return;
-
-        setIsUpdating(true);
-        try {
-            await updateUserRole(
-                selectedUser.uid,
-                newRole,
-                profile.uid,
-                profile.email || '',
-                selectedUser.email || '',
-                selectedUser.role
-            );
-            setShowConfirmDialog(false);
-            setSelectedUser(null);
-        } catch (error: any) {
-            toast.error(error.message || 'Failed to update role');
-        } finally {
-            setIsUpdating(false);
-        }
-    };
-
     const getRoleBadge = (role: string = 'user', isCurrentUser: boolean) => {
         const normalizedRole = role.toLowerCase().trim();
         if (normalizedRole === 'admin') {
@@ -107,6 +71,72 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
                 <User className="w-3 h-3" />
                 User
             </Badge>
+        );
+    };
+
+    const handleConfirmRoleChange = async (user: UserProfile, role: UserRole) => {
+        if (!profile) return;
+
+        setIsUpdating(true);
+        try {
+            await updateUserRole(
+                user.uid,
+                role,
+                profile.uid,
+                profile.email || '',
+                user.email || '',
+                user.role
+            );
+        } catch (error: any) {
+            toast.error(error.message || 'Failed to update role');
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handleRoleChangeClick = (user: UserProfile, role: UserRole) => {
+        if (user.uid === profile?.uid) {
+            toast.error('You cannot change your own role');
+            return;
+        }
+
+        const message = (
+            <div className="flex flex-col gap-4 text-left w-full mt-2">
+                <div className="space-y-2">
+                    <p className="text-sm font-medium text-foreground">User Details:</p>
+                    <div className="bg-muted/50 p-3 rounded-lg space-y-1">
+                        <p className="text-sm font-bold text-foreground">{user.displayName}</p>
+                        <p className="text-xs text-muted-foreground">{user.email}</p>
+                    </div>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                    <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground">Current:</span>
+                        {getRoleBadge(user.role, false)}
+                    </div>
+                    <span className="text-muted-foreground">→</span>
+                    <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground">New:</span>
+                        {getRoleBadge(role, false)}
+                    </div>
+                </div>
+                {role === 'admin' && (
+                    <div className="bg-orange-500/10 border border-orange-500/20 p-3 rounded-lg flex items-start gap-2">
+                        <Crown className="w-4 h-4 text-orange-500 mt-0.5 shrink-0" />
+                        <p className="text-xs text-orange-500">
+                            This user will have full administrative access to manage all users, apps, and content.
+                        </p>
+                    </div>
+                )}
+            </div>
+        );
+
+        confirmToast(
+            <div className="flex flex-col gap-2">
+                <p>Are you sure you want to change this user's role?</p>
+                {message}
+            </div>,
+            () => handleConfirmRoleChange(user, role)
         );
     };
 
@@ -244,71 +274,6 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
                 </CardContent>
             </Card>
 
-            {/* Confirmation Dialog */}
-            <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-                <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2">
-                            <AlertTriangle className="w-5 h-5 text-orange-500" />
-                            Confirm Role Change
-                        </DialogTitle>
-                        <DialogDescription>
-                            You are about to change the role for this user. This action will take effect immediately.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="py-4 space-y-4">
-                        <div className="space-y-2">
-                            <p className="text-sm font-medium">User Details:</p>
-                            <div className="bg-muted/50 p-3 rounded-lg space-y-1">
-                                <p className="text-sm font-bold">{selectedUser?.displayName}</p>
-                                <p className="text-xs text-muted-foreground">{selectedUser?.email}</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-3 text-sm">
-                            <div className="flex items-center gap-2">
-                                <span className="text-muted-foreground">Current:</span>
-                                {selectedUser && getRoleBadge(selectedUser.role, false)}
-                            </div>
-                            <span className="text-muted-foreground">→</span>
-                            <div className="flex items-center gap-2">
-                                <span className="text-muted-foreground">New:</span>
-                                {getRoleBadge(newRole, false)}
-                            </div>
-                        </div>
-                        {newRole === 'admin' && (
-                            <div className="bg-orange-500/10 border border-orange-500/20 p-3 rounded-lg flex items-start gap-2">
-                                <Crown className="w-4 h-4 text-orange-500 mt-0.5 shrink-0" />
-                                <p className="text-xs text-orange-500">
-                                    This user will have full administrative access to manage all users, apps, and content.
-                                </p>
-                            </div>
-                        )}
-                    </div>
-                    <DialogFooter>
-                        <Button
-                            variant="outline"
-                            onClick={() => setShowConfirmDialog(false)}
-                            disabled={isUpdating}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={handleConfirmRoleChange}
-                            disabled={isUpdating}
-                            className="bg-primary"
-                        >
-                            {isUpdating ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Updating...
-                                </>
-                            ) : (
-                                'Confirm Change'
-                            )}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </>
     );
 };
