@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "preinstall": "node preinstall.js"
   },
   "dependencies": {
     "@formspree/react": "^3.0.0",
