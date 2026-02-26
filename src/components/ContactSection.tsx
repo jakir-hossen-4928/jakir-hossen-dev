@@ -47,7 +47,7 @@ const contactInfo = [
 ];
 
 export default function ContactSection() {
-  const [state, handleSubmit] = useForm(import.meta.env.VITE_FORMSPREE_FORM_ID);
+  const [state, handleSubmit] = useForm(import.meta.env.VITE_FORMSPREE_FORM_ID || "xykdyyzk");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
