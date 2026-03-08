@@ -1,4 +1,4 @@
-export type AppStatus = 'production' | 'testing';
+export type AppStatus = 'production' | 'closed_testing';
 export type BlogStatus = 'published' | 'draft';
 export type UserRole = 'user' | 'admin';
 

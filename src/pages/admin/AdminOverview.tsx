@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Rocket, BookOpen, Users, Mail, NotebookPen } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { AppEntry, Tester, BlogPost, Subscriber, Note } from '@/lib/types';
+import { AppEntry, Tester, BlogPost, Subscriber, Note, UserProfile } from '@/lib/types';
 import OptimizedImage from '@/components/ui/OptimizedImage';
 
 interface AdminOverviewProps {
@@ -12,9 +12,10 @@ interface AdminOverviewProps {
     subscribers: Subscriber[];
     blogs?: BlogPost[];
     notes?: Note[];
+    users: UserProfile[];
 }
 
-export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, subscribers, blogs = [], notes = [] }) => {
+export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, subscribers, blogs = [], notes = [], users = [] }) => {
     const totalAppsCount = apps.length;
 
     return (
@@ -51,7 +52,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, sub
                         <Users size={14} className="text-orange-500/40" />
                     </CardHeader>
                     <CardContent className="p-4 pt-0">
-                        <p className="text-3xl font-black text-foreground">{testers.length}</p>
+                        <p className="text-3xl font-black text-foreground">{users.length}</p>
                     </CardContent>
                 </Card>
 
@@ -87,22 +88,24 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({ apps, testers, sub
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {apps.slice(0, 3).map(app => (
                             <Card key={app.id} className="border border-border shadow-xl overflow-hidden bg-card/40 backdrop-blur-xl hover:border-primary/40 transition-all group">
-                                <CardHeader className="p-4 flex flex-row items-center justify-between bg-gradient-to-br from-white/5 to-transparent">
+                                <CardHeader className="p-4 flex flex-row items-center justify-between bg-gradient-to-br from-white/5 to-transparent h-full">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-lg overflow-hidden bg-muted/20 border border-white/10 shrink-0">
+                                        <div className="w-10 h-10 rounded-xl overflow-hidden bg-muted/20 border border-white/10 shrink-0 shadow-lg">
                                             {app.icon && <OptimizedImage src={app.icon} alt={app.appName} className="w-full h-full object-cover" />}
                                         </div>
                                         <div>
                                             <CardTitle className="text-sm font-black text-foreground group-hover:text-primary transition-colors line-clamp-1">{app.appName}</CardTitle>
-                                            <p className="text-[9px] text-muted-foreground font-black uppercase tracking-tighter">{app.status}</p>
+                                            <div className="flex items-center gap-1.5 mt-1">
+                                                <Badge variant="outline" className={cn(
+                                                    "text-[8px] px-1.5 py-0 font-black uppercase tracking-tighter",
+                                                    app.status === 'production' && "bg-green-500/20 text-green-400 border-green-500/30",
+                                                    app.status === 'closed_testing' && "bg-blue-500/20 text-blue-400 border-blue-500/30"
+                                                )}>
+                                                    {app.status === 'closed_testing' ? 'Closed Testing' : app.status}
+                                                </Badge>
+                                            </div>
                                         </div>
                                     </div>
-                                    <Badge variant={app.status === 'production' ? 'default' : 'outline'} className={cn(
-                                        "text-[8px] px-1.5 py-0 font-black uppercase",
-                                        app.status === 'production' ? "bg-green-500/20 text-green-400 border-green-500/30" : "bg-primary/10 text-primary border-primary/20"
-                                    )}>
-                                        {app.status}
-                                    </Badge>
                                 </CardHeader>
                             </Card>
                         ))}

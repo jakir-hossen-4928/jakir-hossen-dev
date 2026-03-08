@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Save, Trash2, X, Edit, Loader2, Folder, FolderPlus, Link2, ChevronRight, MoreVertical, ExternalLink, ArrowLeft, Download, Upload } from 'lucide-react';
+import { Search, Plus, Save, Trash2, X, Edit, Loader2, Folder, FolderPlus, Link2, ChevronRight, MoreVertical, ExternalLink, ArrowLeft, Download, Upload, Copy } from 'lucide-react';
 import { BookmarkFolder, BookmarkLink } from '@/lib/types';
 import {
-    syncBookmarkFolders,
-    syncBookmarkLinks,
+    subscribeToBookmarkFolders,
+    subscribeToBookmarkLinks,
     addBookmarkFolder,
     updateBookmarkFolder,
     deleteBookmarkFolder,
@@ -148,7 +148,6 @@ const AdminLinks = () => {
                                     updatedAt: new Date().toISOString()
                                 };
                                 currentFolders.push(newFolder);
-                                setFolders(prev => [...prev, newFolder]);
                                 importedCount++;
                             }
 
@@ -187,7 +186,6 @@ const AdminLinks = () => {
                                     updatedAt: new Date().toISOString()
                                 };
                                 currentLinks.push(newLink);
-                                setLinks(prev => [...prev, newLink]);
                                 importedCount++;
                             }
                         }
@@ -208,23 +206,25 @@ const AdminLinks = () => {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [fetchedFolders, fetchedLinks] = await Promise.all([
-                    syncBookmarkFolders(),
-                    syncBookmarkLinks()
-                ]);
-                setFolders(fetchedFolders);
-                setLinks(fetchedLinks);
-            } catch (error) {
-                console.error("Failed to fetch data:", error);
-                toast.error("Failed to load bookmarks");
-            } finally {
-                setLoading(false);
-            }
-        };
+        setLoading(true);
 
-        fetchData();
+        // Use individual unsubs to ensure they are cleaned up correctly
+        const unsubFolders = subscribeToBookmarkFolders((fetchedFolders) => {
+            setFolders(fetchedFolders);
+            // Only stop loading when both could have potentially finished
+            // In reality, Firestore local cache reflects almost instantly
+            setLoading(false);
+        });
+
+        const unsubLinks = subscribeToBookmarkLinks((fetchedLinks) => {
+            setLinks(fetchedLinks);
+            setLoading(false);
+        });
+
+        return () => {
+            unsubFolders();
+            unsubLinks();
+        };
     }, []);
 
     const handleCreateOrUpdateFolder = async () => {
@@ -237,21 +237,12 @@ const AdminLinks = () => {
         try {
             if (editingFolder.id) {
                 await updateBookmarkFolder(editingFolder.id, { name: editingFolder.name });
-                setFolders(prev => prev.map(f => f.id === editingFolder.id ? { ...f, name: editingFolder.name! } : f));
                 toast.success("Folder updated");
             } else {
-                const id = await addBookmarkFolder({
+                await addBookmarkFolder({
                     name: editingFolder.name,
                     parentId: currentFolderId
                 });
-                const newFolder = {
-                    id,
-                    name: editingFolder.name,
-                    parentId: currentFolderId,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                setFolders(prev => [newFolder, ...prev]);
                 toast.success("Folder created");
             }
             setIsFolderDialogOpen(false);
@@ -274,23 +265,13 @@ const AdminLinks = () => {
         try {
             if (editingLink.id) {
                 await updateBookmarkLink(editingLink.id, { title: editingLink.title, url: editingLink.url });
-                setLinks(prev => prev.map(l => l.id === editingLink.id ? { ...l, title: editingLink.title!, url: editingLink.url! } : l));
                 toast.success("Link updated");
             } else {
-                const id = await addBookmarkLink({
+                await addBookmarkLink({
                     title: editingLink.title,
                     url: editingLink.url,
                     folderId: currentFolderId
                 });
-                const newLink = {
-                    id,
-                    title: editingLink.title,
-                    url: editingLink.url,
-                    folderId: currentFolderId,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                };
-                setLinks(prev => [newLink, ...prev]);
                 toast.success("Link created");
             }
             setIsLinkDialogOpen(false);
@@ -308,17 +289,6 @@ const AdminLinks = () => {
             try {
                 await deleteBookmarkFolder(id);
 
-                // Recursively find all child IDs to remove from state
-                const getChildIds = (parentId: string): string[] => {
-                    const children = folders.filter(f => f.parentId === parentId);
-                    return [parentId, ...children.flatMap(c => getChildIds(c.id))];
-                };
-
-                const allIdsToDelete = getChildIds(id);
-
-                setFolders(prev => prev.filter(f => !allIdsToDelete.includes(f.id)));
-                setLinks(prev => prev.filter(l => !allIdsToDelete.includes(l.folderId || '')));
-
                 if (currentFolderId === id) {
                     setCurrentFolderId(null);
                 }
@@ -335,7 +305,6 @@ const AdminLinks = () => {
         confirmToast("Delete this link?", async () => {
             try {
                 await deleteBookmarkLink(id);
-                setLinks(prev => prev.filter(l => l.id !== id));
                 toast.success("Link deleted");
             } catch (error) {
                 console.error("Error deleting link:", error);
@@ -628,31 +597,62 @@ const AdminLinks = () => {
                                     onClick={() => window.open(link.url, '_blank')}
                                 >
                                     <div className="absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                                    <MoreVertical className="w-4 h-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={(e) => {
+                                        <div className="flex items-center gap-1">
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors"
+                                                onClick={(e) => {
                                                     e.stopPropagation();
-                                                    setEditingLink(link);
-                                                    setIsLinkDialogOpen(true);
-                                                }}>
-                                                    <Edit className="w-4 h-4 mr-2" /> Edit
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    className="text-destructive"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleDeleteLink(link.id);
-                                                    }}
-                                                >
-                                                    <Trash2 className="w-4 h-4 mr-2" /> Delete
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                                    navigator.clipboard.writeText(link.url);
+                                                    toast.success("URL copied to clipboard!");
+                                                }}
+                                                title="Copy URL"
+                                            >
+                                                <Copy className="h-4 w-4" />
+                                            </Button>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                                                        <MoreVertical className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end" className="w-48">
+                                                    <DropdownMenuItem
+                                                        className="gap-2 cursor-pointer"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            navigator.clipboard.writeText(link.url);
+                                                            toast.success("URL copied to clipboard!");
+                                                        }}
+                                                    >
+                                                        <Copy className="h-4 w-4" />
+                                                        <span>Copy URL</span>
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        className="gap-2 cursor-pointer"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setEditingLink(link);
+                                                            setIsLinkDialogOpen(true);
+                                                        }}
+                                                    >
+                                                        <Edit className="h-4 w-4" />
+                                                        <span>Edit Link</span>
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        className="gap-2 text-destructive focus:text-destructive cursor-pointer"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleDeleteLink(link.id);
+                                                        }}
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                        <span>Delete Link</span>
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
                                     </div>
                                     <div className="p-4 flex items-center gap-4">
                                         <Favicon url={link.url} title={link.title} />

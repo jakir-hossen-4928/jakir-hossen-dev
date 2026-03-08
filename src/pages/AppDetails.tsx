@@ -20,8 +20,12 @@ import {
     Send,
     Sparkles,
     Share2,
-    Loader2
+    Loader2,
+    Users,
+    Mail,
+    AlertCircle
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { useAppBySlug } from '@/hooks/useApps';
 import { useComments } from '@/hooks/useComments';
@@ -165,7 +169,12 @@ const AppDetails = () => {
                                 {/* Title & Status */}
                                 <div className="flex-1 space-y-0.5 mb-1">
                                     {app.status && (
-                                        <Badge variant="outline" className="text-[8px] py-0 h-3.5 mb-0.5 bg-background/50 backdrop-blur-md">{app.status.toUpperCase()}</Badge>
+                                        <Badge variant="outline" className={cn(
+                                            "text-[10px] font-black uppercase px-2 py-0.5",
+                                            app.status === 'production' ? "bg-green-500/20 text-green-400 border-green-500/30" : "bg-blue-500/20 text-blue-400 border-blue-500/30"
+                                        )}>
+                                            {app.status === 'closed_testing' ? 'Closed Testing' : app.status}
+                                        </Badge>
                                     )}
                                     {app.appName && (
                                         <h1 className="text-xl md:text-2xl lg:text-3xl font-black leading-tight tracking-tight drop-shadow-sm">{app.appName}</h1>
@@ -189,6 +198,81 @@ const AppDetails = () => {
                         </div>
                     </Card>
                 </div>
+
+                {/* Closed Testing Instructions */}
+                {app.status === 'closed_testing' && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.98 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="max-w-4xl mx-auto"
+                    >
+                        <Card className="border-none bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 backdrop-blur-md rounded-3xl p-6 md:p-8 overflow-hidden group relative">
+                            {/* Decorative background icon */}
+                            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+                                <Users size={160} className="text-blue-500" />
+                            </div>
+
+                            <div className="relative z-10 flex flex-col lg:flex-row gap-8 items-center lg:items-start">
+                                {/* Icon & English Text */}
+                                <div className="flex-1 space-y-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                                            <AlertCircle size={28} />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-black text-blue-600 dark:text-blue-400">Join Closed Testing</h3>
+                                            <p className="text-muted-foreground text-sm font-medium">Instruction for testers</p>
+                                        </div>
+                                    </div>
+
+                                    <p className="text-muted-foreground text-[14px] leading-relaxed">
+                                        This app is in <span className="text-blue-600 dark:text-blue-400 font-bold">Closed Testing</span>.
+                                        Join our testing group with your <span className="font-bold">Play Store email</span> to get access.
+                                    </p>
+
+                                    <div className="flex flex-wrap items-center gap-4">
+                                        <Button
+                                            size="lg"
+                                            className="rounded-xl font-black uppercase tracking-widest bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-500/20 h-12 px-8"
+                                            asChild
+                                        >
+                                            <a href="https://groups.google.com/g/sajuriya-tester" target="_blank" rel="noopener noreferrer">
+                                                Join Group
+                                            </a>
+                                        </Button>
+
+                                        <div className="hidden md:flex items-center gap-2 text-[12px] text-muted-foreground font-semibold italic">
+                                            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                                            Required for Play Store access.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Divider for Desktop */}
+                                <div className="hidden lg:block w-px h-32 bg-blue-500/20 self-center" />
+
+                                {/* Bengali Localization */}
+                                <div className="flex-1 space-y-4 text-center lg:text-left">
+                                    <div className="lg:hidden w-full h-px bg-blue-500/20 my-2" />
+                                    <div>
+                                        <h3 className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">ক্লোজড টেস্টিং-এ যোগ দিন</h3>
+                                        <p className="text-muted-foreground text-sm font-medium">টেস্টিং এর জন্য নির্দেশনা</p>
+                                    </div>
+
+                                    <p className="text-muted-foreground text-[15px] leading-relaxed font-medium">
+                                        এই অ্যাপটি বর্তমানে <span className="text-blue-600 dark:text-blue-400 font-bold">ক্লোজড টেস্টিং</span>-এ আছে।
+                                        ডাউনলোড করতে আপনার <span className="font-bold">প্লে-স্টোর ইমেইল</span> দিয়ে আমাদের টেস্টিং গ্রুপে যোগ দিন।
+                                    </p>
+
+                                    <div className="flex items-center justify-center lg:justify-start gap-2 text-[13px] text-muted-foreground font-semibold italic">
+                                        <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                                        প্লে-স্টোর থেকে ডাউনলোড করার জন্য আবশ্যক।
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
+                    </motion.div>
+                )}
 
                 {/* About Section */}
                 {app.description && (

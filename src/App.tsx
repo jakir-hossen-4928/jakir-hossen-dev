@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import BlogGallery from "./pages/BlogGallery";
 import BlogDetails from "./pages/BlogDetails";
+import Contact from "./pages/Contact";
 import AuthModal from "./components/AuthModal";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -98,6 +99,7 @@ const App = () => {
                   }
                 />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/contact" element={<Contact />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

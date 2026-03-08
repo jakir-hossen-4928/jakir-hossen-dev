@@ -38,7 +38,7 @@ export const AdminApps: React.FC = () => {
         if (app) {
             setEditingApp({ ...app });
         } else {
-            setEditingApp({ status: 'testing', appName: '', slug: '', playStoreUrl: '' });
+            setEditingApp({ status: 'closed_testing', appName: '', slug: '', playStoreUrl: '' });
         }
         setIsDialogOpen(true);
     };
@@ -80,7 +80,7 @@ export const AdminApps: React.FC = () => {
                 apkUrl: editingApp.apkUrl || '',
                 icon: editingApp.icon || '',
                 description: htmlDescription,
-                status: editingApp.status || 'testing',
+                status: editingApp.status || 'closed_testing',
                 createdAt: editingApp.createdAt || new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
             };
@@ -192,8 +192,14 @@ export const AdminApps: React.FC = () => {
                                         <div className="text-[10px] text-muted-foreground font-mono mt-1">{app.playStoreUrl ? 'Play Store Linked' : 'No Link'}</div>
                                     </TableCell>
                                     <TableCell>
-                                        <Badge variant={app.status === 'production' ? 'default' : 'secondary'} className={cn("font-black uppercase text-[9px]")}>
-                                            {app.status}
+                                        <Badge
+                                            variant={app.status === 'production' ? 'default' : 'secondary'}
+                                            className={cn(
+                                                "font-black uppercase text-[9px]",
+                                                app.status === 'closed_testing' && "bg-blue-500/20 text-blue-400 border-blue-500/30"
+                                            )}
+                                        >
+                                            {app.status === 'closed_testing' ? 'Closed Testing' : app.status}
                                         </Badge>
                                     </TableCell>
                                     <TableCell className="text-right pr-6 space-x-2">
@@ -284,15 +290,35 @@ export const AdminApps: React.FC = () => {
 
                         </div>
 
-                        <div className="flex items-center gap-4 p-4 border rounded-xl bg-muted/20">
-                            <Switch
-                                checked={editingApp.status === 'production'}
-                                onCheckedChange={(c) => setEditingApp(prev => ({ ...prev, status: c ? 'production' : 'testing' }))}
-                            />
-                            <div>
-                                <Label>Production Mode</Label>
-                                <p className="text-xs text-muted-foreground">Visible to public without login</p>
+                        <div className="grid grid-cols-1 gap-4 p-4 border rounded-xl bg-muted/20">
+                            <Label className="text-sm font-bold">App Category / Release Status</Label>
+                            <div className="flex flex-wrap gap-2">
+                                <Button
+                                    type="button"
+                                    variant={editingApp.status === 'production' ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() => setEditingApp(prev => ({ ...prev, status: 'production' }))}
+                                    className="rounded-lg font-bold text-[10px] uppercase"
+                                >
+                                    Production (Public)
+                                </Button>
+                                <Button
+                                    type="button"
+                                    variant={editingApp.status === 'closed_testing' ? 'secondary' : 'outline'}
+                                    size="sm"
+                                    onClick={() => setEditingApp(prev => ({ ...prev, status: 'closed_testing' }))}
+                                    className={cn(
+                                        "rounded-lg font-bold text-[10px] uppercase",
+                                        editingApp.status === 'closed_testing' && "bg-blue-600 text-white hover:bg-blue-700"
+                                    )}
+                                >
+                                    Closed Testing (Group Based)
+                                </Button>
                             </div>
+                            <p className="text-[10px] text-muted-foreground">
+                                {editingApp.status === 'production' && "Visible to everyone on the Play Store."}
+                                {editingApp.status === 'closed_testing' && "Only visible to users in the 'sajuriya-tester' Google Group."}
+                            </p>
                         </div>
 
                         <div className="space-y-2">

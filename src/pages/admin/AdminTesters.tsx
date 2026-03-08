@@ -207,13 +207,12 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
                                         <TableHead className="font-black text-[9px] md:text-[10px] uppercase tracking-widest py-5 text-muted-foreground/50">Email</TableHead>
                                         <TableHead className="font-black text-[9px] md:text-[10px] uppercase tracking-widest py-5 text-muted-foreground/50">Role</TableHead>
                                         <TableHead className="font-black text-[9px] md:text-[10px] uppercase tracking-widest py-5 text-muted-foreground/50">Actions</TableHead>
-                                        <TableHead className="font-black text-[9px] md:text-[10px] uppercase tracking-widest py-5 text-right pr-6 md:pr-8 text-muted-foreground/50">Joined</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {filteredUsers.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="text-center py-24 text-muted-foreground/20">
+                                            <TableCell colSpan={4} className="text-center py-24 text-muted-foreground/20">
                                                 <Users size={48} className="mx-auto mb-4 opacity-50" />
                                                 <p className="font-black uppercase tracking-widest text-[10px]">No users found</p>
                                             </TableCell>
@@ -259,9 +258,6 @@ export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => 
                                                                 </SelectContent>
                                                             </Select>
                                                         )}
-                                                    </TableCell>
-                                                    <TableCell className="text-right pr-6 md:pr-8 py-4 font-black text-[10px] md:text-xs text-muted-foreground/50 whitespace-nowrap">
-                                                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
                                                     </TableCell>
                                                 </TableRow>
                                             );

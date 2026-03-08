@@ -17,6 +17,7 @@ import { useApps } from '@/hooks/useApps';
 import { useTesters } from '@/hooks/useTesters';
 import { useSubscribers } from '@/hooks/useSubscribers';
 import { useBlogs } from '@/hooks/useBlogs';
+import { useUsers } from '@/hooks/useUsers';
 import { Note } from '@/lib/types';
 import { syncNotes } from '@/lib/syncService';
 
@@ -43,6 +44,7 @@ const AdminDashboard = () => {
   const { testers, isLoading: testersLoading } = useTesters();
   const { subscribers, isLoading: subsLoading } = useSubscribers();
   const { blogs, isLoading: blogsLoading } = useBlogs();
+  const { users, isLoading: usersLoading } = useUsers();
 
   // Fetch notes
   const [notes, setNotes] = useState<Note[]>([]);
@@ -62,7 +64,7 @@ const AdminDashboard = () => {
     fetchNotes();
   }, []);
 
-  const isLoading = appsLoading || testersLoading || subsLoading || blogsLoading || notesLoading;
+  const isLoading = appsLoading || testersLoading || subsLoading || blogsLoading || notesLoading || usersLoading;
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -105,7 +107,7 @@ const AdminDashboard = () => {
     document.body.removeChild(link);
   };
 
-  const exportTesters = () => exportToCSV(testers, 'testers_export');
+  const exportTesters = () => exportToCSV(users, 'users_export');
   const exportSubscribers = () => exportToCSV(subscribers, 'subscribers_export');
 
   const renderContent = () => {
@@ -156,7 +158,14 @@ const AdminDashboard = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
           >
-            <AdminOverview apps={apps} testers={testers} subscribers={subscribers} blogs={blogs} notes={notes} />
+            <AdminOverview
+              apps={apps}
+              testers={testers}
+              subscribers={subscribers}
+              blogs={blogs}
+              notes={notes}
+              users={users}
+            />
           </motion.div>
         );
     }
@@ -172,7 +181,14 @@ const AdminDashboard = () => {
   }
 
   return (
-    <DashboardLayout apps={apps} testers={testers} subscribers={subscribers} blogs={blogs} notes={notes}>
+    <DashboardLayout
+      apps={apps}
+      testers={testers}
+      subscribers={subscribers}
+      blogs={blogs}
+      notes={notes}
+      users={users}
+    >
       <div className="mb-4 flex items-center justify-end px-4 md:px-8">
         <Badge variant={isOnline ? "outline" : "destructive"} className="gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest border-white/10">
           {isOnline ? (

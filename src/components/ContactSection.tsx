@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useForm, ValidationError } from "@formspree/react";
-import { Mail, Github, Linkedin, Send, MapPin, Check, MessageCircle } from "lucide-react";
+import { Mail, Github, Linkedin, Send, MapPin, Check, MessageCircle, Copy } from "lucide-react";
+import { toast } from "react-toastify";
 
 const contactInfo = [
   {
@@ -117,30 +118,62 @@ export default function ContactSection() {
 
             <div className="grid sm:grid-cols-2 gap-3 md:gap-4">
               {contactInfo.map((info, i) => (
-                <motion.a
+                <motion.div
                   key={info.label}
-                  href={info.href}
-                  target={info.href.startsWith("http") ? "_blank" : undefined}
-                  rel="noopener noreferrer"
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  whileHover={{ y: -4 }}
-                  className="p-4 rounded-[1.25rem] bg-card border border-border flex flex-col items-center text-center gap-3 transition-all group hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 cursor-pointer"
+                  className="p-4 rounded-[1.25rem] bg-card border border-border flex flex-col items-center text-center gap-3 transition-all group hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 relative"
                 >
-                  <div className={`w-10 h-10 rounded-xl ${info.bg} flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3`}>
-                    <info.icon className={`w-5 h-5 ${info.color}`} />
-                  </div>
-                  <div>
-                    <div className="text-[8px] font-black text-muted-foreground uppercase tracking-[0.3em] mb-0.5 opacity-60">
-                      {info.label}
+                  <a
+                    href={info.href}
+                    target={info.href.startsWith("http") ? "_blank" : undefined}
+                    rel="noopener noreferrer"
+                    className="flex flex-col items-center gap-3 w-full"
+                  >
+                    <div className={`w-10 h-10 rounded-xl ${info.bg} flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3`}>
+                      <info.icon className={`w-5 h-5 ${info.color}`} />
                     </div>
-                    <div className="text-xs font-black text-foreground truncate max-w-[120px] tracking-tight">
-                      {info.value}
+                    <div className="w-full">
+                      <div className="text-[8px] font-black text-muted-foreground uppercase tracking-[0.3em] mb-0.5 opacity-60">
+                        {info.label}
+                      </div>
+                      <div className="text-xs font-black text-foreground truncate w-full px-2 tracking-tight">
+                        {info.value}
+                      </div>
                     </div>
-                  </div>
-                </motion.a>
+                  </a>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      let copyValue = info.value;
+                      if (info.label === "WhatsApp") {
+                        copyValue = "https://wa.me/8801647470849";
+                      } else if (info.label === "Email") {
+                        copyValue = "mdjakirkhan4928@gmail.com";
+                      } else if (info.href.startsWith("http")) {
+                        copyValue = info.href;
+                      }
+                      navigator.clipboard.writeText(copyValue);
+                      toast.success(`${info.label} link copied!`, {
+                        position: "bottom-center",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        theme: "dark",
+                      });
+                    }}
+                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-muted/50 text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-primary/10 hover:text-primary transition-all z-20"
+                    title={`Copy ${info.label}`}
+                  >
+                    <Copy size={12} />
+                  </button>
+                </motion.div>
               ))}
             </div>
           </div>

@@ -23,7 +23,7 @@ function mapAppEntry(docId: string, data: any): AppEntry {
         id: docId,
         slug: data.slug || '',
         appName: data.appName || 'Untitled App',
-        status: data.status || 'testing',
+        status: data.status || 'closed_testing',
         playStoreUrl: data.playStoreUrl || '',
         apkUrl: data.apkUrl || '',
         icon: data.icon || '',
@@ -735,6 +735,29 @@ export async function syncBookmarkFolders(force: boolean = false): Promise<Bookm
     }
 }
 
+// Real-time sync for bookmark folders
+export function subscribeToBookmarkFolders(callback: (folders: BookmarkFolder[]) => void): () => void {
+    console.log('[SyncService] subscribeToBookmarkFolders initialized');
+    const ref = collection(firestore, 'bookmarkFolders');
+    const q = query(ref, orderBy('createdAt', 'desc'));
+
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+        const folders = snapshot.docs.map(doc => mapBookmarkFolder(doc.id, doc.data()));
+        console.log(`[SyncService] subscribeToBookmarkFolders snapshot update: ${folders.length} folders`);
+
+        // Update cache
+        await db.transaction('rw', db.bookmarkFolders, db.metadata, async () => {
+            await db.bookmarkFolders.clear();
+            await db.bookmarkFolders.bulkPut(folders);
+            await updateCacheMetadata('bookmarkFolders');
+        });
+
+        callback(folders);
+    });
+
+    return unsubscribe;
+}
+
 // Sync bookmark links
 export async function syncBookmarkLinks(force: boolean = false): Promise<BookmarkLink[]> {
     const cacheKey = 'bookmarkLinks';
@@ -762,6 +785,29 @@ export async function syncBookmarkLinks(force: boolean = false): Promise<Bookmar
         console.error('[SyncService] Error syncing bookmark links:', error);
         throw error;
     }
+}
+
+// Real-time sync for bookmark links
+export function subscribeToBookmarkLinks(callback: (links: BookmarkLink[]) => void): () => void {
+    console.log('[SyncService] subscribeToBookmarkLinks initialized');
+    const ref = collection(firestore, 'bookmarkLinks');
+    const q = query(ref, orderBy('createdAt', 'desc'));
+
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+        const links = snapshot.docs.map(doc => mapBookmarkLink(doc.id, doc.data()));
+        console.log(`[SyncService] subscribeToBookmarkLinks snapshot update: ${links.length} links`);
+
+        // Update cache
+        await db.transaction('rw', db.bookmarkLinks, db.metadata, async () => {
+            await db.bookmarkLinks.clear();
+            await db.bookmarkLinks.bulkPut(links);
+            await updateCacheMetadata('bookmarkLinks');
+        });
+
+        callback(links);
+    });
+
+    return unsubscribe;
 }
 
 // CRUD for Folders

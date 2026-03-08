@@ -24,7 +24,7 @@ const navItems = [
   { label: "About", href: "/", isHash: true, targetId: "#about" },
   { label: "Experience", href: "/", isHash: true, targetId: "#about" },
   { label: "Projects", href: "/", isHash: true, targetId: "#projects" },
-  { label: "Contact", href: "/", isHash: true, targetId: "#contact" },
+  { label: "Contact", href: "/contact", isHash: false },
   { label: "Play Store Apps", href: "/apps", isHash: false },
   { label: "Blog", href: "/blogs", isHash: false },
 ];
