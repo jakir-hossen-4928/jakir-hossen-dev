@@ -11,76 +11,20 @@ const GooglePlayButton: React.FC<GooglePlayButtonProps> = ({ url, className = ''
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-block transition-transform hover:scale-105 ${className}`}
+      className={`inline-flex items-center justify-center bg-black dark:bg-white border border-white/5 dark:border-black/5 rounded-2xl transition-all duration-300 hover:bg-neutral-900 dark:hover:bg-neutral-100 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl h-14 md:h-16 w-full sm:w-auto px-6 overflow-hidden ${className}`}
     >
-      <svg
-        width="180"
-        height="53"
-        viewBox="0 0 180 53"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="drop-shadow-lg"
-      >
-        {/* Background */}
-        <rect width="180" height="53" rx="6" fill="black" />
-        
-        {/* Google Play Logo */}
-        <g transform="translate(12, 10)">
-          {/* Triangle parts of Play logo */}
-          <path
-            d="M2.5 3.5L18.5 16.5L2.5 29.5V3.5Z"
-            fill="url(#paint0_linear)"
-          />
-          <path
-            d="M18.5 16.5L2.5 3.5L14 1L18.5 16.5Z"
-            fill="url(#paint1_linear)"
-          />
-          <path
-            d="M18.5 16.5L14 32L2.5 29.5L18.5 16.5Z"
-            fill="url(#paint2_linear)"
-          />
-          <path
-            d="M18.5 16.5L14 1L24 6.5L18.5 16.5Z"
-            fill="url(#paint3_linear)"
-          />
-          <path
-            d="M18.5 16.5L24 26.5L14 32L18.5 16.5Z"
-            fill="url(#paint4_linear)"
-          />
-        </g>
+      <div className="flex items-center gap-3">
+        <img
+          src="/google-play-store.png"
+          alt="Google Play"
+          className="w-7 h-7 md:w-8 md:h-8 object-contain shrink-0"
+        />
 
-        {/* Text */}
-        <text x="45" y="18" fill="white" fontSize="8" fontFamily="Arial, sans-serif">
-          GET IT ON
-        </text>
-        <text x="45" y="35" fill="white" fontSize="16" fontWeight="bold" fontFamily="Arial, sans-serif">
-          Google Play
-        </text>
-
-        {/* Gradients */}
-        <defs>
-          <linearGradient id="paint0_linear" x1="2.5" y1="16.5" x2="18.5" y2="16.5">
-            <stop stopColor="#00D7FE" />
-            <stop offset="1" stopColor="#00A1FF" />
-          </linearGradient>
-          <linearGradient id="paint1_linear" x1="8.25" y1="2.25" x2="14" y2="8.75">
-            <stop stopColor="#FFD800" />
-            <stop offset="1" stopColor="#FF8A00" />
-          </linearGradient>
-          <linearGradient id="paint2_linear" x1="8.25" y1="30.75" x2="14" y2="24.25">
-            <stop stopColor="#FF3A44" />
-            <stop offset="1" stopColor="#B11162" />
-          </linearGradient>
-          <linearGradient id="paint3_linear" x1="19" y1="3.75" x2="21.25" y2="11.5">
-            <stop stopColor="#FFD800" />
-            <stop offset="1" stopColor="#FF8A00" />
-          </linearGradient>
-          <linearGradient id="paint4_linear" x1="19" y1="29.25" x2="21.25" y2="21.5">
-            <stop stopColor="#FF3A44" />
-            <stop offset="1" stopColor="#B11162" />
-          </linearGradient>
-        </defs>
-      </svg>
+        <div className="flex flex-col items-start leading-none group">
+          <span className="text-[10px] font-bold text-white/70 dark:text-black/60 uppercase tracking-widest">GET IT ON</span>
+          <span className="text-lg md:text-xl font-black text-white dark:text-black tracking-tight">Google Play</span>
+        </div>
+      </div>
     </a>
   );
 };

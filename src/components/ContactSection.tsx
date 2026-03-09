@@ -60,7 +60,7 @@ export default function ContactSection() {
 
   if (state.succeeded) {
     return (
-      <section id="contact" className="py-16 md:py-20 bg-background">
+      <section id="contact" className="py-8 md:py-10 bg-background">
         <div className="section-container">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -87,13 +87,13 @@ export default function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-16 md:py-20 bg-background relative overflow-hidden">
+    <section id="contact" className="py-8 md:py-10 bg-background relative overflow-hidden">
       {/* Background glow effects */}
       <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-orange-500/5 blur-[100px] rounded-full pointer-events-none" />
 
       <div className="section-container relative z-10">
-        <div className="text-center mb-10 md:mb-12">
+        <div className="text-center mb-6 md:mb-8">
           <h3 className="text-[9px] font-black text-primary uppercase tracking-[0.4em] mb-2">Communication</h3>
           <h2 className="text-2xl sm:text-4xl font-black text-foreground mb-4 tracking-tighter">
             Get In <span className="text-primary italic">Touch</span>

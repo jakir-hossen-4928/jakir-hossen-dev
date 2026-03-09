@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon, LogOut, LogIn, LayoutDashboard, User, Settings, Shield } from "lucide-react";
+import { Menu, X, Sun, Moon, LogOut, LogIn, LayoutDashboard, User, Settings, Shield, Home, Briefcase, Code, Mail, Gamepad2, Newspaper, Facebook, Instagram, Github } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
@@ -18,15 +18,16 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "./ui/avatar";
+import { cn } from "@/lib/utils";
 
 const navItems = [
-  { label: "Home", href: "/", isHash: true, targetId: "#home" },
-  { label: "About", href: "/", isHash: true, targetId: "#about" },
-  { label: "Experience", href: "/", isHash: true, targetId: "#about" },
-  { label: "Projects", href: "/", isHash: true, targetId: "#projects" },
-  { label: "Contact", href: "/contact", isHash: false },
-  { label: "Play Store Apps", href: "/apps", isHash: false },
-  { label: "Blog", href: "/blogs", isHash: false },
+  { label: "Home", href: "/", isHash: true, targetId: "#home", icon: Home },
+  { label: "About", href: "/", isHash: true, targetId: "#about", icon: User },
+  { label: "Experience", href: "/", isHash: true, targetId: "#about", icon: Briefcase },
+  { label: "Projects", href: "/", isHash: true, targetId: "#projects", icon: Code },
+  { label: "Blog", href: "/blogs", isHash: false, icon: Newspaper },
+  { label: "Play Store Apps", href: "/apps", isHash: false, icon: Gamepad2 },
+  { label: "Contact", href: "/contact", isHash: false, icon: Mail },
 ];
 
 export default function Header() {
@@ -262,17 +263,23 @@ export default function Header() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -10 }}
                     onClick={() => handleNavClick(item)}
-                    className={`group relative px-6 py-4.5 text-lg font-black rounded-3xl text-left transition-all active:scale-[0.97] ${(location.pathname === item.href && !item.isHash)
+                    className={`group relative px-6 py-4 text-base font-black rounded-[2rem] text-left transition-all active:scale-[0.97] flex items-center gap-4 ${(location.pathname === item.href && !item.isHash)
                       ? "text-primary bg-primary/10"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                       }`}
                   >
-                    <span className="relative z-10 flex items-center justify-between">
+                    <div className={cn(
+                      "w-10 h-10 rounded-xl flex items-center justify-center transition-all",
+                      (location.pathname === item.href && !item.isHash) ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "bg-muted/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                    )}>
+                      <item.icon size={20} />
+                    </div>
+                    <span className="relative z-10 flex-1 flex items-center justify-between">
                       {item.label}
                       {(location.pathname === item.href && !item.isHash) && (
                         <motion.div
                           layoutId="activeDotMobile"
-                          className="w-2 h-2 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]"
+                          className="w-1.5 h-1.5 rounded-full bg-primary"
                         />
                       )}
                     </span>
@@ -300,6 +307,22 @@ export default function Header() {
                     </Link>
                   </motion.div>
                 )}
+              </div>
+
+              {/* Social Connect - Mobile Only Section */}
+              <div className="px-6 py-4 border-t border-border/50">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-3 ml-1">Connect On Social</p>
+                <div className="flex gap-2">
+                  <a href="https://github.com/jakir-hossen-4928" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all border border-border/50 shadow-sm">
+                    <Github size={18} />
+                  </a>
+                  <a href="https://www.facebook.com/profile.php?id=61579137497937" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all border border-border/50 shadow-sm">
+                    <Facebook size={18} />
+                  </a>
+                  <a href="https://www.instagram.com/jakir_hossen_4928" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-pink-500 transition-all border border-border/50 shadow-sm">
+                    <Instagram size={18} />
+                  </a>
+                </div>
               </div>
 
               {/* Account Section - Pinned to bottom */}

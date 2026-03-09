@@ -65,12 +65,12 @@ const item = {
 
 export default function ProjectsSection() {
   return (
-    <section id="projects" className="py-24 bg-background relative overflow-hidden">
+    <section id="projects" className="py-8 bg-background relative overflow-hidden">
       {/* Background glow accent */}
       <div className="absolute top-1/2 left-0 w-80 h-80 bg-primary/5 blur-[100px] rounded-full -ml-40 pointer-events-none" />
 
       <div className="section-container relative z-10">
-        <div className="text-center mb-20">
+        <div className="text-center mb-8">
           <motion.h3
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}

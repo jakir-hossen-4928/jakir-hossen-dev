@@ -8,6 +8,7 @@ import { AppEntry, Comment } from '@/lib/types';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import GooglePlayButton from '@/components/GooglePlayButton';
+import DownloadApkButton from '@/components/DownloadApkButton';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -115,7 +116,7 @@ const AppDetails = () => {
         <div className="min-h-screen bg-background text-foreground">
             <Header />
 
-            <main className="container mx-auto px-4 pt-24 md:pt-32 pb-12 space-y-4 md:space-y-6">
+            <main className="container mx-auto px-4 pt-20 md:pt-24 pb-12 space-y-4 md:space-y-6">
 
                 {/* Back Button & Share */}
                 <div className="flex items-center justify-between mt-2 md:mt-4">
@@ -182,16 +183,38 @@ const AppDetails = () => {
                                 </div>
 
                                 {/* Actions */}
-                                <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                                    {app.playStoreUrl && (
-                                        <GooglePlayButton url={app.playStoreUrl} />
-                                    )}
+                                <div className="flex flex-col gap-4 w-full md:w-auto">
+                                    <div className="flex flex-col sm:flex-row gap-3 w-full">
+                                        {app.status === 'closed_testing' && (
+                                            <Button size="lg" className="h-14 md:h-16 px-8 md:px-10 text-base md:text-lg font-black rounded-2xl bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-600/20 group w-full lg:flex-[1.5]" asChild>
+                                                <a href="https://groups.google.com/g/sajuriya-tester" target="_blank" rel="noopener noreferrer">
+                                                    <div className="mr-2 md:mr-3 w-8 h-8 md:w-9 md:h-9 bg-white rounded-full flex items-center justify-center p-1.5 shadow-sm shrink-0">
+                                                        <img
+                                                            src="/google.png"
+                                                            alt="Google"
+                                                            className="w-full h-full object-contain"
+                                                        />
+                                                    </div>
+                                                    Join Tester Group
+                                                </a>
+                                            </Button>
+                                        )}
+                                        {app.playStoreUrl && (
+                                            <GooglePlayButton url={app.playStoreUrl} />
+                                        )}
+                                    </div>
+
                                     {app.apkUrl && (
-                                        <Button size="lg" className="h-12 md:h-14 px-6 md:px-8 text-sm md:text-base font-black rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 group" asChild>
-                                            <a href={app.apkUrl} target="_blank" rel="noopener noreferrer">
-                                                <Download className="mr-2 md:mr-3 w-4 h-4 md:w-5 md:h-5 group-hover:animate-bounce" /> Download APK
-                                            </a>
-                                        </Button>
+                                        <DownloadApkButton url={app.apkUrl} />
+                                    )}
+
+                                    {app.status === 'closed_testing' && (
+                                        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-indigo-500/5 border border-indigo-500/10">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
+                                            <p className="text-xs md:text-sm text-indigo-500/80 font-bold italic">
+                                                Join group with your Play Store email to unlock access
+                                            </p>
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -199,78 +222,38 @@ const AppDetails = () => {
                     </Card>
                 </div>
 
-                {/* Closed Testing Instructions */}
+                {/* Minimalist Instruction Section */}
                 {app.status === 'closed_testing' && (
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="max-w-4xl mx-auto"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="max-w-4xl mx-auto w-full"
                     >
-                        <Card className="border-none bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 backdrop-blur-md rounded-3xl p-6 md:p-8 overflow-hidden group relative">
-                            {/* Decorative background icon */}
-                            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
-                                <Users size={160} className="text-blue-500" />
-                            </div>
-
-                            <div className="relative z-10 flex flex-col lg:flex-row gap-8 items-center lg:items-start">
-                                {/* Icon & English Text */}
-                                <div className="flex-1 space-y-4">
-                                    <div className="flex items-center gap-4">
-                                        <div className="p-3 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                                            <AlertCircle size={28} />
-                                        </div>
-                                        <div>
-                                            <h3 className="text-xl font-black text-blue-600 dark:text-blue-400">Join Closed Testing</h3>
-                                            <p className="text-muted-foreground text-sm font-medium">Instruction for testers</p>
-                                        </div>
-                                    </div>
-
-                                    <p className="text-muted-foreground text-[14px] leading-relaxed">
-                                        This app is in <span className="text-blue-600 dark:text-blue-400 font-bold">Closed Testing</span>.
-                                        Join our testing group with your <span className="font-bold">Play Store email</span> to get access.
-                                    </p>
-
-                                    <div className="flex flex-wrap items-center gap-4">
-                                        <Button
-                                            size="lg"
-                                            className="rounded-xl font-black uppercase tracking-widest bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-500/20 h-12 px-8"
-                                            asChild
-                                        >
-                                            <a href="https://groups.google.com/g/sajuriya-tester" target="_blank" rel="noopener noreferrer">
-                                                Join Group
-                                            </a>
-                                        </Button>
-
-                                        <div className="hidden md:flex items-center gap-2 text-[12px] text-muted-foreground font-semibold italic">
-                                            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                                            Required for Play Store access.
-                                        </div>
-                                    </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Card className="border-none bg-indigo-500/5 dark:bg-indigo-500/10 border border-indigo-500/10 rounded-2xl p-6 flex flex-col items-center text-center gap-4">
+                                <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                                    <Users size={24} />
                                 </div>
-
-                                {/* Divider for Desktop */}
-                                <div className="hidden lg:block w-px h-32 bg-blue-500/20 self-center" />
-
-                                {/* Bengali Localization */}
-                                <div className="flex-1 space-y-4 text-center lg:text-left">
-                                    <div className="lg:hidden w-full h-px bg-blue-500/20 my-2" />
-                                    <div>
-                                        <h3 className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">ক্লোজড টেস্টিং-এ যোগ দিন</h3>
-                                        <p className="text-muted-foreground text-sm font-medium">টেস্টিং এর জন্য নির্দেশনা</p>
-                                    </div>
-
-                                    <p className="text-muted-foreground text-[15px] leading-relaxed font-medium">
-                                        এই অ্যাপটি বর্তমানে <span className="text-blue-600 dark:text-blue-400 font-bold">ক্লোজড টেস্টিং</span>-এ আছে।
-                                        ডাউনলোড করতে আপনার <span className="font-bold">প্লে-স্টোর ইমেইল</span> দিয়ে আমাদের টেস্টিং গ্রুপে যোগ দিন।
+                                <div className="space-y-2">
+                                    <h4 className="text-base font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-tight">Tester Registration</h4>
+                                    <p className="text-xs md:text-sm text-muted-foreground leading-relaxed font-medium">
+                                        Join our official Google Group with your Play Store email address. This step is mandatory to obtain download permissions for closed testing builds.
                                     </p>
-
-                                    <div className="flex items-center justify-center lg:justify-start gap-2 text-[13px] text-muted-foreground font-semibold italic">
-                                        <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                                        প্লে-স্টোর থেকে ডাউনলোড করার জন্য আবশ্যক।
-                                    </div>
                                 </div>
-                            </div>
-                        </Card>
+                            </Card>
+
+                            <Card className="border-none bg-indigo-500/5 dark:bg-indigo-500/10 border border-indigo-500/10 rounded-2xl p-6 flex flex-col items-center text-center gap-4">
+                                <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                                    <AlertCircle size={24} />
+                                </div>
+                                <div className="space-y-2">
+                                    <h4 className="text-lg md:text-xl font-bold text-indigo-600 dark:text-indigo-400">টেস্টিং নির্দেশাবলী</h4>
+                                    <p className="text-xs md:text-sm text-muted-foreground leading-relaxed font-medium">
+                                        অ্যাপটি ডাউনলোড করতে প্লে-স্টোর ইমেইল ব্যবহার করে আমাদের টেস্টিং গ্রুপে যোগ দিন। এটি পাবলিকলি উন্মুক্ত হওয়ার আগে টেস্টিংয়ের জন্য একান্ত আবশ্যক।
+                                    </p>
+                                </div>
+                            </Card>
+                        </div>
                     </motion.div>
                 )}
 

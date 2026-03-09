@@ -209,7 +209,7 @@ const BlogGallery = () => {
                     {/* Blog Content Section */}
                     <div className="relative flex-grow min-h-[600px] mb-20 overflow-hidden bg-background/50 border border-border/5 rounded-[3rem]">
                         {isLoading ? (
-                            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 p-4 md:p-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 p-4 md:p-8">
                                 {[...Array(6)].map((_, i) => (
                                     <div key={i} className="bg-card border border-border rounded-[2.5rem] overflow-hidden p-0 h-[320px] md:h-[480px]">
                                         <Skeleton className="h-[180px] md:h-[280px] w-full" />
@@ -223,7 +223,7 @@ const BlogGallery = () => {
                         ) : blogs && blogs.length > 0 ? (
                             /* Fallback to standard grid for small number of blogs to ensure visibility */
                             blogs.length < 15 ? (
-                                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 p-3 md:p-8 overflow-y-auto max-h-full no-scrollbar relative">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 p-3 md:p-8 overflow-y-auto max-h-full no-scrollbar relative">
                                     {/* Debug Marker */}
                                     <div className="absolute top-0 right-4 text-[8px] opacity-10 pointer-events-none">
                                         GRID_LAYOUT_ACTIVE ({blogs.length} items)
@@ -245,12 +245,13 @@ const BlogGallery = () => {
                                             const finalHeight = height || 800;
                                             const finalWidth = width || 1240;
 
-                                            let columnCount = 2; // Default to 2 for mobile
+                                            let columnCount = 1; // Default to 1 for mobile
                                             if (finalWidth >= 1024) columnCount = 3;
-                                            else columnCount = 2; // Strict 2-column for all mobile/tablet unless large desktop
+                                            else if (finalWidth >= 640) columnCount = 2;
+                                            else columnCount = 1; 
 
                                             const rowCount = Math.ceil(blogs.length / columnCount);
-                                            const rowHeight = finalWidth < 768 ? 320 : 450; // Dynamic height based on screen
+                                            const rowHeight = finalWidth < 640 ? 400 : (finalWidth < 768 ? 320 : 450); // Dynamic height based on screen
 
                                             console.log(`[BlogGallery] Virtual List Render: ${width}x${height}, Items: ${blogs.length}`);
 

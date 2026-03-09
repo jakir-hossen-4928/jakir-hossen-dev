@@ -3,14 +3,14 @@ import { Award, BookOpen, GraduationCap, Calendar, ChevronRight, FileText } from
 import { Button } from "@/components/ui/button";
 
 export default function AboutSection() {
-  const profileImage = "https://i.ibb.co.com/LDz6vpPY/Jakir.jpg";
+  const profileImage = "/jakir-hossen.jpg";
 
   return (
-    <section id="about" className="py-24 bg-background relative overflow-hidden">
+    <section id="about" className="py-8 bg-background relative overflow-hidden group">
       <div className="section-container relative z-10">
 
         {/* Section Header */}
-        <div className="text-left mb-16">
+        <div className="text-left mb-6">
           <div className="relative inline-block">
             <h2 className="text-xl font-black text-primary uppercase tracking-widest pb-1 border-b-2 border-primary">
               About Me
@@ -140,7 +140,7 @@ export default function AboutSection() {
         </div>
 
         {/* Experience Section */}
-        <div className="mt-24 sm:mt-32 pt-16 sm:pt-24 border-t border-border/30">
+        <div className="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-border/30">
           <div className="text-center mb-12 sm:mb-16">
             <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-3">Professional Path</h3>
             <h2 className="text-2xl sm:text-5xl font-black text-foreground tracking-tighter">Work <span className="text-primary italic">Experience</span></h2>
@@ -180,7 +180,7 @@ export default function AboutSection() {
         </div>
 
         {/* Education Section */}
-        <div className="mt-24 sm:mt-32">
+        <div className="mt-10 sm:mt-12">
           <div className="text-center mb-12 sm:mb-16">
             <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-3">Educational Pillars</h3>
             <h2 className="text-2xl sm:text-5xl font-black text-foreground tracking-tighter">Academic <span className="text-primary italic">Roots</span></h2>

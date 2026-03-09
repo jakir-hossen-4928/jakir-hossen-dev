@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from "framer-motion";
-import { ArrowUp, Github, Linkedin, Mail, Send, Gamepad2 } from "lucide-react";
+import { ArrowUp, Github, Linkedin, Mail, Send, Gamepad2, Facebook, Instagram } from "lucide-react";
 import { db } from '@/lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
@@ -59,7 +59,7 @@ export default function Footer() {
             <form onSubmit={handleSubscribe} className="flex gap-2 relative z-10">
               <Input
                 type="email"
-                placeholder="google.play.email@gmail.com"
+                placeholder="Enter your Google Play Store Gmail"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-secondary/50 border-input focus:border-primary h-11 rounded-xl text-sm"
@@ -74,7 +74,7 @@ export default function Footer() {
           <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent max-w-2xl" />
 
           {/* Social Links */}
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
             <motion.a
               whileHover={{ y: -5, scale: 1.1 }}
               href="https://github.com/jakir-hossen-4928"
@@ -102,6 +102,26 @@ export default function Footer() {
               aria-label="Email"
             >
               <Mail size={20} />
+            </motion.a>
+            <motion.a
+              whileHover={{ y: -5, scale: 1.1 }}
+              href="https://www.facebook.com/profile.php?id=61579137497937"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground hover:text-blue-600 hover:bg-blue-600/10 transition-all cursor-pointer shadow-sm border border-border/50"
+              aria-label="Facebook"
+            >
+              <Facebook size={20} />
+            </motion.a>
+            <motion.a
+              whileHover={{ y: -5, scale: 1.1 }}
+              href="https://www.instagram.com/jakir_hossen_4928"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground hover:text-pink-600 hover:bg-pink-600/10 transition-all cursor-pointer shadow-sm border border-border/50"
+              aria-label="Instagram"
+            >
+              <Instagram size={20} />
             </motion.a>
             <motion.a
               whileHover={{ y: -5, scale: 1.1 }}

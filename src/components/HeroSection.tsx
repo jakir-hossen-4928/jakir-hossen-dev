@@ -74,7 +74,7 @@ export default function HeroSection() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-base sm:text-lg text-muted-foreground mb-12 leading-relaxed max-w-3xl mx-auto font-medium px-4 opacity-80"
           >
-            Specializing in React, TypeScript, and Firebase to build high-performance,
+            Specializing in React, TypeScript, Shopify, and Firebase to build high-performance,
             <br className="hidden sm:block" /> UI-integrated web applications and scalable automation solutions.
           </motion.p>
 

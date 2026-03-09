@@ -16,16 +16,17 @@ const skills = [
   { name: "GitHub", slug: "github", bg: "bg-gray-100 dark:bg-white/5" },
   { name: "Google Apps Script", slug: "googleappsscript", bg: "bg-blue-50 dark:bg-[#4285F4]/5" },
   { name: "n8n Automation", slug: "n8n", bg: "bg-red-50 dark:bg-[#FF6C37]/5" },
+  { name: "Shopify Store", slug: "shopify", bg: "bg-green-50 dark:bg-[#96BF48]/5" },
 ];
 
 export default function SkillsSection() {
   return (
-    <section id="skills" className="py-24 bg-background relative overflow-hidden">
+    <section id="skills" className="py-8 bg-background relative overflow-hidden">
       {/* Subtle background texture */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05] pointer-events-none" style={{ backgroundImage: 'radial-gradient(var(--border) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
       <div className="section-container relative z-10">
-        <div className="text-center mb-16">
+        <div className="text-center mb-8">
           <motion.h3
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
