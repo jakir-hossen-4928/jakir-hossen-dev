@@ -5,7 +5,8 @@ service cloud.firestore {
     // Helper function to check if user is admin
     function isAdmin() {
       return request.auth != null && 
-             (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' || 
+             (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' || 
               request.auth.token.email == 'mdjakirkhan4928@gmail.com');
     }
     
@@ -55,17 +56,23 @@ service cloud.firestore {
     // Users collection - strict admin control for role management
     match /users/{userId} {
       // Admins can read all users
-      allow read: if isAdmin();
+      allow list: if isAdmin();
       
       // Users can create their own profile on sign-up (role must be 'user')
       allow create: if isAuthenticated() && 
                       request.auth.uid == userId &&
                       request.resource.data.role == 'user';
       
-      // Users can read and update their own profile (but not their role)
-      allow read, update: if isAuthenticated() && 
-                            request.auth.uid == userId &&
-                            (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']));
+      // Users can read their own profile
+      allow get: if isAuthenticated() && request.auth.uid == userId;
+      
+      // Admins can read any user
+      allow get: if isAdmin();
+
+      // Users can update their own profile (but not their role)
+      allow update: if isAuthenticated() && 
+                      request.auth.uid == userId &&
+                      (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']));
       
       // Only admins can update roles, and they cannot update their own role
       allow update: if isAdmin() && 
@@ -92,9 +99,22 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Notes collection - admin only
+    // Notes collection
     match /notes/{noteId} {
-      allow read, write: if isAdmin();
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Bookmark Folders collection
+    match /bookmarkFolders/{folderId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Bookmark Links collection
+    match /bookmarkLinks/{linkId} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
     
     // Deny all other access

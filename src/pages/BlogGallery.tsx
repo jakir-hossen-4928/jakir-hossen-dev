@@ -102,7 +102,7 @@ const Row = ({ index, style, data }: { index: number, style: React.CSSProperties
     }
 
     return (
-        <div style={style} className="flex px-2 md:px-4">
+        <div key={index} style={style} className="flex px-2 md:px-4">
             {items}
         </div>
     );

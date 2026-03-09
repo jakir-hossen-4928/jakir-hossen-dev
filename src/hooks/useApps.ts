@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 export function useApps() {
     const queryClient = useQueryClient();
 
-    const { data: apps = [], isLoading, error, refetch } = useQuery({
+    const { data, isLoading, error, refetch } = useQuery<AppEntry[]>({
         queryKey: ['apps'],
         queryFn: async () => {
             console.log('[useApps] Querying apps...');
@@ -19,6 +19,8 @@ export function useApps() {
         },
         staleTime: 1000 * 60 * 15, // 15 minutes
     });
+
+    const apps = data || [];
 
     useEffect(() => {
         const unsubscribe = subscribeToApps((updatedApps) => {

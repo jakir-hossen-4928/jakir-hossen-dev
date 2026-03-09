@@ -98,6 +98,23 @@ export default function HeroSection() {
               Get In Touch
             </button>
           </motion.div>
+
+          {/* Play Store Developer Link */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 1 }}
+            className="mt-8 flex items-center justify-center gap-2 text-muted-foreground/60 hover:text-primary transition-colors cursor-pointer group"
+          >
+            <a
+              href="https://play.google.com/store/apps/dev?id=6495908705399463745"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em]"
+            >
+              Official Developer on Google Play Store
+            </a>
+          </motion.div>
         </div>
       </div>
     </section>

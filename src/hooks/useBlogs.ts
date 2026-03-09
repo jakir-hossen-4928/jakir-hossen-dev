@@ -2,14 +2,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { syncBlogs, subscribeToBlogs } from '@/lib/syncService';
 import { db } from '@/lib/db';
 import { BlogPost } from '@/lib/types';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Fuse from 'fuse.js';
 
 export function useBlogs() {
     const queryClient = useQueryClient();
 
     // Query for blogs
-    const { data: blogs = [], isLoading, error, refetch } = useQuery({
+    const { data, isLoading, error, refetch } = useQuery<BlogPost[]>({
         queryKey: ['blogs'],
         queryFn: async () => {
             console.log('[useBlogs] Querying blogs...');
@@ -24,6 +24,8 @@ export function useBlogs() {
         },
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
+
+    const blogs = data || [];
 
     // Subscriptions for real-time updates
     useEffect(() => {
@@ -44,11 +46,10 @@ export function useBlogs() {
 
 export function useFilteredBlogs(searchTerm: string, selectedCategory: string | null) {
     const { blogs, isLoading, error } = useBlogs();
-    const [filtered, setFiltered] = useState<BlogPost[]>([]);
 
-    useEffect(() => {
+    const filtered = useMemo(() => {
         console.log(`[useFilteredBlogs] Filtering blogs. Total: ${blogs.length}, Search: "${searchTerm}", Category: "${selectedCategory}"`);
-        if (!blogs) return;
+        if (!blogs) return [];
 
         let results = [...blogs];
 
@@ -77,7 +78,7 @@ export function useFilteredBlogs(searchTerm: string, selectedCategory: string | 
         );
         console.log(`[useFilteredBlogs] After status filter: ${results.length}`);
 
-        setFiltered(results);
+        return results;
     }, [blogs, searchTerm, selectedCategory]);
 
     return {

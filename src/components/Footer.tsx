@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from "framer-motion";
-import { ArrowUp, Github, Linkedin, Mail, Send } from "lucide-react";
+import { ArrowUp, Github, Linkedin, Mail, Send, Gamepad2 } from "lucide-react";
 import { db } from '@/lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
@@ -102,6 +102,16 @@ export default function Footer() {
               aria-label="Email"
             >
               <Mail size={20} />
+            </motion.a>
+            <motion.a
+              whileHover={{ y: -5, scale: 1.1 }}
+              href="https://play.google.com/store/apps/dev?id=6495908705399463745"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all cursor-pointer shadow-sm border border-border/50"
+              aria-label="Google Play Store"
+            >
+              <Gamepad2 size={20} />
             </motion.a>
             <motion.button
               whileHover={{ y: -5, scale: 1.1 }}

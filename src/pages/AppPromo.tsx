@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight, Search, Filter } from 'lucide-react';
+import { Sparkles, ArrowRight, Search, Filter, ExternalLink } from 'lucide-react';
 import { useApps } from '@/hooks/useApps';
 import OptimizedImage from '@/components/ui/OptimizedImage';
 
@@ -129,10 +129,21 @@ const AppPromo = () => {
                     <DropdownMenuItem onClick={() => setSortBy(SortOption.NEWEST)}>Newest First</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setSortBy(SortOption.OLDEST)}>Oldest First</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setSortBy(SortOption.NAME_AZ)}>Name (A-Z)</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setSortBy(SortOption.NAME_ZA)}>Name (Z-A)</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setSortBy(SortOption.STATUS)}>Status</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+              </motion.div>
+
+              <motion.div variants={itemVariants} className="flex justify-center pt-4">
+                <a
+                  href="https://play.google.com/store/apps/dev?id=6495908705399463745"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-all font-black text-xs uppercase tracking-widest border border-primary/20 shadow-lg shadow-primary/10 group"
+                >
+                  <ExternalLink size={14} className="group-hover:scale-110 transition-transform" />
+                  Browse all apps on Google Play
+                </a>
               </motion.div>
             </section>
 
