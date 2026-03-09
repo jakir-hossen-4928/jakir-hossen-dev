@@ -24,8 +24,8 @@ const contactInfo = [
   {
     icon: MessageCircle,
     label: "WhatsApp",
-    value: "+8801647470849",
-    href: "https://wa.me/8801647470849",
+    value: "+880 1864-091946",
+    href: "https://wa.me/8801864091946",
     color: "text-green-500",
     bg: "bg-green-500/10"
   },
@@ -151,7 +151,7 @@ export default function ContactSection() {
                       e.stopPropagation();
                       let copyValue = info.value;
                       if (info.label === "WhatsApp") {
-                        copyValue = "https://wa.me/8801647470849";
+                        copyValue = "https://wa.me/8801864091946";
                       } else if (info.label === "Email") {
                         copyValue = "mdjakirkhan4928@gmail.com";
                       } else if (info.href.startsWith("http")) {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon, LogOut, LogIn, LayoutDashboard, User, Settings, Shield, Home, Briefcase, Code, Mail, Gamepad2, Newspaper, Facebook, Instagram, Github } from "lucide-react";
+import { Menu, X, Sun, Moon, LogOut, LogIn, LayoutDashboard, User, Settings, Shield, Home, Briefcase, Code, Mail, Gamepad2, Newspaper, Facebook, Instagram, Github, MessageSquare, Phone } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
@@ -318,6 +318,9 @@ export default function Header() {
                   </a>
                   <a href="https://www.facebook.com/profile.php?id=61579137497937" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all border border-border/50 shadow-sm">
                     <Facebook size={18} />
+                  </a>
+                  <a href="https://wa.me/8801864091946" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-green-500 transition-all border border-border/50 shadow-sm">
+                    <MessageSquare size={18} />
                   </a>
                   <a href="https://www.instagram.com/jakir_hossen_4928" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-pink-500 transition-all border border-border/50 shadow-sm">
                     <Instagram size={18} />
