@@ -1,0 +1,1158 @@
+{
+  "portfolio": {
+    "metadata": {
+      "title": "Premium Web Themes Portfolio",
+      "description": "Curated collection of 29 distinctive design themes for modern web experiences",
+      "totalThemes": 29,
+      "lastUpdated": "2026-03-13",
+      "bookingEnabled": true
+    },
+    "categories": [
+      {
+        "id": "minimalist",
+        "name": "Minimalist",
+        "description": "Clean, focused designs that prioritize content",
+        "themeIds": ["monochrome", "swiss-minimalist", "minimal-dark"]
+      },
+      {
+        "id": "modern-ui",
+        "name": "Modern UI",
+        "description": "Contemporary interface design systems",
+        "themeIds": ["material-design", "flat-design", "neumorphism", "claymorphism", "saas"]
+      },
+      {
+        "id": "bold-experimental",
+        "name": "Bold & Experimental",
+        "description": "High-impact, unconventional aesthetics",
+        "themeIds": ["neo-brutalism", "maximalism", "cyberpunk", "vaporwave", "art-deco"]
+      },
+      {
+        "id": "professional",
+        "name": "Professional",
+        "description": "Business-ready corporate aesthetics",
+        "themeIds": ["enterprise", "professional", "industrial", "academia", "newsprint"]
+      },
+      {
+        "id": "organic",
+        "name": "Organic & Natural",
+        "description": "Nature-inspired, flowing designs",
+        "themeIds": ["organic", "botanical"]
+      },
+      {
+        "id": "retro-vintage",
+        "name": "Retro & Vintage",
+        "description": "Nostalgic and classic aesthetics",
+        "themeIds": ["retro", "bauhaus", "terminal"]
+      },
+      {
+        "id": "artistic",
+        "name": "Artistic",
+        "description": "Creative and expressive styles",
+        "themeIds": ["kinetic", "playful-geometric", "sketch", "luxury"]
+      },
+      {
+        "id": "emerging-tech",
+        "name": "Emerging Tech",
+        "description": "Future-forward digital aesthetics",
+        "themeIds": ["web3", "modern-dark"]
+      }
+    ],
+    "themes": [
+      {
+        "id": "botanical",
+        "name": "Botanical",
+        "tagline": "Nature-inspired organic elegance",
+        "description": "A fresh, organic design theme featuring natural textures, leafy motifs, and earthy color palettes. Perfect for wellness brands, sustainable businesses, and lifestyle portfolios.",
+        "imageUrl": "https://i.ibb.co.com/Z650qb0K/botanical.png",
+        "previewUrl": "https://i.ibb.co.com/Z650qb0K/botanical.png",
+        "category": "organic",
+        "tags": ["nature", "organic", "green", "sustainable", "wellness", "soft"],
+        "colorPalette": {
+          "primary": "#2D5A3D",
+          "secondary": "#8FBC8F",
+          "accent": "#E8F5E9",
+          "background": "#F1F8E9",
+          "text": "#1B3A1B"
+        },
+        "typography": {
+          "heading": "Serif",
+          "body": "Sans-serif"
+        },
+        "features": ["Organic shapes", "Leaf patterns", "Natural textures", "Soft shadows"],
+        "bestFor": ["Wellness", "Sustainability", "Lifestyle", "Spas", "Organic products"],
+        "complexity": "medium",
+        "popularity": 85,
+        "pricing": {
+          "tier": "premium",
+          "basePrice": 129,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/botanical-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "monochrome",
+        "name": "Monochrome",
+        "tagline": "Timeless black and white sophistication",
+        "description": "A stark, high-contrast theme utilizing only black, white, and grayscale tones. Emphasizes typography and photography with zero color distraction.",
+        "imageUrl": "https://i.ibb.co.com/jvWPW01J/monochrome.png",
+        "previewUrl": "https://i.ibb.co.com/jvWPW01J/monochrome.png",
+        "category": "minimalist",
+        "tags": ["black-white", "contrast", "photography", "editorial", "classic"],
+        "colorPalette": {
+          "primary": "#000000",
+          "secondary": "#333333",
+          "accent": "#666666",
+          "background": "#FFFFFF",
+          "text": "#000000"
+        },
+        "typography": {
+          "heading": "Bold Sans-serif",
+          "body": "Clean Sans-serif"
+        },
+        "features": ["High contrast", "Photography focus", "Editorial layout", "Grid system"],
+        "bestFor": ["Photography", "Editorial", "Fashion", "Portfolio", "Agency"],
+        "complexity": "low",
+        "popularity": 92,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 99,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/monochrome-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "swiss-minimalist",
+        "name": "Swiss Minimalist",
+        "tagline": "International Typographic Style precision",
+        "description": "Inspired by the Swiss Design movement, featuring asymmetric layouts, sans-serif typography, and objective photography. Grid-based perfection.",
+        "imageUrl": "https://i.ibb.co.com/RkhnJ2VL/swiss-minimalist.png",
+        "previewUrl": "https://i.ibb.co.com/RkhnJ2VL/swiss-minimalist.png",
+        "category": "minimalist",
+        "tags": ["grid", "typography", "asymmetric", "international-style", "precise"],
+        "colorPalette": {
+          "primary": "#FF0000",
+          "secondary": "#000000",
+          "accent": "#FFFFFF",
+          "background": "#F5F5F5",
+          "text": "#1A1A1A"
+        },
+        "typography": {
+          "heading": "Helvetica/Akzidenz",
+          "body": "Sans-serif"
+        },
+        "features": ["Asymmetric grids", "Objective photography", "Functional design", "Clear hierarchy"],
+        "bestFor": ["Design agencies", "Architecture", "Editorial", "Corporate", "Gallery"],
+        "complexity": "medium",
+        "popularity": 88,
+        "pricing": {
+          "tier": "premium",
+          "basePrice": 149,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/swiss-consultation",
+          "duration": 45,
+          "requiresDeposit": true,
+          "depositAmount": 50
+        }
+      },
+      {
+        "id": "academia",
+        "name": "Academia",
+        "tagline": "Scholarly elegance and intellectual depth",
+        "description": "A refined theme evoking university aesthetics, library archives, and scholarly pursuits. Features classic typography, parchment textures, and institutional gravitas.",
+        "imageUrl": "https://i.ibb.co.com/gMCPR6QL/academia.png",
+        "previewUrl": "https://i.ibb.co.com/gMCPR6QL/academia.png",
+        "category": "professional",
+        "tags": ["scholarly", "classic", "university", "library", "intellectual"],
+        "colorPalette": {
+          "primary": "#8B4513",
+          "secondary": "#D2691E",
+          "accent": "#F4A460",
+          "background": "#FDF5E6",
+          "text": "#2F4F4F"
+        },
+        "typography": {
+          "heading": "Old Style Serif",
+          "body": "Transitional Serif"
+        },
+        "features": ["Parchment textures", "Footnotes", "Citations", "Classical ornaments"],
+        "bestFor": ["Universities", "Research", "Publishing", "Libraries", "Think tanks"],
+        "complexity": "high",
+        "popularity": 75,
+        "pricing": {
+          "tier": "premium",
+          "basePrice": 159,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/academia-consultation",
+          "duration": 45,
+          "requiresDeposit": true,
+          "depositAmount": 75
+        }
+      },
+      {
+        "id": "art-deco",
+        "name": "Art Deco",
+        "tagline": "Gatsby-era glamour and geometric luxury",
+        "description": "Roaring 20s inspired design featuring bold geometric patterns, sunburst motifs, metallic accents, and streamlined elegance.",
+        "imageUrl": "https://i.ibb.co.com/nsWLrS3R/art-deco.png",
+        "previewUrl": "https://i.ibb.co.com/nsWLrS3R/art-deco.png",
+        "category": "bold-experimental",
+        "tags": ["1920s", "geometric", "luxury", "gold", "glamour", "vintage"],
+        "colorPalette": {
+          "primary": "#D4AF37",
+          "secondary": "#000000",
+          "accent": "#C0C0C0",
+          "background": "#1A1A2E",
+          "text": "#F5F5DC"
+        },
+        "typography": {
+          "heading": "Geometric Sans",
+          "body": "Elegant Serif"
+        },
+        "features": ["Sunburst patterns", "Chevrons", "Metallic gradients", "Symmetrical layouts"],
+        "bestFor": ["Luxury brands", "Events", "Hotels", "Fashion", "Entertainment"],
+        "complexity": "high",
+        "popularity": 82,
+        "pricing": {
+          "tier": "luxury",
+          "basePrice": 199,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/artdeco-consultation",
+          "duration": 60,
+          "requiresDeposit": true,
+          "depositAmount": 100
+        }
+      },
+      {
+        "id": "claymorphism",
+        "name": "Claymorphism",
+        "tagline": "Soft 3D tactile interfaces",
+        "description": "Trendy 3D design trend featuring soft, inflated shapes with inner shadows and light borders, creating a tactile, clay-like appearance.",
+        "imageUrl": "https://i.ibb.co.com/Kz6DRgd8/claymorphism.png",
+        "previewUrl": "https://i.ibb.co.com/Kz6DRgd8/claymorphism.png",
+        "category": "modern-ui",
+        "tags": ["3d", "soft", "tactile", "trendy", "friendly", "playful"],
+        "colorPalette": {
+          "primary": "#FF6B9D",
+          "secondary": "#C44569",
+          "accent": "#F8B500",
+          "background": "#FFF5F7",
+          "text": "#2C3E50"
+        },
+        "typography": {
+          "heading": "Rounded Sans",
+          "body": "Clean Sans-serif"
+        },
+        "features": ["Inner shadows", "Soft 3D shapes", "Pastel colors", "Floating elements"],
+        "bestFor": ["Apps", "Startups", "Children", "Creative tools", "Social platforms"],
+        "complexity": "medium",
+        "popularity": 90,
+        "pricing": {
+          "tier": "premium",
+          "basePrice": 139,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/claymorphism-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "cyberpunk",
+        "name": "Cyberpunk",
+        "tagline": "Neon-drenched futuristic dystopia",
+        "description": "High-tech, low-life aesthetic featuring neon glows, dark backgrounds, glitch effects, and futuristic interface elements.",
+        "imageUrl": "https://i.ibb.co.com/PshwCwxs/cyberpunk.png",
+        "previewUrl": "https://i.ibb.co.com/PshwCwxs/cyberpunk.png",
+        "category": "bold-experimental",
+        "tags": ["neon", "futuristic", "dark", "tech", "glitch", "sci-fi"],
+        "colorPalette": {
+          "primary": "#FF00FF",
+          "secondary": "#00FFFF",
+          "accent": "#FFFF00",
+          "background": "#0A0A0F",
+          "text": "#E0E0E0"
+        },
+        "typography": {
+          "heading": "Tech/Monospace",
+          "body": "Sans-serif"
+        },
+        "features": ["Neon glows", "Glitch effects", "HUD elements", "Scan lines", "Dark mode"],
+        "bestFor": ["Gaming", "Tech", "Crypto", "Sci-fi", "Entertainment", "DJ/Music"],
+        "complexity": "high",
+        "popularity": 95,
+        "pricing": {
+          "tier": "premium",
+          "basePrice": 169,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/cyberpunk-consultation",
+          "duration": 45,
+          "requiresDeposit": true,
+          "depositAmount": 75
+        }
+      },
+      {
+        "id": "enterprise",
+        "name": "Enterprise",
+        "tagline": "Corporate confidence and scalable solutions",
+        "description": "Professional, trustworthy design for B2B companies and large organizations. Clean layouts, data visualization ready, and conversion optimized.",
+        "imageUrl": "https://i.ibb.co.com/WWDZrxGC/enterprise.png",
+        "previewUrl": "https://i.ibb.co.com/WWDZrxGC/enterprise.png",
+        "category": "professional",
+        "tags": ["corporate", "b2b", "professional", "trust", "scalable"],
+        "colorPalette": {
+          "primary": "#003366",
+          "secondary": "#0066CC",
+          "accent": "#00A8E8",
+          "background": "#FFFFFF",
+          "text": "#1F2937"
+        },
+        "typography": {
+          "heading": "Corporate Sans",
+          "body": "Clean Sans-serif"
+        },
+        "features": ["Data visualization", "Testimonials", "Case studies", "ROI calculators", "Trust badges"],
+        "bestFor": ["SaaS", "Consulting", "Finance", "Healthcare", "Enterprise software"],
+        "complexity": "high",
+        "popularity": 87,
+        "pricing": {
+          "tier": "enterprise",
+          "basePrice": 249,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/enterprise-consultation",
+          "duration": 60,
+          "requiresDeposit": true,
+          "depositAmount": 150
+        }
+      },
+      {
+        "id": "flat-design",
+        "name": "Flat Design",
+        "tagline": "Two-dimensional simplicity and bold colors",
+        "description": "Clean, two-dimensional design with no shadows or gradients. Bold colors, simple shapes, and clear iconography define this timeless style.",
+        "imageUrl": "https://i.ibb.co.com/twqbpsF1/flat-design.png",
+        "previewUrl": "https://i.ibb.co.com/twqbpsF1/flat-design.png",
+        "category": "modern-ui",
+        "tags": ["2d", "simple", "bold-colors", "icons", "clean", "microsoft"],
+        "colorPalette": {
+          "primary": "#3498DB",
+          "secondary": "#E74C3C",
+          "accent": "#2ECC71",
+          "background": "#ECF0F1",
+          "text": "#2C3E50"
+        },
+        "typography": {
+          "heading": "Geometric Sans",
+          "body": "Humanist Sans"
+        },
+        "features": ["No gradients", "Long shadows", "Simple icons", "Bold colors", "Card layouts"],
+        "bestFor": ["Apps", "Dashboards", "Startups", "Education", "General use"],
+        "complexity": "low",
+        "popularity": 78,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 89,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/flatdesign-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "industrial",
+        "name": "Industrial",
+        "tagline": "Raw materials and manufacturing grit",
+        "description": "Rugged, utilitarian design featuring exposed structures, metal textures, concrete aesthetics, and mechanical elements.",
+        "imageUrl": "https://i.ibb.co.com/cKzp4pqN/industrial.png",
+        "previewUrl": "https://i.ibb.co.com/cKzp4pqN/industrial.png",
+        "category": "professional",
+        "tags": ["raw", "metal", "concrete", "manufacturing", "utilitarian", "gritty"],
+        "colorPalette": {
+          "primary": "#4A4A4A",
+          "secondary": "#8B7355",
+          "accent": "#CD7F32",
+          "background": "#E8E4E1",
+          "text": "#2C2C2C"
+        },
+        "typography": {
+          "heading": "Stencil/Industrial",
+          "body": "Sans-serif"
+        },
+        "features": ["Metal textures", "Rivets", "Exposed grids", "Weathered effects", "Blueprint elements"],
+        "bestFor": ["Manufacturing", "Construction", "Automotive", "Logistics", "Hardware"],
+        "complexity": "medium",
+        "popularity": 70,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 119,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/industrial-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "kinetic",
+        "name": "Kinetic",
+        "tagline": "Motion-driven dynamic experiences",
+        "description": "Design centered around movement, animation, and dynamic interactions. Elements that respond to scroll, hover, and time-based triggers.",
+        "imageUrl": "https://i.ibb.co.com/jF5qyQ5/kinetic.png",
+        "previewUrl": "https://i.ibb.co.com/jF5qyQ5/kinetic.png",
+        "category": "artistic",
+        "tags": ["animation", "motion", "dynamic", "interactive", "scroll-triggered"],
+        "colorPalette": {
+          "primary": "#FF3366",
+          "secondary": "#33CCFF",
+          "accent": "#FFCC00",
+          "background": "#0F0F23",
+          "text": "#FFFFFF"
+        },
+        "typography": {
+          "heading": "Variable Font",
+          "body": "Sans-serif"
+        },
+        "features": ["Scroll animations", "Micro-interactions", "Parallax", "Morphing shapes", "Physics-based"],
+        "bestFor": ["Agencies", "Portfolio", "Creative", "Entertainment", "Events"],
+        "complexity": "high",
+        "popularity": 91,
+        "pricing": {
+          "tier": "luxury",
+          "basePrice": 189,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/kinetic-consultation",
+          "duration": 60,
+          "requiresDeposit": true,
+          "depositAmount": 100
+        }
+      },
+      {
+        "id": "luxury",
+        "name": "Luxury",
+        "tagline": "Opulent sophistication and premium experiences",
+        "description": "High-end aesthetic featuring elegant typography, generous whitespace, gold accents, and refined photography treatments.",
+        "imageUrl": "https://i.ibb.co.com/BFDQByc/luxury.png",
+        "previewUrl": "https://i.ibb.co.com/BFDQByc/luxury.png",
+        "category": "artistic",
+        "tags": ["premium", "elegant", "gold", "sophisticated", "high-end", "fashion"],
+        "colorPalette": {
+          "primary": "#D4AF37",
+          "secondary": "#1A1A1A",
+          "accent": "#F5F5DC",
+          "background": "#FFFFFF",
+          "text": "#1A1A1A"
+        },
+        "typography": {
+          "heading": "Elegant Serif",
+          "body": "Light Sans-serif"
+        },
+        "features": ["Generous whitespace", "Gold foiling", "Elegant photography", "Subtle animations", "Premium textures"],
+        "bestFor": ["Fashion", "Jewelry", "Real estate", "Luxury goods", "High-end services"],
+        "complexity": "high",
+        "popularity": 86,
+        "pricing": {
+          "tier": "luxury",
+          "basePrice": 219,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/luxury-consultation",
+          "duration": 60,
+          "requiresDeposit": true,
+          "depositAmount": 150
+        }
+      },
+      {
+        "id": "material-design",
+        "name": "Material Design",
+        "tagline": "Google's tactile design language",
+        "description": "Comprehensive design system with depth, shadows, and meaningful motion. Based on physical materials and realistic lighting.",
+        "imageUrl": "https://i.ibb.co.com/HfCQjBPS/material-design.png",
+        "previewUrl": "https://i.ibb.co.com/HfCQjBPS/material-design.png",
+        "category": "modern-ui",
+        "tags": ["google", "system", "shadows", "depth", "cards", "responsive"],
+        "colorPalette": {
+          "primary": "#6200EE",
+          "secondary": "#03DAC6",
+          "accent": "#FF0266",
+          "background": "#FFFFFF",
+          "text": "#000000"
+        },
+        "typography": {
+          "heading": "Roboto",
+          "body": "Roboto"
+        },
+        "features": ["Elevation shadows", "Ripple effects", "FAB buttons", "Consistent grids", "Motion"],
+        "bestFor": ["Android apps", "Google ecosystems", "Dashboards", "Productivity", "General use"],
+        "complexity": "medium",
+        "popularity": 83,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 109,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/material-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "maximalism",
+        "name": "Maximalism",
+        "tagline": "More is more visual abundance",
+        "description": "Bold, cluttered, and expressive design that embraces excess. Multiple fonts, vibrant colors, and layered elements create visual richness.",
+        "imageUrl": "https://i.ibb.co.com/LD0RXJhX/maximalism.png",
+        "previewUrl": "https://i.ibb.co.com/LD0RXJhX/maximalism.png",
+        "category": "bold-experimental",
+        "tags": ["bold", "colorful", "cluttered", "expressive", "eclectic", "vibrant"],
+        "colorPalette": {
+          "primary": "#FF006E",
+          "secondary": "#FB5607",
+          "accent": "#FFBE0B",
+          "background": "#8338EC",
+          "text": "#3A86FF"
+        },
+        "typography": {
+          "heading": "Multiple Display",
+          "body": "Mixed"
+        },
+        "features": ["Layered elements", "Mixed patterns", "Vibrant clashes", "Decorative", "Collage style"],
+        "bestFor": ["Fashion", "Art", "Events", "Music", "Creative agencies", "Youth brands"],
+        "complexity": "high",
+        "popularity": 79,
+        "pricing": {
+          "tier": "premium",
+          "basePrice": 159,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/maximalism-consultation",
+          "duration": 45,
+          "requiresDeposit": true,
+          "depositAmount": 75
+        }
+      },
+      {
+        "id": "minimal-dark",
+        "name": "Minimal Dark",
+        "tagline": "Dark mode minimalism",
+        "description": "Clean, sparse design with dark backgrounds and light text. Perfect for reducing eye strain while maintaining elegant simplicity.",
+        "imageUrl": "https://i.ibb.co.com/PGh8TqZz/minimal-dark.png",
+        "previewUrl": "https://i.ibb.co.com/PGh8TqZz/minimal-dark.png",
+        "category": "minimalist",
+        "tags": ["dark-mode", "minimal", "night", "elegant", "focus", "reduced-eye-strain"],
+        "colorPalette": {
+          "primary": "#E0E0E0",
+          "secondary": "#A0A0A0",
+          "accent": "#FFFFFF",
+          "background": "#121212",
+          "text": "#E0E0E0"
+        },
+        "typography": {
+          "heading": "Light Sans-serif",
+          "body": "Sans-serif"
+        },
+        "features": ["Dark backgrounds", "High contrast text", "Subtle borders", "Focus mode", "OLED optimized"],
+        "bestFor": ["Developers", "Portfolio", "Reading apps", "Night use", "Photography"],
+        "complexity": "low",
+        "popularity": 89,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 99,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/minimaldark-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "neo-brutalism",
+        "name": "Neo-Brutalism",
+        "tagline": "Raw, unpolished digital honesty",
+        "description": "Anti-design aesthetic featuring default system fonts, high contrast borders, raw HTML elements, and intentional ugliness.",
+        "imageUrl": "https://i.ibb.co.com/5hSVkJr5/neo-brutalism.png",
+        "previewUrl": "https://i.ibb.co.com/5hSVkJr5/neo-brutalism.png",
+        "category": "bold-experimental",
+        "tags": ["raw", "anti-design", "high-contrast", "borders", "system-fonts", "honest"],
+        "colorPalette": {
+          "primary": "#FF00FF",
+          "secondary": "#00FF00",
+          "accent": "#FFFF00",
+          "background": "#FFFFFF",
+          "text": "#000000"
+        },
+        "typography": {
+          "heading": "Times New Roman",
+          "body": "Arial"
+        },
+        "features": ["Thick borders", "System defaults", "No shadows", "Raw HTML", "High contrast", "Unpolished"],
+        "bestFor": ["Artists", "Underground", "Zines", "Music", "Counter-culture", "Experimental"],
+        "complexity": "low",
+        "popularity": 84,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 109,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/neobrutalism-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "neumorphism",
+        "name": "Neumorphism",
+        "tagline": "Soft UI plastic interfaces",
+        "description": "Soft, extruded plastic look with subtle shadows creating the illusion of elements pushing through the background surface.",
+        "imageUrl": "https://i.ibb.co.com/7Hyq8Z0/neumorphism.png",
+        "previewUrl": "https://i.ibb.co.com/7Hyq8Z0/neumorphism.png",
+        "category": "modern-ui",
+        "tags": ["soft-ui", "plastic", "shadows", "subtle", "tactile", "trendy"],
+        "colorPalette": {
+          "primary": "#E0E5EC",
+          "secondary": "#A3B1C6",
+          "accent": "#7D8597",
+          "background": "#E0E5EC",
+          "text": "#4A5568"
+        },
+        "typography": {
+          "heading": "Rounded Sans",
+          "body": "Sans-serif"
+        },
+        "features": ["Soft shadows", "Extruded elements", "Monochromatic", "Tactile buttons", "Depth without borders"],
+        "bestFor": ["Apps", "Dashboards", "Music players", "Calendars", "Soft products"],
+        "complexity": "medium",
+        "popularity": 76,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 119,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/neumorphism-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "organic",
+        "name": "Organic",
+        "tagline": "Fluid shapes and natural flows",
+        "description": "Design inspired by nature with fluid shapes, soft curves, and biological patterns. Avoids straight lines and sharp corners.",
+        "imageUrl": "https://i.ibb.co.com/G333PCyJ/organic.png",
+        "previewUrl": "https://i.ibb.co.com/G333PCyJ/organic.png",
+        "category": "organic",
+        "tags": ["fluid", "curves", "natural", "biomorphic", "soft", "flowing"],
+        "colorPalette": {
+          "primary": "#2E8B57",
+          "secondary": "#F4A460",
+          "accent": "#87CEEB",
+          "background": "#F0FFF0",
+          "text": "#2F4F4F"
+        },
+        "typography": {
+          "heading": "Rounded/Handwritten",
+          "body": "Soft Sans"
+        },
+        "features": ["Blob shapes", "Fluid animations", "Natural curves", "Earth tones", "Liquid effects"],
+        "bestFor": ["Wellness", "Beauty", "Environment", "Food", "Lifestyle", "Yoga"],
+        "complexity": "medium",
+        "popularity": 81,
+        "pricing": {
+          "tier": "premium",
+          "basePrice": 139,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/organic-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "playful-geometric",
+        "name": "Playful Geometric",
+        "tagline": "Fun shapes and vibrant interactions",
+        "description": "Bright, geometric design with playful shapes, bold colors, and friendly illustrations. Appeals to younger audiences and creative brands.",
+        "imageUrl": "https://i.ibb.co.com/tpWHfByb/playful-geometric.png",
+        "previewUrl": "https://i.ibb.co.com/tpWHfByb/playful-geometric.png",
+        "category": "artistic",
+        "tags": ["fun", "geometric", "colorful", "shapes", "friendly", "illustrations"],
+        "colorPalette": {
+          "primary": "#FF6B6B",
+          "secondary": "#4ECDC4",
+          "accent": "#FFE66D",
+          "background": "#F7FFF7",
+          "text": "#2C3E50"
+        },
+        "typography": {
+          "heading": "Rounded Display",
+          "body": "Friendly Sans"
+        },
+        "features": ["Geometric shapes", "Bright colors", "Illustrations", "Animations", "Friendly icons"],
+        "bestFor": ["Education", "Children", "Apps", "Creative tools", "Events", "Startups"],
+        "complexity": "medium",
+        "popularity": 88,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 129,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/playful-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "professional",
+        "name": "Professional",
+        "tagline": "Trustworthy business aesthetics",
+        "description": "Clean, conservative design for established businesses. Emphasizes credibility, clarity, and professional presentation.",
+        "imageUrl": "https://i.ibb.co.com/N25jjZGg/professional.png",
+        "previewUrl": "https://i.ibb.co.com/N25jjZGg/professional.png",
+        "category": "professional",
+        "tags": ["business", "corporate", "trust", "clean", "conservative", "established"],
+        "colorPalette": {
+          "primary": "#1E3A8A",
+          "secondary": "#3B82F6",
+          "accent": "#60A5FA",
+          "background": "#FFFFFF",
+          "text": "#1F2937"
+        },
+        "typography": {
+          "heading": "Traditional Serif",
+          "body": "Clean Sans-serif"
+        },
+        "features": ["Conservative layout", "Trust signals", "Testimonials", "Team photos", "Clear CTAs"],
+        "bestFor": ["Law firms", "Consulting", "Finance", "Insurance", "B2B services"],
+        "complexity": "medium",
+        "popularity": 85,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 119,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/professional-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "retro",
+        "name": "Retro",
+        "tagline": "Nostalgic vintage aesthetics",
+        "description": "Design inspired by past decades, featuring vintage color palettes, retro typography, and nostalgic imagery.",
+        "imageUrl": "https://i.ibb.co.com/YBsBHsbt/retro.png",
+        "previewUrl": "https://i.ibb.co.com/YBsBHsbt/retro.png",
+        "category": "retro-vintage",
+        "tags": ["vintage", "nostalgic", "classic", "old-school", "warm", "faded"],
+        "colorPalette": {
+          "primary": "#D2691E",
+          "secondary": "#CD853F",
+          "accent": "#F4A460",
+          "background": "#FFF8DC",
+          "text": "#8B4513"
+        },
+        "typography": {
+          "heading": "Retro Display",
+          "body": "Classic Serif"
+        },
+        "features": ["Vintage filters", "Retro fonts", "Aged textures", "Classic layouts", "Warm tones"],
+        "bestFor": ["Restaurants", "Bars", "Fashion", "Music", "Events", "Lifestyle"],
+        "complexity": "medium",
+        "popularity": 80,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 109,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/retro-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "sketch",
+        "name": "Sketch",
+        "tagline": "Hand-drawn authenticity",
+        "description": "Design that mimics hand-drawn sketches, wireframes, and doodles. Creates an approachable, work-in-progress feel.",
+        "imageUrl": "https://i.ibb.co.com/svSppGwN/sketch.png",
+        "previewUrl": "https://i.ibb.co.com/svSppGwN/sketch.png",
+        "category": "artistic",
+        "tags": ["hand-drawn", "sketch", "wireframe", "authentic", "approachable", "doodle"],
+        "colorPalette": {
+          "primary": "#2C3E50",
+          "secondary": "#7F8C8D",
+          "accent": "#E74C3C",
+          "background": "#FDFDFD",
+          "text": "#2C3E50"
+        },
+        "typography": {
+          "heading": "Handwritten",
+          "body": "Sketch Sans"
+        },
+        "features": ["Hand-drawn icons", "Sketch borders", "Paper textures", "Pencil effects", "Wireframe style"],
+        "bestFor": ["Creative", "Education", "Startups", "Personal blogs", "Designers"],
+        "complexity": "medium",
+        "popularity": 77,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 99,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/sketch-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "terminal",
+        "name": "Terminal",
+        "tagline": "Command-line computing nostalgia",
+        "description": "Monospace fonts, green-on-black color schemes, and command-line aesthetics for developers and tech enthusiasts.",
+        "imageUrl": "https://i.ibb.co.com/BHCDr2s5/terminal.png",
+        "previewUrl": "https://i.ibb.co.com/BHCDr2s5/terminal.png",
+        "category": "retro-vintage",
+        "tags": ["code", "developer", "monospace", "retro-tech", "hacker", "matrix"],
+        "colorPalette": {
+          "primary": "#00FF00",
+          "secondary": "#00CC00",
+          "accent": "#33FF33",
+          "background": "#000000",
+          "text": "#00FF00"
+        },
+        "typography": {
+          "heading": "Monospace",
+          "body": "Monospace"
+        },
+        "features": ["Blinking cursor", "Command prompts", "ASCII art", "Matrix effects", "Code blocks"],
+        "bestFor": ["Developers", "Tech", "Security", "Hacking", "Programming", "IT"],
+        "complexity": "low",
+        "popularity": 73,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 89,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/terminal-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "vaporwave",
+        "name": "Vaporwave",
+        "tagline": "Nostalgic future from the past",
+        "description": "Aesthetic combining 80s/90s nostalgia with surreal digital art. Features pastel colors, glitch art, and classical statues.",
+        "imageUrl": "https://i.ibb.co.com/CsJJjZyP/vaporwave.png",
+        "previewUrl": "https://i.ibb.co.com/CsJJjZyP/vaporwave.png",
+        "category": "bold-experimental",
+        "tags": ["aesthetic", "80s", "90s", "glitch", "pastel", "surreal", "nostalgia"],
+        "colorPalette": {
+          "primary": "#FF71CE",
+          "secondary": "#01CDFE",
+          "accent": "#05FFA1",
+          "background": "#2D1B4E",
+          "text": "#FFFFFF"
+        },
+        "typography": {
+          "heading": "Outrun/Retro",
+          "body": "Clean Sans"
+        },
+        "features": ["Glitch effects", "Classical statues", "Sunsets", "Grid floors", "Japanese text", "Palm trees"],
+        "bestFor": ["Music", "Art", "Fashion", "Events", "Gaming", "Lifestyle"],
+        "complexity": "high",
+        "popularity": 87,
+        "pricing": {
+          "tier": "premium",
+          "basePrice": 149,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/vaporwave-consultation",
+          "duration": 45,
+          "requiresDeposit": true,
+          "depositAmount": 50
+        }
+      },
+      {
+        "id": "web3",
+        "name": "Web3",
+        "tagline": "Decentralized digital frontier",
+        "description": "Futuristic design for blockchain, crypto, and decentralized applications. Features glassmorphism, gradients, and tech aesthetics.",
+        "imageUrl": "https://i.ibb.co.com/nNBPdXkH/web3.png",
+        "previewUrl": "https://i.ibb.co.com/nNBPdXkH/web3.png",
+        "category": "emerging-tech",
+        "tags": ["crypto", "blockchain", "defi", "nft", "futuristic", "decentralized"],
+        "colorPalette": {
+          "primary": "#6366F1",
+          "secondary": "#8B5CF6",
+          "accent": "#EC4899",
+          "background": "#0F172A",
+          "text": "#F8FAFC"
+        },
+        "typography": {
+          "heading": "Display Sans",
+          "body": "Inter/Sans"
+        },
+        "features": ["Glassmorphism", "Gradients", "3D elements", "Connected nodes", "Glowing effects", "Dark mode"],
+        "bestFor": ["Crypto", "NFT", "DeFi", "DAOs", "Blockchain", "Startups"],
+        "complexity": "high",
+        "popularity": 93,
+        "pricing": {
+          "tier": "premium",
+          "basePrice": 179,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/web3-consultation",
+          "duration": 45,
+          "requiresDeposit": true,
+          "depositAmount": 100
+        }
+      },
+      {
+        "id": "bauhaus",
+        "name": "Bauhaus",
+        "tagline": "Form follows function",
+        "description": "Inspired by the Bauhaus school, featuring primary colors, geometric shapes, and the unity of art and technology.",
+        "imageUrl": "https://i.ibb.co.com/LDqMrV4X/bauhaus.png",
+        "previewUrl": "https://i.ibb.co.com/LDqMrV4X/bauhaus.png",
+        "category": "retro-vintage",
+        "tags": ["modernist", "geometric", "primary-colors", "art-school", "functional"],
+        "colorPalette": {
+          "primary": "#E63946",
+          "secondary": "#F1FAEE",
+          "accent": "#A8DADC",
+          "background": "#F1FAEE",
+          "text": "#1D3557"
+        },
+        "typography": {
+          "heading": "Geometric Sans",
+          "body": "Sans-serif"
+        },
+        "features": ["Primary colors", "Circles/triangles/squares", "Asymmetric balance", "Functional art", "Clean lines"],
+        "bestFor": ["Art schools", "Design agencies", "Museums", "Modernist brands", "Architecture"],
+        "complexity": "medium",
+        "popularity": 78,
+        "pricing": {
+          "tier": "premium",
+          "basePrice": 139,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/bauhaus-consultation",
+          "duration": 45,
+          "requiresDeposit": true,
+          "depositAmount": 50
+        }
+      },
+      {
+        "id": "modern-dark",
+        "name": "Modern Dark",
+        "tagline": "Sleek contemporary darkness",
+        "description": "Sophisticated dark theme with modern gradients, glass effects, and subtle animations. Premium feel for modern brands.",
+        "imageUrl": "https://i.ibb.co.com/pjywKK0R/modern-dark.png",
+        "previewUrl": "https://i.ibb.co.com/pjywKK0R/modern-dark.png",
+        "category": "emerging-tech",
+        "tags": ["dark", "modern", "sleek", "gradients", "glassmorphism", "premium"],
+        "colorPalette": {
+          "primary": "#3B82F6",
+          "secondary": "#8B5CF6",
+          "accent": "#EC4899",
+          "background": "#0F0F0F",
+          "text": "#FAFAFA"
+        },
+        "typography": {
+          "heading": "Modern Sans",
+          "body": "Inter"
+        },
+        "features": ["Glassmorphism", "Subtle gradients", "Glow effects", "Smooth animations", "Premium feel"],
+        "bestFor": ["SaaS", "Tech", "Portfolio", "Agencies", "Startups", "Apps"],
+        "complexity": "high",
+        "popularity": 94,
+        "pricing": {
+          "tier": "premium",
+          "basePrice": 159,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/moderndark-consultation",
+          "duration": 45,
+          "requiresDeposit": true,
+          "depositAmount": 75
+        }
+      },
+      {
+        "id": "newsprint",
+        "name": "Newsprint",
+        "tagline": "Editorial journalism aesthetic",
+        "description": "Design mimicking newspapers and magazines with columns, serif fonts, and editorial layouts. Evokes trust and authority.",
+        "imageUrl": "https://i.ibb.co.com/nMqmCRcT/newsprint.png",
+        "previewUrl": "https://i.ibb.co.com/nMqmCRcT/newsprint.png",
+        "category": "professional",
+        "tags": ["newspaper", "editorial", "journalism", "columns", "serif", "authority"],
+        "colorPalette": {
+          "primary": "#1A1A1A",
+          "secondary": "#4A4A4A",
+          "accent": "#8B0000",
+          "background": "#F5F5DC",
+          "text": "#2F2F2F"
+        },
+        "typography": {
+          "heading": "Old Style Serif",
+          "body": "Serif"
+        },
+        "features": ["Multi-column layout", "Drop caps", "Pull quotes", "Newspaper textures", "Headlines"],
+        "bestFor": ["News", "Publishing", "Blogs", "Magazines", "Editorial", "Content sites"],
+        "complexity": "medium",
+        "popularity": 74,
+        "pricing": {
+          "tier": "standard",
+          "basePrice": 109,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/newsprint-consultation",
+          "duration": 30,
+          "requiresDeposit": false
+        }
+      },
+      {
+        "id": "saas",
+        "name": "SaaS",
+        "tagline": "Conversion-optimized software landing",
+        "description": "High-converting design specifically for SaaS products. Features pricing tables, feature grids, testimonials, and clear CTAs.",
+        "imageUrl": "https://i.ibb.co.com/twRX03n3/saas.png",
+        "previewUrl": "https://i.ibb.co.com/twRX03n3/saas.png",
+        "category": "modern-ui",
+        "tags": ["software", "conversion", "landing-page", "b2b", "product", "growth"],
+        "colorPalette": {
+          "primary": "#0F172A",
+          "secondary": "#3B82F6",
+          "accent": "#10B981",
+          "background": "#FFFFFF",
+          "text": "#1E293B"
+        },
+        "typography": {
+          "heading": "Inter/Geist",
+          "body": "Inter"
+        },
+        "features": ["Pricing tables", "Feature comparison", "Testimonials", "Integrations", "Analytics", "CTAs"],
+        "bestFor": ["SaaS", "Software", "Startups", "B2B", "Product launches", "App landing"],
+        "complexity": "high",
+        "popularity": 96,
+        "pricing": {
+          "tier": "enterprise",
+          "basePrice": 199,
+          "currency": "USD"
+        },
+        "meetingBooking": {
+          "enabled": true,
+          "calendlyLink": "/book/saas-consultation",
+          "duration": 60,
+          "requiresDeposit": true,
+          "depositAmount": 100
+        }
+      }
+    ],
+    "bookingConfig": {
+      "provider": "calendly",
+      "baseUrl": "https://calendly.com/your-portfolio",
+      "availableSlots": {
+        "weekdays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "hours": "09:00-17:00",
+        "timezone": "UTC"
+      },
+      "meetingTypes": [
+        {
+          "id": "consultation",
+          "name": "Theme Consultation",
+          "description": "Discuss your project requirements and theme customization",
+          "duration": 30,
+          "price": 0
+        },
+        {
+          "id": "deep-dive",
+          "name": "Deep Dive Session",
+          "description": "Detailed theme walkthrough and customization planning",
+          "duration": 60,
+          "price": 100
+        },
+        {
+          "id": "enterprise",
+          "name": "Enterprise Planning",
+          "description": "Large-scale implementation and team training",
+          "duration": 90,
+          "price": 250
+        }
+      ]
+    },
+    "filters": {
+      "complexity": ["low", "medium", "high"],
+      "pricingTier": ["standard", "premium", "luxury", "enterprise"],
+      "categories": ["minimalist", "modern-ui", "bold-experimental", "professional", "organic", "retro-vintage", "artistic", "emerging-tech"],
+      "features": ["dark-mode", "animation", "e-commerce", "blog", "portfolio", "saas", "responsive"]
+    }
+  }
+}

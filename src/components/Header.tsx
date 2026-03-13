@@ -25,6 +25,7 @@ const navItems = [
   { label: "About", href: "/", isHash: true, targetId: "#about", icon: User },
   { label: "Experience", href: "/", isHash: true, targetId: "#about", icon: Briefcase },
   { label: "Projects", href: "/", isHash: true, targetId: "#projects", icon: Code },
+  { label: "Themes", href: "/themes", isHash: false, icon: LayoutDashboard },
   { label: "Blog", href: "/blogs", isHash: false, icon: Newspaper },
   { label: "Play Store Apps", href: "/apps", isHash: false, icon: Gamepad2 },
   { label: "Contact", href: "/contact", isHash: false, icon: Mail },

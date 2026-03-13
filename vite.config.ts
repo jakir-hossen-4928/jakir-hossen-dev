@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from 'vite-plugin-pwa';
+import { visualizer } from 'rollup-plugin-visualizer';
+import viteCompression from 'vite-plugin-compression';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -38,11 +40,60 @@ export default defineConfig(({ mode }) => ({
           }
         ]
       }
-    })
+    }),
+    // Gzip compression for production builds
+    mode === 'production' && viteCompression({
+      algorithm: 'gzip',
+      ext: '.gz',
+      threshold: 1024, // Only compress files > 1KB
+    }),
+    // Brotli compression for production builds
+    mode === 'production' && viteCompression({
+      algorithm: 'brotliCompress',
+      ext: '.br',
+      threshold: 1024,
+    }),
+    // Bundle analysis (generates stats.html on build)
+    mode === 'production' && visualizer({
+      filename: 'dist/stats.html',
+      open: false,
+      gzipSize: true,
+      brotliSize: true,
+    }),
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  build: {
+    // Target modern browsers for smaller output
+    target: 'es2020',
+    // Increase chunk size warning limit
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Core React runtime
+          'vendor-react': ['react', 'react-dom'],
+          // Routing
+          'vendor-router': ['react-router-dom'],
+          // Firebase (typically the largest dependency)
+          'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
+          // Animation library
+          'vendor-framer': ['framer-motion'],
+          // UI utilities
+          'vendor-ui': ['@tanstack/react-query', 'lucide-react'],
+        },
+      },
+    },
+    // Minification options
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: mode === 'production',
+        drop_debugger: true,
+      },
     },
   },
 }));
