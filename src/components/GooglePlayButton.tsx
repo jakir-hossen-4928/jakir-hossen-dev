@@ -15,7 +15,7 @@ const GooglePlayButton: React.FC<GooglePlayButtonProps> = ({ url, className = ''
     >
       <div className="flex items-center gap-3">
         <img
-          src="/google-play-store.png"
+          src="/icons8-google-play-96.png"
           alt="Google Play"
           className="w-7 h-7 md:w-8 md:h-8 object-contain shrink-0"
         />

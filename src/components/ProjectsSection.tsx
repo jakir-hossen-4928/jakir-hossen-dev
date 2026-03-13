@@ -4,6 +4,7 @@ import { Github, ExternalLink } from "lucide-react";
 import sajuriyaImg from "@/assets/project-sajuriya.png";
 import aiVocabImg from "@/assets/project-ai-vocab.png";
 import myMealsImg from "@/assets/project-my-meals.png";
+import tinyThreadsImg from "@/assets/project-tiny-threads.png";
 
 const projects = [
   {
@@ -20,7 +21,7 @@ const projects = [
     title: "AI Vocabulary Coach",
     tagline: "AI-Powered English Vocabulary Builder",
     description: "Sophisticated vocabulary learning platform for IELTS Band 7+. Uses GPT-4o for content generation, supports offline-first usage with sync, flashcards, and PDF export.",
-    image: "https://i.ibb.co.com/Zz6ZNk18/5.png",
+    image: aiVocabImg,
     tech: ["React 18", "TypeScript", "Framer Motion", "Firebase", "OpenAI GPT-4o"],
     github: "https://github.com/jakir-hossen-4928/ai-vocab-web",
     live: "https://ai-vocabulary-coach.netlify.app/",
@@ -45,6 +46,16 @@ const projects = [
     github: "https://github.com/jakir-hossen-4928/i-Chat-Messaging-Platform",
     live: "https://ichatofficial.netlify.app/login",
     category: "Messaging App"
+  },
+  {
+    title: "TinyThreads",
+    tagline: "Kids' Fashion Marketplace",
+    description: "A sophisticated landing page for a children's clothing brand. Integrated with Supabase for real-time data and authentication, Stripe for secure payments, and Edge Functions for serverless backend logic.",
+    image: tinyThreadsImg,
+    tech: ["React", "TypeScript", "Supabase", "Stripe", "Edge Functions", "Tailwind CSS"],
+    github: "https://github.com/jakirhossensoftvance/tinythreads",
+    live: "https://tinythreads.netlify.app/",
+    category: "E-commerce"
   }
 ];
 

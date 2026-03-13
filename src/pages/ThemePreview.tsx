@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, CheckCircle2, Monitor, Smartphone, Tablet, Lock } from 'lucide-react';
 import { ProgressiveImg } from '@/components/ProgressiveImg';
+import { FloatingWhatsApp } from '@digicroz/react-floating-whatsapp';
 
 const BOOKING_URL = import.meta.env.VITE_MEETTING_URL;
 
@@ -253,6 +254,22 @@ export default function ThemePreview() {
         </div>
 
       </div>
+
+      {/* WhatsApp Floating Button */}
+      <FloatingWhatsApp
+        phoneNumber="8801864091946"
+        accountName="Jakir Hossen"
+        avatar="/jakir-hossen.jpg"
+        statusMessage="Typically replies within 1 hour"
+        chatMessage={`Hello! 👋\nInterested in the *${theme.name}* theme?\nHow can I help you today?`}
+        placeholder="Type a message..."
+        darkMode={false}
+        allowClickAway={true}
+        allowEsc={true}
+        notification={true}
+        notificationDelay={30}
+        notificationSound={true}
+      />
     </div>
   );
 }

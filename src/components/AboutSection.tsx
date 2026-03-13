@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Award, BookOpen, GraduationCap, Calendar, ChevronRight, FileText } from "lucide-react";
+import { Award, BookOpen, GraduationCap, Calendar, ChevronRight, FileText, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function AboutSection() {
@@ -108,31 +108,50 @@ export default function AboutSection() {
               </Button>
             </motion.div>
 
-            {/* Icon Cards (Screenshot Style) */}
-            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 pt-4 max-w-3xl">
+            {/* Icon Cards (Responsive stack) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 pt-4 w-full">
               <motion.div
-                whileHover={{ x: 5 }}
-                className="flex items-center gap-5 sm:gap-6 p-6 sm:p-7 rounded-[2rem] bg-card border border-border group hover:border-primary/30 transition-all shadow-sm"
+                whileHover={{ y: -5 }}
+                className="flex flex-col items-start gap-4 p-6 rounded-[2rem] bg-card border border-border group hover:border-primary/30 transition-all shadow-sm h-full text-left"
               >
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#FDF8EE] dark:bg-primary/5 flex items-center justify-center shrink-0 border border-primary/10">
-                  <Award size={28} className="text-primary" />
+                <div className="w-14 h-14 rounded-2xl bg-[#FDF8EE] dark:bg-primary/5 flex items-center justify-center shrink-0 border border-primary/10 transition-transform group-hover:scale-110">
+                  <Award size={24} className="text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-black text-foreground text-xs sm:text-sm uppercase tracking-widest leading-none mb-2">Quality Driven</h4>
-                  <p className="text-[10px] sm:text-[11px] text-muted-foreground leading-snug">Clean and maintainable code.</p>
+                  <h4 className="font-black text-foreground text-[11px] uppercase tracking-widest leading-tight mb-1">Quality Driven</h4>
+                  <p className="text-[10px] text-muted-foreground leading-tight">Clean and maintainable code.</p>
                 </div>
               </motion.div>
 
               <motion.div
-                whileHover={{ x: 5 }}
-                className="flex items-center gap-5 sm:gap-6 p-6 sm:p-7 rounded-[2rem] bg-card border border-border group hover:border-blue-500/30 transition-all shadow-sm"
+                whileHover={{ y: -5 }}
+                className="flex flex-col items-start gap-4 p-6 rounded-[2rem] bg-card border border-border group hover:border-blue-500/30 transition-all shadow-sm h-full text-left"
               >
-                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#EEF2FD] dark:bg-blue-500/5 flex items-center justify-center shrink-0 border border-blue-500/10">
-                  <BookOpen size={28} className="text-blue-500" />
+                <div className="w-14 h-14 rounded-2xl bg-[#EEF2FD] dark:bg-blue-500/5 flex items-center justify-center shrink-0 border border-blue-500/10 transition-transform group-hover:scale-110">
+                  <BookOpen size={24} className="text-blue-500" />
                 </div>
                 <div>
-                  <h4 className="font-black text-foreground text-xs sm:text-sm uppercase tracking-widest leading-none mb-2">Always Learning</h4>
-                  <p className="text-[10px] sm:text-[11px] text-muted-foreground leading-snug">Modern web stack.</p>
+                  <h4 className="font-black text-foreground text-[11px] uppercase tracking-widest leading-tight mb-1">Always Learning</h4>
+                  <p className="text-[10px] text-muted-foreground leading-tight">Modern web stack.</p>
+                </div>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ y: -5 }}
+                className="flex flex-col items-start gap-4 p-6 rounded-[2rem] bg-card border border-border group hover:border-pink-500/30 transition-all shadow-sm relative overflow-hidden h-full text-left"
+              >
+                <a
+                  href="https://lalita-story.netlify.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="absolute inset-0 z-10"
+                />
+                <div className="w-14 h-14 rounded-2xl bg-[#FDEEF8] dark:bg-pink-500/5 flex items-center justify-center shrink-0 border border-pink-500/10 transition-transform group-hover:scale-110">
+                  <Heart size={24} className="text-pink-500" />
+                </div>
+                <div>
+                  <h4 className="font-black text-foreground text-[11px] uppercase tracking-widest leading-tight mb-1">Creative writing</h4>
+                  <p className="text-[10px] text-muted-foreground leading-tight italic">ললিতা - A Love Story.</p>
                 </div>
               </motion.div>
             </div>
@@ -146,35 +165,57 @@ export default function AboutSection() {
             <h2 className="text-2xl sm:text-5xl font-black text-foreground tracking-tighter">Work <span className="text-primary italic">Experience</span></h2>
           </div>
 
-          <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 max-w-5xl mx-auto">
+            {/* Softvance Delta */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="group relative"
+              whileHover={{ y: -8 }}
+              className="p-6 sm:p-8 rounded-[2rem] bg-card border border-border transition-all hover:shadow-2xl hover:shadow-primary/10 group text-left flex flex-col items-start"
             >
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/10 to-orange-500/10 rounded-[2.5rem] blur opacity-0 group-hover:opacity-100 transition duration-500" />
-              <div className="relative bg-card border border-border p-6 sm:p-12 rounded-[2.5rem] flex flex-col md:flex-row items-center gap-8 md:gap-10 hover:border-primary/20 transition-all text-left">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-white flex items-center justify-center shrink-0 transition-all duration-500 border border-border/50 overflow-hidden p-2 shadow-lg">
-                  <img
-                    src="myschool.png"
-                    alt="MySchool Logo"
-                    className="w-full rounded-[2rem] h-full object-contain"
-                  />
-                </div>
-                <div className="flex-1 space-y-3">
-                  <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                    <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest whitespace-nowrap">Dec 2024 - Aug 2025</span>
-                    <h4 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">Accountant</h4>
-                  </div>
-                  <h5 className="text-base sm:text-lg font-bold text-muted-foreground flex items-center gap-2">
-                    MySchool (মাইস্কুল) <ChevronRight size={14} className="text-primary" /> Cheora, Cumilla
-                  </h5>
-                  <p className="text-sm sm:text-base text-muted-foreground font-medium opacity-80 leading-relaxed pt-1">
-                    Managing administrative tasks, staff training on internal software, and leading digital transformation initiatives for school management.
-                  </p>
-                </div>
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white flex items-center justify-center p-2 mb-5 sm:mb-6 border border-primary/10 transition-all duration-500 overflow-hidden shadow-sm">
+                <img
+                  src="softvance.png"
+                  alt="Softvance Delta Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
+              <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight">Frontend Developer</h4>
+              <div className="flex flex-col gap-1 mb-4">
+                <p className="font-bold text-muted-foreground flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest">
+                  <Calendar size={12} className="text-primary" /> Feb 2026 - Present
+                </p>
+                <h5 className="text-[11px] sm:text-sm font-bold text-muted-foreground flex items-center gap-1">
+                  Softvance Delta <ChevronRight size={14} className="text-primary" /> Onsite, Dhaka
+                </h5>
+              </div>
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed opacity-80 pt-1">
+                Leading frontend development and crafting high-converting Shopify store designs with a focus on modern web standards.
+              </p>
+            </motion.div>
+
+            {/* MySchool */}
+            <motion.div
+              whileHover={{ y: -8 }}
+              className="p-6 sm:p-8 rounded-[2rem] bg-card border border-border transition-all hover:shadow-2xl hover:shadow-primary/10 group text-left flex flex-col items-start"
+            >
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white flex items-center justify-center p-2 mb-5 sm:mb-6 border border-primary/10 transition-all duration-500 overflow-hidden shadow-sm">
+                <img
+                  src="myschool.png"
+                  alt="MySchool Logo"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight">Accountant</h4>
+              <div className="flex flex-col gap-1 mb-4">
+                <p className="font-bold text-muted-foreground flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest">
+                  <Calendar size={12} className="text-primary" /> Dec 2024 - Aug 2025
+                </p>
+                <h5 className="text-[11px] sm:text-sm font-bold text-muted-foreground flex items-center gap-1">
+                  MySchool (মাইস্কুল) <ChevronRight size={14} className="text-primary" /> Cheora, Cumilla
+                </h5>
+              </div>
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed opacity-80 pt-1">
+                Managing administrative tasks, staff training, and leading digital transformation initiatives for school management.
+              </p>
             </motion.div>
           </div>
         </div>

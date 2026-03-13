@@ -37,14 +37,14 @@ const contactInfo = [
     color: "text-foreground",
     bg: "bg-foreground/10"
   },
-  {
-    icon: MapPin,
-    label: "Location",
-    value: "Dhaka, Bangladesh",
-    href: "#",
-    color: "text-red-500",
-    bg: "bg-red-500/10"
-  }
+  // {
+  //   icon: MapPin,
+  //   label: "Location",
+  //   value: "Dhaka, Bangladesh",
+  //   href: "#",
+  //   color: "text-red-500",
+  //   bg: "bg-red-500/10"
+  // }
 ];
 
 export default function ContactSection() {

@@ -145,8 +145,10 @@ export default function Footer() {
 
           {/* Copyright */}
           <div className="text-center space-y-2">
-            <div className="flex justify-center gap-6 text-[10px] font-semibold uppercase tracking-widest opacity-60">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6 text-[10px] font-semibold uppercase tracking-widest opacity-60">
               <a href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</a>
+              <span>•</span>
+              <a href="https://lalita-story.netlify.app/" target="_blank" rel="noopener noreferrer" className="hover:text-pink-500 transition-colors">Short Story: ললিতা</a>
               <span>•</span>
               <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
             </div>
