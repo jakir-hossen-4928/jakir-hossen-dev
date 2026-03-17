@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { usePageTitle } from '@/hooks/usePageTitle';
+import { SEO, seoConfig } from '@/components/SEO';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AdminOverview } from './admin/AdminOverview';
@@ -10,6 +10,7 @@ import { AdminTesters } from './admin/AdminTesters';
 import { AdminBlogs } from './admin/AdminBlogs';
 import AdminNotes from './admin/AdminNotes';
 import AdminLinks from './admin/AdminLinks';
+import { AdminThemes } from './admin/AdminThemes';
 import { toast } from 'react-toastify';
 import { Wifi, WifiOff, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -18,8 +19,9 @@ import { useTesters } from '@/hooks/useTesters';
 import { useSubscribers } from '@/hooks/useSubscribers';
 import { useBlogs } from '@/hooks/useBlogs';
 import { useUsers } from '@/hooks/useUsers';
-import { Note } from '@/lib/types';
-import { syncNotes } from '@/lib/syncService';
+import { Note, BookmarkFolder, BookmarkLink, WebTheme } from '@/lib/types';
+import { syncNotes, syncBookmarkFolders, syncBookmarkLinks } from '@/lib/syncService';
+import { useWebThemes } from '@/hooks/useWebThemes';
 
 const AdminDashboard = () => {
   const location = useLocation();
@@ -29,14 +31,13 @@ const AdminDashboard = () => {
     if (path === '/admin/testers') return "Manage Users | Admin Portal";
     if (path === '/admin/subscribers') return "Manage Subscribers | Admin Portal";
     if (path === '/admin/blogs') return "Manage Articles | Admin Portal";
-    if (path === '/admin/blogs') return "Manage Articles | Admin Portal";
+    if (path === '/admin/themes') return "Web Themes | Admin Portal";
     if (path === '/admin/notes') return "My Notebook | Admin Portal";
     if (path === '/admin/links') return "Link Manager | Admin Portal";
     if (path === '/admin/settings') return "Settings | Admin Portal";
     return "Overview | Admin Portal";
   };
 
-  usePageTitle(getAdminTitle());
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   // Use TanStack Query hooks
@@ -45,10 +46,16 @@ const AdminDashboard = () => {
   const { subscribers, isLoading: subsLoading } = useSubscribers();
   const { blogs, isLoading: blogsLoading } = useBlogs();
   const { users, isLoading: usersLoading } = useUsers();
+  const { themes, isLoading: themesLoading } = useWebThemes();
 
   // Fetch notes
   const [notes, setNotes] = useState<Note[]>([]);
   const [notesLoading, setNotesLoading] = useState(true);
+
+  // Fetch bookmarks
+  const [bookmarkFolders, setBookmarkFolders] = useState<BookmarkFolder[]>([]);
+  const [bookmarkLinks, setBookmarkLinks] = useState<BookmarkLink[]>([]);
+  const [bookmarksLoading, setBookmarksLoading] = useState(true);
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -61,10 +68,25 @@ const AdminDashboard = () => {
         setNotesLoading(false);
       }
     };
+    
+    const fetchBookmarks = async () => {
+        try {
+            const folders = await syncBookmarkFolders();
+            const links = await syncBookmarkLinks();
+            setBookmarkFolders(folders);
+            setBookmarkLinks(links);
+        } catch (error) {
+            console.error("Failed to fetch bookmarks:", error);
+        } finally {
+            setBookmarksLoading(false);
+        }
+    };
+
     fetchNotes();
+    fetchBookmarks();
   }, []);
 
-  const isLoading = appsLoading || testersLoading || subsLoading || blogsLoading || notesLoading || usersLoading;
+  const isLoading = appsLoading || testersLoading || subsLoading || blogsLoading || notesLoading || usersLoading || bookmarksLoading || themesLoading;
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -138,12 +160,13 @@ const AdminDashboard = () => {
             <AdminNotes />
           </motion.div>
         );
-      case '/admin/links':
+      case '/admin/themes':
         return (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <AdminLinks />
+            <AdminThemes />
           </motion.div>
         );
+      case '/admin/links':
       case '/admin/settings':
         return (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
@@ -181,14 +204,18 @@ const AdminDashboard = () => {
   }
 
   return (
-    <DashboardLayout
-      apps={apps}
-      testers={testers}
-      subscribers={subscribers}
-      blogs={blogs}
-      notes={notes}
-      users={users}
-    >
+    <>
+      <SEO {...seoConfig.admin} />
+      <DashboardLayout
+        apps={apps}
+        testers={testers}
+        subscribers={subscribers}
+        blogs={blogs}
+        notes={notes}
+        bookmarkFolders={bookmarkFolders}
+        bookmarkLinks={bookmarkLinks}
+        themes={themes}
+      >
       <div className="mb-4 flex items-center justify-end px-4 md:px-8">
         <Badge variant={isOnline ? "outline" : "destructive"} className="gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest border-white/10">
           {isOnline ? (
@@ -202,6 +229,7 @@ const AdminDashboard = () => {
         {renderContent()}
       </AnimatePresence>
     </DashboardLayout>
+    </>
   );
 };
 

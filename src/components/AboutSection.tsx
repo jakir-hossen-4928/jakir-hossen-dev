@@ -6,8 +6,11 @@ export default function AboutSection() {
   const profileImage = "/jakir-hossen.jpg";
 
   return (
-    <section id="about" className="py-8 bg-background relative overflow-hidden group">
-      <div className="section-container relative z-10">
+    <section id="about" className="pt-0 pb-8 bg-background relative overflow-hidden group">
+      {/* Smooth gradient transition from Hero */}
+      <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background via-background to-transparent pointer-events-none" />
+      
+      <div className="section-container relative z-10 pt-8">
 
         {/* Section Header */}
         <div className="text-left mb-6">
@@ -18,9 +21,9 @@ export default function AboutSection() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-11 gap-12 lg:gap-16 items-center">
           {/* Left Side: Image and Stats Cards */}
-          <div className="lg:col-span-12 xl:col-span-5 flex flex-col items-center">
+          <div className="lg:col-span-5 xl:col-span-4 flex flex-col items-center">
             {/* Image Area with Themed Frames */}
             <div className="relative w-full max-w-[340px] sm:max-w-[380px] aspect-square flex items-center justify-center group mb-10">
               {/* Background Frames (Themed & Subtle) */}
@@ -66,7 +69,7 @@ export default function AboutSection() {
           </div>
 
           {/* Right Side: Content */}
-          <div className="lg:col-span-12 xl:col-span-7 text-left space-y-6 sm:space-y-8">
+          <div className="lg:col-span-6 xl:col-span-7 text-left space-y-6 sm:space-y-8">
             <motion.h2
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -109,36 +112,36 @@ export default function AboutSection() {
             </motion.div>
 
             {/* Icon Cards (Responsive stack) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 pt-4 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 w-full">
               <motion.div
                 whileHover={{ y: -5 }}
-                className="flex flex-col items-start gap-4 p-6 rounded-[2rem] bg-card border border-border group hover:border-primary/30 transition-all shadow-sm h-full text-left"
+                className="flex flex-row items-center gap-5 p-6 rounded-[2rem] bg-card border border-border group hover:border-primary/30 transition-all shadow-sm h-full text-left"
               >
-                <div className="w-14 h-14 rounded-2xl bg-[#FDF8EE] dark:bg-primary/5 flex items-center justify-center shrink-0 border border-primary/10 transition-transform group-hover:scale-110">
+                <div className="w-14 h-14 rounded-2xl bg-[#FDF8EE] dark:bg-primary/5 flex items-center justify-center shrink-0 border border-primary/10 transition-transform group-hover:scale-110 shadow-sm">
                   <Award size={24} className="text-primary" />
                 </div>
-                <div>
-                  <h4 className="font-black text-foreground text-[11px] uppercase tracking-widest leading-tight mb-1">Quality Driven</h4>
-                  <p className="text-[10px] text-muted-foreground leading-tight">Clean and maintainable code.</p>
+                <div className="space-y-1">
+                  <h4 className="font-black text-foreground text-[13px] uppercase tracking-widest leading-none">Quality Driven</h4>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed font-medium opacity-80">Clean and maintainable code.</p>
                 </div>
               </motion.div>
 
               <motion.div
                 whileHover={{ y: -5 }}
-                className="flex flex-col items-start gap-4 p-6 rounded-[2rem] bg-card border border-border group hover:border-blue-500/30 transition-all shadow-sm h-full text-left"
+                className="flex flex-row items-center gap-5 p-6 rounded-[2rem] bg-card border border-border group hover:border-blue-500/30 transition-all shadow-sm h-full text-left"
               >
-                <div className="w-14 h-14 rounded-2xl bg-[#EEF2FD] dark:bg-blue-500/5 flex items-center justify-center shrink-0 border border-blue-500/10 transition-transform group-hover:scale-110">
+                <div className="w-14 h-14 rounded-2xl bg-[#EEF2FD] dark:bg-blue-500/5 flex items-center justify-center shrink-0 border border-blue-500/10 transition-transform group-hover:scale-110 shadow-sm">
                   <BookOpen size={24} className="text-blue-500" />
                 </div>
-                <div>
-                  <h4 className="font-black text-foreground text-[11px] uppercase tracking-widest leading-tight mb-1">Always Learning</h4>
-                  <p className="text-[10px] text-muted-foreground leading-tight">Modern web stack.</p>
+                <div className="space-y-1">
+                  <h4 className="font-black text-foreground text-[13px] uppercase tracking-widest leading-none">Always Learning</h4>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed font-medium opacity-80">Modern web stack.</p>
                 </div>
               </motion.div>
 
               <motion.div
                 whileHover={{ y: -5 }}
-                className="flex flex-col items-start gap-4 p-6 rounded-[2rem] bg-card border border-border group hover:border-pink-500/30 transition-all shadow-sm relative overflow-hidden h-full text-left"
+                className="flex flex-row items-center gap-5 p-6 rounded-[2rem] bg-card border border-border group hover:border-pink-500/30 transition-all shadow-sm relative overflow-hidden h-full text-left"
               >
                 <a
                   href="https://lalita-story.netlify.app/"
@@ -146,12 +149,12 @@ export default function AboutSection() {
                   rel="noopener noreferrer"
                   className="absolute inset-0 z-10"
                 />
-                <div className="w-14 h-14 rounded-2xl bg-[#FDEEF8] dark:bg-pink-500/5 flex items-center justify-center shrink-0 border border-pink-500/10 transition-transform group-hover:scale-110">
+                <div className="w-14 h-14 rounded-2xl bg-[#FDEEF8] dark:bg-pink-500/5 flex items-center justify-center shrink-0 border border-pink-500/10 transition-transform group-hover:scale-110 shadow-sm">
                   <Heart size={24} className="text-pink-500" />
                 </div>
-                <div>
-                  <h4 className="font-black text-foreground text-[11px] uppercase tracking-widest leading-tight mb-1">Creative writing</h4>
-                  <p className="text-[10px] text-muted-foreground leading-tight italic">ললিতা - A Love Story.</p>
+                <div className="space-y-1">
+                  <h4 className="font-black text-foreground text-[13px] uppercase tracking-widest leading-none">Creative writing</h4>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed font-medium opacity-80 italic">ললিতা - A Love Story.</p>
                 </div>
               </motion.div>
             </div>

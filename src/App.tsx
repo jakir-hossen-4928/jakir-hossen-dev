@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./lib/AuthContext";
+import { ThemeProvider } from "./lib/ThemeContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthModal from "./components/AuthModal";
@@ -39,91 +40,44 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ErrorBoundary>
-          <TooltipProvider>
-            <Toaster />
-            <ToastContainer theme="dark" position="bottom-right" />
-            <AuthModal />
-            <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-              <ScrollToTop />
-              <Suspense fallback={<PageLoader />}>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/apps" element={<AppPromo />} />
-                  <Route path="/apps/:slug" element={<AppDetails />} />
-                  <Route path="/blogs" element={<BlogGallery />} />
-                  <Route path="/blogs/:slug" element={<BlogDetails />} />
-                  <Route path="/themes" element={<ThemesGallery />} />
-                  <Route path="/themes/:id" element={<ThemePreview />} />
-                  <Route
-                    path="/admin"
-                    element={
-                      <ProtectedRoute adminOnly>
-                        <AdminDashboard />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/admin/testers"
-                    element={
-                      <ProtectedRoute adminOnly>
-                        <AdminDashboard />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/admin/subscribers"
-                    element={
-                      <ProtectedRoute adminOnly>
-                        <AdminDashboard />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/admin/settings"
-                    element={
-                      <ProtectedRoute adminOnly>
-                        <AdminDashboard />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/admin/blogs"
-                    element={
-                      <ProtectedRoute adminOnly>
-                        <AdminDashboard />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/admin/notes"
-                    element={
-                      <ProtectedRoute adminOnly>
-                        <AdminDashboard />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/admin/links"
-                    element={
-                      <ProtectedRoute adminOnly>
-                        <AdminDashboard />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-            </BrowserRouter>
-          </TooltipProvider>
-        </ErrorBoundary>
-      </AuthProvider>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <ThemeProvider>
+          <AuthProvider>
+            <ErrorBoundary>
+              <TooltipProvider>
+                <Toaster />
+                <ToastContainer theme="dark" position="bottom-right" />
+                <AuthModal />
+                <ScrollToTop />
+                <Suspense fallback={<PageLoader />}>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/apps" element={<AppPromo />} />
+                    <Route path="/apps/:slug" element={<AppDetails />} />
+                    <Route path="/blogs" element={<BlogGallery />} />
+                    <Route path="/blogs/:slug" element={<BlogDetails />} />
+                    <Route path="/themes" element={<ThemesGallery />} />
+                    <Route path="/themes/:id" element={<ThemePreview />} />
+                    <Route
+                      path="/admin/*"
+                      element={
+                        <ProtectedRoute adminOnly>
+                          <AdminDashboard />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </TooltipProvider>
+            </ErrorBoundary>
+          </AuthProvider>
+        </ThemeProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   );
-
 };
 
 export default App;

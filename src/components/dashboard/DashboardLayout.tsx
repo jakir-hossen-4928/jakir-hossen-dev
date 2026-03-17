@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { AppSidebar } from './AppSidebar';
 import { UniversalSearch } from './UniversalSearch';
-import { Menu, ChevronRight } from 'lucide-react';
+import { Menu, ChevronRight, Sun, Moon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLocation } from 'react-router-dom';
-import { AppEntry, Tester, Subscriber, BlogPost, Note } from '@/lib/types';
+import { AppEntry, Tester, Subscriber, BlogPost, Note, BookmarkFolder, BookmarkLink, WebTheme } from '@/lib/types';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -13,12 +13,17 @@ interface DashboardLayoutProps {
     subscribers?: Subscriber[];
     blogs?: BlogPost[];
     notes?: Note[];
+    bookmarkFolders?: BookmarkFolder[];
+    bookmarkLinks?: BookmarkLink[];
+    themes?: WebTheme[];
 }
 
 import { useUserPreferences } from '@/hooks/useUserPreferences';
+import { useTheme } from '@/hooks/useTheme';
 
-export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, apps = [], testers = [], subscribers = [], blogs = [], notes = [] }) => {
+export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, apps = [], testers = [], subscribers = [], blogs = [], notes = [], bookmarkFolders = [], bookmarkLinks = [], themes = [] }) => {
     const { sidebarCollapsed, setSidebarCollapsed } = useUserPreferences();
+    const { isDark, toggle } = useTheme();
     const [mobileOpen, setMobileOpen] = useState(false);
     const location = useLocation();
 
@@ -66,9 +71,16 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, apps
 
                     <div className="flex items-center gap-2 md:gap-4 shrink-0">
                         {/* Universal Search */}
-                        <UniversalSearch apps={apps} testers={testers} subscribers={subscribers} blogs={blogs} notes={notes} />
+                        <UniversalSearch apps={apps} testers={testers} subscribers={subscribers} blogs={blogs} notes={notes} bookmarkFolders={bookmarkFolders} bookmarkLinks={bookmarkLinks} themes={themes} />
 
                         <div className="flex items-center gap-1">
+                            <button
+                                onClick={toggle}
+                                className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted transition-all active:scale-90 border border-transparent hover:border-border/50"
+                                aria-label="Toggle theme"
+                            >
+                                {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                            </button>
                         </div>
                     </div>
                 </header>

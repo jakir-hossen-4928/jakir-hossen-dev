@@ -31,6 +31,15 @@ const navItems = [
   { label: "Contact", href: "/contact", isHash: false, icon: Mail },
 ];
 
+// Mobile nav items - excludes About, Experience, Projects
+const mobileNavItems = [
+  { label: "Home", href: "/", isHash: true, targetId: "#home", icon: Home },
+  { label: "Themes", href: "/themes", isHash: false, icon: LayoutDashboard },
+  { label: "Blog", href: "/blogs", isHash: false, icon: Newspaper },
+  { label: "Play Store Apps", href: "/apps", isHash: false, icon: Gamepad2 },
+  { label: "Contact", href: "/contact", isHash: false, icon: Mail },
+];
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isDark, toggle } = useTheme();
@@ -227,8 +236,8 @@ export default function Header() {
 
             <div className="flex flex-col h-full relative z-10">
               {/* Sidebar Header */}
-              <div className="flex items-center justify-between px-6 pt-8 pb-6">
-                <div className="flex flex-col gap-1">
+              <div className="flex items-center justify-between px-6 pt-6 pb-4">
+                <div className="flex flex-col gap-0.5">
                   <Link
                     to="/"
                     onClick={() => {
@@ -237,11 +246,11 @@ export default function Header() {
                         document.querySelector("#home")?.scrollIntoView({ behavior: "smooth" });
                       }
                     }}
-                    className="text-3xl font-black tracking-tightest text-foreground transition-transform active:scale-95"
+                    className="text-2xl font-black tracking-tightest text-foreground transition-transform active:scale-95"
                   >
                     Jakir<span className="text-primary">.</span>
                   </Link>
-                  <span className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-[0.3em] pl-1">
+                  <span className="text-[8px] font-bold text-muted-foreground/40 uppercase tracking-[0.3em] pl-0.5">
                     Portfolio v2.0
                   </span>
                 </div>
@@ -249,31 +258,31 @@ export default function Header() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-2xl bg-muted/30 hover:bg-muted text-foreground h-12 w-12 transition-all active:scale-90 border border-border/50"
+                  className="rounded-xl bg-muted/30 hover:bg-muted text-foreground h-10 w-10 transition-all active:scale-90 border border-border/50"
                 >
-                  <X size={24} />
+                  <X size={18} />
                 </Button>
               </div>
 
               {/* Nav Items */}
-              <div className="flex flex-col gap-1.5 px-4 overflow-y-auto flex-grow">
-                {navItems.map((item) => (
+              <div className="flex flex-col gap-1 px-4 overflow-y-auto flex-grow">
+                {mobileNavItems.map((item) => (
                   <motion.button
                     key={item.label}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -10 }}
                     onClick={() => handleNavClick(item)}
-                    className={`group relative px-6 py-4 text-base font-black rounded-[2rem] text-left transition-all active:scale-[0.97] flex items-center gap-4 ${(location.pathname === item.href && !item.isHash)
+                    className={`group relative px-5 py-3 text-sm font-black rounded-[1.5rem] text-left transition-all active:scale-[0.97] flex items-center gap-3 ${(location.pathname === item.href && !item.isHash)
                       ? "text-primary bg-primary/10"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                       }`}
                   >
                     <div className={cn(
-                      "w-10 h-10 rounded-xl flex items-center justify-center transition-all",
+                      "w-8 h-8 rounded-lg flex items-center justify-center transition-all",
                       (location.pathname === item.href && !item.isHash) ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20" : "bg-muted/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
                     )}>
-                      <item.icon size={20} />
+                      <item.icon size={16} />
                     </div>
                     <span className="relative z-10 flex-1 flex items-center justify-between">
                       {item.label}
@@ -296,13 +305,13 @@ export default function Header() {
                     <Link
                       to="/admin"
                       onClick={() => setMobileOpen(false)}
-                      className={`group px-6 py-4.5 text-lg font-black flex items-center gap-4 rounded-3xl transition-all active:scale-[0.97] ${location.pathname === "/admin"
+                      className={`group px-5 py-3 text-sm font-black flex items-center gap-3 rounded-[1.5rem] transition-all active:scale-[0.97] ${location.pathname === "/admin"
                         ? "text-primary bg-primary/10"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                         }`}
                     >
-                      <div className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-colors shadow-sm ${location.pathname === "/admin" ? "bg-primary text-primary-foreground shadow-primary/20" : "bg-muted text-muted-foreground"}`}>
-                        <Shield size={20} />
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors shadow-sm ${location.pathname === "/admin" ? "bg-primary text-primary-foreground shadow-primary/20" : "bg-muted text-muted-foreground"}`}>
+                        <Shield size={16} />
                       </div>
                       Admin Portal
                     </Link>
@@ -311,20 +320,20 @@ export default function Header() {
               </div>
 
               {/* Social Connect - Mobile Only Section */}
-              <div className="px-6 py-4 border-t border-border/50">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-3 ml-1">Connect On Social</p>
+              <div className="px-6 py-3 border-t border-border/50">
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-2 ml-1">Connect On Social</p>
                 <div className="flex gap-2">
-                  <a href="https://github.com/jakir-hossen-4928" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all border border-border/50 shadow-sm">
-                    <Github size={18} />
+                  <a href="https://github.com/jakir-hossen-4928" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all border border-border/50 shadow-sm">
+                    <Github size={14} />
                   </a>
-                  <a href="https://www.facebook.com/profile.php?id=61579137497937" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all border border-border/50 shadow-sm">
-                    <Facebook size={18} />
+                  <a href="https://www.facebook.com/profile.php?id=61579137497937" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-primary transition-all border border-border/50 shadow-sm">
+                    <Facebook size={14} />
                   </a>
-                  <a href="https://wa.me/8801864091946" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-green-500 transition-all border border-border/50 shadow-sm">
-                    <MessageSquare size={18} />
+                  <a href="https://wa.me/8801864091946" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-green-500 transition-all border border-border/50 shadow-sm">
+                    <MessageSquare size={14} />
                   </a>
-                  <a href="https://www.instagram.com/jakir_hossen_4928" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-pink-500 transition-all border border-border/50 shadow-sm">
-                    <Instagram size={18} />
+                  <a href="https://www.instagram.com/jakir_hossen_4928" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-pink-500 transition-all border border-border/50 shadow-sm">
+                    <Instagram size={14} />
                   </a>
                 </div>
               </div>
@@ -334,42 +343,42 @@ export default function Header() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="mt-auto p-6 bg-background border-t border-border"
-                style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom, 0px))' }}
+                className="mt-auto p-4 bg-background border-t border-border"
+                style={{ paddingBottom: 'calc(1.2rem + env(safe-area-inset-bottom, 0px))' }}
               >
                 {user ? (
-                  <div className="flex items-center justify-between p-4.5 bg-muted/40 rounded-[2.5rem] border border-border shadow-sm">
-                    <div className="flex items-center gap-4 min-w-0">
+                  <div className="flex items-center justify-between p-3.5 bg-muted/40 rounded-[2rem] border border-border shadow-sm">
+                    <div className="flex items-center gap-3 min-w-0">
                       <div className="relative shrink-0">
-                        <Avatar className="h-12 w-12 border-2 border-background shadow-lg">
+                        <Avatar className="h-10 w-10 border-2 border-background shadow-lg">
                           <AvatarImage src={profile?.photoURL || ''} alt={profile?.displayName || 'User'} referrerPolicy="no-referrer" />
-                          <AvatarFallback className="bg-primary/10 text-primary text-base font-black uppercase">
-                            {profile?.displayName?.charAt(0) || profile?.email?.charAt(0) || <User size={20} />}
+                          <AvatarFallback className="bg-primary/10 text-primary text-xs font-black uppercase">
+                            {profile?.displayName?.charAt(0) || profile?.email?.charAt(0) || <User size={16} />}
                           </AvatarFallback>
                         </Avatar>
-                        <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 border-2 border-background rounded-full shadow-lg shadow-green-500/20" />
+                        <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 border-2 border-background rounded-full shadow-lg shadow-green-500/20" />
                       </div>
                       <div className="flex flex-col min-w-0">
-                        <span className="text-sm font-black text-foreground truncate">{profile?.displayName || profile?.email?.split('@')[0] || 'User'}</span>
-                        <span className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest truncate">{profile?.email}</span>
+                        <span className="text-xs font-black text-foreground truncate">{profile?.displayName || profile?.email?.split('@')[0] || 'User'}</span>
+                        <span className="text-[9px] font-bold text-muted-foreground/60 uppercase tracking-widest truncate">{profile?.email}</span>
                       </div>
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => { logout(); setMobileOpen(false); }}
-                      className="h-11 w-11 text-destructive hover:bg-destructive/10 rounded-2xl shrink-0"
+                      className="h-9 w-9 text-destructive hover:bg-destructive/10 rounded-xl shrink-0"
                       aria-label="Sign out"
                     >
-                      <LogOut size={20} />
+                      <LogOut size={16} />
                     </Button>
                   </div>
                 ) : (
                   <Button
                     onClick={() => { showLogin(); setMobileOpen(false); }}
-                    className="w-full h-14 text-sm font-black uppercase tracking-widest rounded-[2rem] shadow-xl shadow-primary/20 flex items-center gap-3"
+                    className="w-full h-12 text-xs font-black uppercase tracking-widest rounded-[1.5rem] shadow-xl shadow-primary/20 flex items-center gap-3"
                   >
-                    <LogIn size={20} />
+                    <LogIn size={18} />
                     Sign In
                   </Button>
                 )}

@@ -1,9 +1,7 @@
 // lib/firebase.ts
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-// import { getStorage } from 'firebase/storage';
-
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -14,7 +12,7 @@ const firebaseConfig = {
 } as const;
 
 // Prevent app from initializing with missing/invalid config in production
-if (!firebaseConfig.apiKey) {   
+if (!firebaseConfig.apiKey) {
     throw new Error('Missing Firebase configuration. Check your .env.local file.');
 }
 
@@ -28,5 +26,10 @@ export const IMAGE_BB_API_KEY = import.meta.env.VITE_IMAGE_BB_API_KEY;
 
 // Uncomment & export as needed:
 export const auth = getAuth(app);
-export const db = getFirestore(app);
-// export const storage = getStorage(app);
+
+// Use new cache settings to avoid deprecation warning
+export const db = initializeFirestore(app, {
+    localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager()
+    })
+});

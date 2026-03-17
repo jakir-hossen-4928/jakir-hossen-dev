@@ -117,6 +117,21 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
     
+    // Themes collection - public read, admin write
+    match /themes/{themeId} {
+      // Anyone can read themes (no authentication required)
+      allow read: if true;
+      
+      // Only admins can create, update, delete
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Theme Categories collection - public read, admin write
+    match /themeCategories/{categoryId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    
     // Deny all other access
     match /{document=**} {
       allow read, write: if false;

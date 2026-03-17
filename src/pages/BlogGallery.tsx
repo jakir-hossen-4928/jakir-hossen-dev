@@ -20,7 +20,7 @@ import { useFilteredBlogs } from '@/hooks/useBlogs';
 import { BlogPost } from '@/lib/types';
 import * as ReactWindow from 'react-window';
 import * as ASModule from 'react-virtualized-auto-sizer';
-import { usePageTitle } from '@/hooks/usePageTitle';
+import { SEO, seoConfig } from '@/components/SEO';
 
 // Forcing compatibility with various build environments (Vite/Rollup)
 const RW: any = ReactWindow;
@@ -109,7 +109,6 @@ const Row = ({ index, style, data }: { index: number, style: React.CSSProperties
 };
 
 const BlogGallery = () => {
-    usePageTitle("Technical Articles & Insights");
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [activeFilter, setActiveFilter] = useState('All Articles');
@@ -126,6 +125,7 @@ const BlogGallery = () => {
 
     return (
         <div className="min-h-screen bg-background text-foreground overflow-hidden flex flex-col">
+            <SEO {...seoConfig.blogs} />
             <Header />
             <main className="flex-grow pt-20 md:pt-24 pb-0 px-4 md:px-8 flex flex-col">
                 <div className="max-w-7xl mx-auto w-full flex flex-col flex-grow">

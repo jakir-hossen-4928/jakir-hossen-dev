@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,11 +36,21 @@ interface AdminTestersProps {
 type RoleFilter = 'all' | 'admin' | 'user';
 
 export const AdminTesters: React.FC<AdminTestersProps> = ({ exportTesters }) => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [roleFilter, setRoleFilter] = useState<RoleFilter>('all');
-    const [isUpdating, setIsUpdating] = useState(false);
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [roleFilter, setRoleFilter] = React.useState<RoleFilter>('all');
+    const [isUpdating, setIsUpdating] = React.useState(false);
     const { users, isLoading, error } = useUsers();
     const { profile } = useAuth();
+    const location = useLocation();
+
+    // Deep link handling - pre-fill search from query param
+    React.useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const searchParam = params.get('search');
+        if (searchParam) {
+            setSearchTerm(searchParam);
+        }
+    }, [location.search]);
 
     // Filter users by search term and role
     const filteredUsers = users.filter(user => {

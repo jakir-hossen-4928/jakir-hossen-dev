@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,8 +14,18 @@ interface AdminSubscribersProps {
 }
 
 export const AdminSubscribers: React.FC<AdminSubscribersProps> = ({ exportSubscribers }) => {
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = React.useState('');
     const { subscribers, isLoading } = useSubscribers();
+    const location = useLocation();
+
+    // Deep link handling - pre-fill search from query param
+    React.useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const searchParam = params.get('search');
+        if (searchParam) {
+            setSearchTerm(searchParam);
+        }
+    }, [location.search]);
 
     const filteredSubscribers = subscribers.filter(sub =>
         sub.email.toLowerCase().includes(searchTerm.toLowerCase())

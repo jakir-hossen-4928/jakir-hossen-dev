@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -34,18 +35,48 @@ const THUMBNAIL_COLORS = [
 ];
 
 export const AdminBlogs: React.FC = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [editingBlog, setEditingBlog] = useState<Partial<BlogPost>>({});
-    const [isSaving, setIsSaving] = useState(false);
-    const editorRef = useRef<DefaultTemplateRef>(null);
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+    const [editingBlog, setEditingBlog] = React.useState<Partial<BlogPost>>({});
+    const [isSaving, setIsSaving] = React.useState(false);
+    const [isUploadingBanner, setIsUploadingBanner] = React.useState(false);
+    const editorRef = React.useRef<DefaultTemplateRef>(null);
 
     const { blogs, isLoading } = useBlogs();
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const filteredBlogs = blogs.filter(blog =>
         (blog.title?.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (Array.isArray(blog.categories) && blog.categories.some(c => c.toLowerCase().includes(searchTerm.toLowerCase())))
     );
+
+    // Deep link handling
+    React.useEffect(() => {
+        if (!isLoading && blogs.length > 0) {
+            const params = new URLSearchParams(location.search);
+            const editBlogId = params.get('editBlog');
+            if (editBlogId) {
+                const blogToEdit = blogs.find(b => b.id === editBlogId);
+                if (blogToEdit && !isDialogOpen) {
+                    setEditingBlog({ ...blogToEdit });
+                    setIsDialogOpen(true);
+                }
+            }
+        }
+    }, [location.search, blogs, isLoading]);
+
+    const handleDialogChange = (open: boolean) => {
+        setIsDialogOpen(open);
+        if (!open) {
+            // Remove the query param when closing
+            const params = new URLSearchParams(location.search);
+            if (params.has('editBlog')) {
+                params.delete('editBlog');
+                navigate({ search: params.toString() }, { replace: true });
+            }
+        }
+    };
 
     const handleOpenDialog = (blog?: BlogPost) => {
         if (blog) {
@@ -93,7 +124,7 @@ export const AdminBlogs: React.FC = () => {
 
             await setDoc(doc(firestore, 'blogs', blogId), blogData, { merge: true });
             toast.success(editingBlog.id ? "Blog updated" : "Blog created");
-            setIsDialogOpen(false);
+            handleDialogChange(false);
         } catch (error) {
             console.error(error);
             toast.error("Error saving blog");
@@ -246,7 +277,7 @@ export const AdminBlogs: React.FC = () => {
                 )}
             </CardContent>
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
                 <DialogContent className="w-[95vw] sm:max-w-4xl h-[calc(100dvh-2rem)] sm:h-auto sm:max-h-[85vh] bg-card border-white/10 p-0 sm:p-6 gap-0 sm:gap-4 flex flex-col overflow-hidden pb-[env(safe-area-inset-bottom)]">
                     <DialogHeader className="p-6 sm:p-0 border-b sm:border-0 border-border">
                         <DialogTitle>{editingBlog.id ? 'Edit Blog Post' : 'New Blog Post'}</DialogTitle>
@@ -394,7 +425,7 @@ export const AdminBlogs: React.FC = () => {
                     </div>
 
                     <DialogFooter className="p-6 sm:p-0 border-t sm:border-0 border-border gap-2 sm:gap-0 mt-auto">
-                        <Button variant="outline" onClick={() => setIsDialogOpen(false)} className="rounded-xl h-12 font-black uppercase tracking-tight">Cancel</Button>
+                        <Button variant="outline" onClick={() => handleDialogChange(false)} className="rounded-xl h-12 font-black uppercase tracking-tight">Cancel</Button>
                         <Button onClick={handleSave} disabled={isSaving} className="rounded-xl h-12 font-black uppercase tracking-tight shadow-lg shadow-primary/20">
                             {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {editingBlog.id ? 'Update Post' : 'Publish Post'}

@@ -1,5 +1,5 @@
 import Dexie, { Table } from 'dexie';
-import { AppEntry, Comment, Tester, Subscriber, BlogPost, Note, BookmarkFolder, BookmarkLink } from '@/lib/types';
+import { AppEntry, Comment, Tester, Subscriber, BlogPost, Note, BookmarkFolder, BookmarkLink, WebTheme, ThemeCategory } from '@/lib/types';
 
 export interface CacheMetadata {
     key: string;
@@ -16,12 +16,14 @@ export class AppDatabase extends Dexie {
     notes!: Table<Note, string>;
     bookmarkFolders!: Table<BookmarkFolder, string>;
     bookmarkLinks!: Table<BookmarkLink, string>;
+    themes!: Table<WebTheme, string>;
+    themeCategories!: Table<ThemeCategory, string>;
     metadata!: Table<CacheMetadata, string>;
 
     constructor() {
         super('portfolioApp');
 
-        // Version 1-6 (kept as is for migration)
+        // Version 1-7 (kept as is for migration)
         this.version(1).stores({
             apps: 'id, slug, appName, status, createdAt, updatedAt',
             comments: 'id, appId, userId, timestamp',
@@ -70,7 +72,6 @@ export class AppDatabase extends Dexie {
             metadata: 'key, lastSync'
         });
 
-        // Version 7: Add bookmark folders and links
         this.version(7).stores({
             apps: 'id, slug, appName, status, createdAt, updatedAt',
             comments: 'id, appId, userId, timestamp',
@@ -80,6 +81,21 @@ export class AppDatabase extends Dexie {
             notes: 'id, title, createdAt, *tags, isPinned',
             bookmarkFolders: 'id, name, parentId, createdAt',
             bookmarkLinks: 'id, title, url, folderId, createdAt',
+            metadata: 'key, lastSync'
+        });
+
+        // Version 8: Add themes and theme categories
+        this.version(8).stores({
+            apps: 'id, slug, appName, status, createdAt, updatedAt',
+            comments: 'id, appId, userId, timestamp',
+            testers: 'uid, email, displayName, joinedAt',
+            subscribers: 'uid, email, joinedAt',
+            blogs: 'id, slug, title, date, status',
+            notes: 'id, title, createdAt, *tags, isPinned',
+            bookmarkFolders: 'id, name, parentId, createdAt',
+            bookmarkLinks: 'id, title, url, folderId, createdAt',
+            themes: 'id, name, category, complexity, createdAt',
+            themeCategories: 'id, name',
             metadata: 'key, lastSync'
         });
     }
@@ -134,4 +150,14 @@ export async function getCachedBookmarkFolders(): Promise<BookmarkFolder[]> {
 // Helper to get cached bookmark links
 export async function getCachedBookmarkLinks(): Promise<BookmarkLink[]> {
     return await db.bookmarkLinks.orderBy('createdAt').reverse().toArray();
+}
+
+// Helper to get cached themes
+export async function getCachedThemes(): Promise<WebTheme[]> {
+    return await db.themes.orderBy('createdAt').reverse().toArray();
+}
+
+// Helper to get cached theme categories
+export async function getCachedThemeCategories(): Promise<ThemeCategory[]> {
+    return await db.themeCategories.toArray();
 }

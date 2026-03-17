@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface ProgressiveImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -20,17 +19,11 @@ export function ProgressiveImg({
 
   return (
     <div className="relative w-full h-full overflow-hidden flex items-center justify-center bg-muted/30">
-      <AnimatePresence mode="wait">
-        {!isLoaded && !hasError && (
-          <motion.div
-            key="skeleton"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className={`absolute inset-0 bg-muted animate-pulse ${skeletonClassName}`}
-          />
-        )}
-      </AnimatePresence>
+      {!isLoaded && !hasError && (
+        <div
+          className={`absolute inset-0 bg-muted animate-pulse ${skeletonClassName}`}
+        />
+      )}
       <img
         src={src}
         alt={alt}

@@ -6,7 +6,7 @@ import { searchApps } from '@/utils/searchUtils';
 import { sortApps, SortOption } from '@/utils/sortUtils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { usePageTitle } from '@/hooks/usePageTitle';
+import { SEO, seoConfig } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -41,7 +41,6 @@ const itemVariants = {
 };
 
 const AppPromo = () => {
-  usePageTitle("My Play Store Apps | Sajuriya Studio");
   const navigate = useNavigate();
   const { apps, isLoading, refetch } = useApps();
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,6 +64,7 @@ const AppPromo = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
+      <SEO {...seoConfig.apps} />
       <Header />
 
       <main className="relative overflow-hidden pt-24 md:pt-32 pb-20 min-h-[calc(100vh-80px)]">

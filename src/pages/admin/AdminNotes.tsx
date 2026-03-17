@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,25 +20,27 @@ import {
 import { DefaultTemplate, DefaultTemplateRef } from '@/richtexteditor/DefaultTemplate';
 
 const AdminNotes = () => {
-    const [notes, setNotes] = useState<Note[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [currentNote, setCurrentNote] = useState<Partial<Note>>({
+    const [notes, setNotes] = React.useState<Note[]>([]);
+    const [loading, setLoading] = React.useState(true);
+    const [searchQuery, setSearchQuery] = React.useState('');
+    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+    const [currentNote, setCurrentNote] = React.useState<Partial<Note>>({
         title: '',
         content: '',
         isPinned: false
     });
-    const [isSaving, setIsSaving] = useState(false);
-    const [isFullscreen, setIsFullscreen] = useState(false);
-    const editorRef = useRef<DefaultTemplateRef>(null);
-    const viewEditorRef = useRef<DefaultTemplateRef>(null);
+    const [isSaving, setIsSaving] = React.useState(false);
+    const [isFullscreen, setIsFullscreen] = React.useState(false);
+    const editorRef = React.useRef<DefaultTemplateRef>(null);
+    const viewEditorRef = React.useRef<DefaultTemplateRef>(null);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     // View Modal State
-    const [viewNote, setViewNote] = useState<Note | null>(null);
-    const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+    const [viewNote, setViewNote] = React.useState<Note | null>(null);
+    const [isViewDialogOpen, setIsViewDialogOpen] = React.useState(false);
 
-    useEffect(() => {
+    React.useEffect(() => {
         const fetchNotes = async () => {
             try {
                 const initialNotes = await syncNotes();
@@ -58,6 +61,39 @@ const AdminNotes = () => {
 
         return () => unsubscribe();
     }, []);
+
+    // Deep link handling
+    React.useEffect(() => {
+        if (!loading && notes.length > 0) {
+            const params = new URLSearchParams(location.search);
+            const viewNoteId = params.get('viewNote');
+            if (viewNoteId) {
+                const noteToView = notes.find(n => n.id === viewNoteId);
+                if (noteToView && !isViewDialogOpen && !isDialogOpen) {
+                    openViewDialog(noteToView);
+                }
+            }
+        }
+    }, [location.search, notes, loading]);
+
+    const handleViewDialogChange = (open: boolean) => {
+        setIsViewDialogOpen(open);
+        if (!open) {
+            // Remove the query param when closing
+            const params = new URLSearchParams(location.search);
+            if (params.has('viewNote')) {
+                params.delete('viewNote');
+                navigate({ search: params.toString() }, { replace: true });
+            }
+        }
+    };
+
+    const handleEditDialogChange = (open: boolean) => {
+        setIsDialogOpen(open);
+        if (!open) {
+            resetForm();
+        }
+    };
 
     const handleCreateOrUpdate = async () => {
         if (!currentNote.title) {
@@ -83,8 +119,7 @@ const AdminNotes = () => {
                 await addNote(noteData as Omit<Note, 'id' | 'createdAt' | 'updatedAt'>);
                 toast.success("Note created successfully");
             }
-            setIsDialogOpen(false);
-            resetForm();
+            handleEditDialogChange(false);
         } catch (error) {
             console.error("Error saving note:", error);
             toast.error("Failed to save note");
@@ -181,10 +216,7 @@ const AdminNotes = () => {
                             className="pl-9 bg-card/50 backdrop-blur-sm border-border focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition-all"
                         />
                     </div>
-                    <Dialog open={isDialogOpen} onOpenChange={(open) => {
-                        setIsDialogOpen(open);
-                        if (!open) resetForm();
-                    }}>
+                    <Dialog open={isDialogOpen} onOpenChange={handleEditDialogChange}>
                         <DialogTrigger asChild>
                             <Button className="gap-2 font-bold shadow-lg shadow-yellow-500/20 bg-yellow-500 hover:bg-yellow-600 text-white min-h-[44px] px-4">
                                 <Plus className="w-4 h-4" /> <span className="hidden sm:inline">New Note</span><span className="sm:hidden">New</span>
@@ -254,7 +286,7 @@ const AdminNotes = () => {
             </div>
 
             {/* View Note Dialog */}
-            <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+            <Dialog open={isViewDialogOpen} onOpenChange={handleViewDialogChange}>
                 <DialogContent className="w-[95vw] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl h-[90vh] flex flex-col p-0 gap-0 overflow-hidden border-2 border-yellow-400 dark:border-yellow-500">
                     <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-yellow-400/30 bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950/20 dark:to-amber-950/20 sticky top-0 z-10">
                         <DialogHeader className="p-0 space-y-0">

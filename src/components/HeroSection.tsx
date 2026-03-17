@@ -1,13 +1,63 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 
 const transition = { duration: 1, ease: [0.25, 0.1, 0.25, 1] };
+
+// Hacker text scramble effect
+const useTextScramble = (texts: string[], interval: number = 3000) => {
+  const [displayText, setDisplayText] = useState(texts[0]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isScrambling, setIsScrambling] = useState(false);
+
+  const chars = "!@#$%^&*()_+-=[]{}|;:,.<>?/~`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  useEffect(() => {
+    const cycleText = () => {
+      setIsScrambling(true);
+      const nextIndex = (currentIndex + 1) % texts.length;
+      const targetText = texts[nextIndex];
+      let iteration = 0;
+      const maxIterations = targetText.length * 3;
+
+      const scrambleInterval = setInterval(() => {
+        setDisplayText(
+          targetText
+            .split("")
+            .map((char, index) => {
+              if (char === " ") return " ";
+              if (index < iteration / 3) {
+                return targetText[index];
+              }
+              return chars[Math.floor(Math.random() * chars.length)];
+            })
+            .join("")
+        );
+
+        iteration++;
+
+        if (iteration >= maxIterations) {
+          clearInterval(scrambleInterval);
+          setDisplayText(targetText);
+          setIsScrambling(false);
+          setCurrentIndex(nextIndex);
+        }
+      }, 30);
+    };
+
+    const timer = setTimeout(cycleText, interval);
+    return () => clearTimeout(timer);
+  }, [currentIndex, texts, interval]);
+
+  return { displayText, isScrambling };
+};
 
 export default function HeroSection() {
   const scrollTo = (href: string) => {
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const roleText = "Frontend Developer";
+  const roles = ["Frontend Developer", "Shopify Developer"];
+  const { displayText, isScrambling } = useTextScramble(roles, 4000);
 
   return (
     <section
@@ -19,6 +69,9 @@ export default function HeroSection() {
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary blur-[140px] rounded-full animate-pulse" />
         <div className="absolute top-1/2 right-1/4 w-[500px] h-[500px] bg-orange-500 blur-[140px] rounded-full animate-pulse delay-700" />
       </div>
+
+      {/* Gradient transition to About section */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
 
       <div className="section-container relative z-10 w-full pt-20">
         <div className="flex flex-col items-center text-center">
@@ -41,29 +94,26 @@ export default function HeroSection() {
             Jakir Hossen
           </motion.h1>
 
-          {/* Subtitle / Role with Animation */}
+          {/* Subtitle / Role with Hacker Scramble Animation */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mb-10"
           >
-            <h2 className="text-xl sm:text-2xl font-bold text-muted-foreground flex items-center justify-center gap-3">
-              <motion.span className="flex">
-                {roleText.split("").map((char, index) => (
-                  <motion.span
-                    key={index}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{
-                      delay: 0.5 + index * 0.05,
-                      duration: 0.5,
-                    }}
-                  >
-                    {char === " " ? "\u00A0" : char}
-                  </motion.span>
-                ))}
+            <h2 className="text-xl sm:text-2xl font-bold flex items-center justify-center gap-3">
+              <motion.span 
+                className={`font-mono tracking-wider ${isScrambling ? 'text-primary' : 'text-muted-foreground'}`}
+                animate={isScrambling ? { opacity: [1, 0.8, 1] } : {}}
+                transition={{ duration: 0.1, repeat: isScrambling ? Infinity : 0 }}
+              >
+                {displayText}
               </motion.span>
+              <motion.span
+                className="inline-block w-0.5 h-6 bg-primary"
+                animate={{ opacity: [1, 0] }}
+                transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+              />
             </h2>
           </motion.div>
 

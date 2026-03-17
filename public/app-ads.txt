@@ -1,1 +1,3 @@
+# AdMob app-ads.txt
+# Publisher ID: pub-7337713061573645
 google.com, pub-7337713061573645, DIRECT, f08c47fec0942fa0

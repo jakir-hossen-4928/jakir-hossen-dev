@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,18 +22,47 @@ import { cn } from '@/lib/utils';
 import { deleteApp } from '@/lib/syncService';
 
 export const AdminApps: React.FC = () => {
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = React.useState('');
     const { apps, isLoading } = useApps();
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const filteredApps = apps.filter(app =>
         app.appName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [editingApp, setEditingApp] = useState<Partial<AppEntry>>({});
-    const [isUploadingIcon, setIsUploadingIcon] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
-    const editorRef = useRef<DefaultTemplateRef>(null);
+    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+    const [editingApp, setEditingApp] = React.useState<Partial<AppEntry>>({});
+    const [isUploadingIcon, setIsUploadingIcon] = React.useState(false);
+    const [isSaving, setIsSaving] = React.useState(false);
+    const editorRef = React.useRef<DefaultTemplateRef>(null);
+
+    // Deep link handling
+    React.useEffect(() => {
+        if (!isLoading && apps.length > 0) {
+            const params = new URLSearchParams(location.search);
+            const editAppId = params.get('editApp');
+            if (editAppId) {
+                const appToEdit = apps.find(a => a.id === editAppId);
+                if (appToEdit && !isDialogOpen) {
+                    setEditingApp({ ...appToEdit });
+                    setIsDialogOpen(true);
+                }
+            }
+        }
+    }, [location.search, apps, isLoading]);
+
+    const handleDialogChange = (open: boolean) => {
+        setIsDialogOpen(open);
+        if (!open) {
+            // Remove the query param when closing
+            const params = new URLSearchParams(location.search);
+            if (params.has('editApp')) {
+                params.delete('editApp');
+                navigate({ search: params.toString() }, { replace: true });
+            }
+        }
+    };
 
     const handleOpenDialog = (app?: AppEntry) => {
         if (app) {
@@ -87,7 +117,7 @@ export const AdminApps: React.FC = () => {
 
             await setDoc(doc(firestore, 'apps', appId), appData, { merge: true });
             toast.success(editingApp.id ? "App updated" : "App created");
-            setIsDialogOpen(false);
+            handleDialogChange(false);
         } catch (error) {
             console.error(error);
             toast.error("Error saving app");
@@ -217,7 +247,7 @@ export const AdminApps: React.FC = () => {
                 )}
             </CardContent>
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
                 <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-card border-white/10">
                     <DialogHeader>
                         <DialogTitle>{editingApp.id ? 'Edit App' : 'New App'}</DialogTitle>
@@ -337,7 +367,7 @@ export const AdminApps: React.FC = () => {
                     </div>
 
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+                        <Button variant="outline" onClick={() => handleDialogChange(false)}>Cancel</Button>
                         <Button onClick={handleSave} disabled={isSaving || isUploadingIcon}>
                             {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Save Changes

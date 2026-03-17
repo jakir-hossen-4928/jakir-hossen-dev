@@ -1,46 +1,61 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, CheckCircle2, Monitor, Smartphone, Tablet, Lock } from 'lucide-react';
 import { ProgressiveImg } from '@/components/ProgressiveImg';
 import { FloatingWhatsApp } from '@digicroz/react-floating-whatsapp';
+import { usePageTitle } from '@/hooks/usePageTitle';
+import { useWebThemeById, useThemeCategories } from '@/hooks/useWebThemes';
 
 const BOOKING_URL = import.meta.env.VITE_MEETTING_URL;
+
+// Device widths configuration
+const DEVICE_WIDTHS = {
+  desktop: 'max-w-full lg:max-w-[1440px]',
+  tablet: 'max-w-[768px]',
+  mobile: 'max-w-[375px]'
+} as const;
+
+type DeviceView = 'desktop' | 'tablet' | 'mobile';
 
 export default function ThemePreview() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [deviceView, setDeviceView] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [deviceView, setDeviceView] = useState<DeviceView>('desktop');
   const [isScrolled, setIsScrolled] = useState(false);
-  const [data, setData] = useState<{ themes: any[], categories: any[] } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  
+  // Use optimized hook with O(1) Map lookup instead of O(n) find
+  const { theme, isLoading: themeLoading } = useWebThemeById(id);
+  const { categories, isLoading: categoriesLoading } = useThemeCategories();
 
-  useEffect(() => {
-    // Dynamic import
-    import('@/assets/design-theme/themes.json').then((module) => {
-      setData({
-        themes: module.default.portfolio.themes,
-        categories: module.default.portfolio.categories,
-      });
-      setIsLoading(false);
-    });
+  // Memoize category lookup with Map for O(1) access
+  const category = useMemo(() => {
+    if (!theme) return undefined;
+    return categories.find(c => c.id === theme.category || c.name === theme.category);
+  }, [theme, categories]);
+
+  const isLoading = themeLoading || categoriesLoading;
+
+  usePageTitle(theme ? `${theme.name} Preview` : 'Theme Preview');
+
+  // Memoized scroll handler
+  const handleScroll = useCallback(() => {
+    setIsScrolled(window.scrollY > 50);
   }, []);
-
-  const theme = useMemo(() => data?.themes.find(t => t.id === id), [id, data]);
-  const category = useMemo(() => data?.categories.find(c => c.id === theme?.category), [theme, data]);
 
   useEffect(() => {
     if (!isLoading) {
       window.scrollTo(0, 0);
     }
 
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isLoading]);
+  }, [isLoading, handleScroll]);
+
+  // Memoized device view setter
+  const setDeviceViewCallback = useCallback((view: DeviceView) => {
+    setDeviceView(view);
+  }, []);
 
   if (isLoading) {
     return (
@@ -63,11 +78,8 @@ export default function ThemePreview() {
     );
   }
 
-  const containerWidths = {
-    desktop: 'max-w-full lg:max-w-[1440px]',
-    tablet: 'max-w-[768px]',
-    mobile: 'max-w-[375px]'
-  };
+  // Memoized derived values
+  const containerWidthClass = useMemo(() => DEVICE_WIDTHS[deviceView], [deviceView]);
 
   return (
     <div className="min-h-screen bg-muted/20">
@@ -98,21 +110,21 @@ export default function ThemePreview() {
             {/* Device Toggle - Visible on lg+ */}
             <div className="hidden lg:flex items-center p-1 bg-muted rounded-lg border border-border/50">
               <button
-                onClick={() => setDeviceView('desktop')}
+                onClick={() => setDeviceViewCallback('desktop')}
                 className={`p-1.5 rounded-md transition-all ${deviceView === 'desktop' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                 title="Desktop View"
               >
                 <Monitor size={16} />
               </button>
               <button
-                onClick={() => setDeviceView('tablet')}
+                onClick={() => setDeviceViewCallback('tablet')}
                 className={`p-1.5 rounded-md transition-all ${deviceView === 'tablet' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                 title="Tablet View"
               >
                 <Tablet size={16} />
               </button>
               <button
-                onClick={() => setDeviceView('mobile')}
+                onClick={() => setDeviceViewCallback('mobile')}
                 className={`p-1.5 rounded-md transition-all ${deviceView === 'mobile' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                 title="Mobile View"
               >
@@ -144,43 +156,61 @@ export default function ThemePreview() {
       {/* Main Content Area */}
       <div className="pt-28 pb-20 px-4 md:px-8 max-w-[1920px] mx-auto flex flex-col lg:flex-row gap-8">
 
-        {/* Left Column: Full Page Scrollable Preview */}
+        {/* Left Column: Device Perspective Preview */}
         <div className="w-full lg:w-[70%] xl:w-[75%] flex justify-center order-2 lg:order-1">
           <motion.div
             layout
-            className={`w-full transition-all duration-500 ease-in-out ${containerWidths[deviceView]}`}
+            className={`w-full transition-all duration-500 ease-in-out ${containerWidthClass}`}
           >
-            {/* Browser/Device Chrome Decorator */}
-            <div className="bg-card border border-border/50 rounded-t-xl p-2.5 sm:p-3 flex items-center gap-2 shadow-sm relative overflow-hidden">
-              {deviceView === 'desktop' && (
-                <>
-                  <div className="flex gap-1.5 shrink-0 z-10 hidden sm:flex">
-                    <div className="w-3 h-3 rounded-full bg-destructive/80" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                    <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                  </div>
-                  <div className="mx-auto px-4 py-1.5 bg-background shadow-sm text-[10px] sm:text-xs text-muted-foreground rounded-lg max-w-md w-full text-center truncate border border-border/50 z-10 flex items-center justify-center gap-2">
-                    <Lock size={12} className="text-green-600 dark:text-green-500" />
-                    jakirhossen.netlify.app/themes/{theme.id}
-                  </div>
-                </>
-              )}
-              {deviceView !== 'desktop' && (
-                <div className="w-16 h-1.5 sm:w-20 sm:h-2 bg-muted-foreground/20 rounded-full mx-auto" />
-              )}
+            {/* The Main Device Frame */}
+            <div className="relative bg-background border border-border pb-1 rounded-2xl overflow-hidden shadow-2xl shadow-primary/5 flex flex-col h-[70vh] sm:h-[75vh] lg:h-[80vh]">
+
+              {/* STICKY Browser/Device Header */}
+              <div className="sticky top-0 left-0 right-0 z-20 bg-card/95 backdrop-blur-md border-b border-border/50 p-2.5 sm:p-3 flex items-center gap-2 shadow-sm shrink-0">
+                {deviceView === 'desktop' && (
+                  <>
+                    <div className="flex gap-1.5 shrink-0 z-10 hidden sm:flex">
+                      <div className="w-3 h-3 rounded-full bg-destructive/60 hover:bg-destructive transition-colors shrink-0" />
+                      <div className="w-3 h-3 rounded-full bg-yellow-500/60 hover:bg-yellow-500 transition-colors shrink-0" />
+                      <div className="w-3 h-3 rounded-full bg-green-500/60 hover:bg-green-500 transition-colors shrink-0" />
+                    </div>
+                    <div className="mx-auto px-4 py-1 bg-muted/50 text-[10px] sm:text-xs text-muted-foreground rounded-full max-w-sm w-full text-center truncate border border-border/50 z-10 flex items-center justify-center gap-2">
+                      <Lock size={12} className="text-green-600 dark:text-green-400 shrink-0" />
+                      <span className="truncate">jakirhossen.dev/themes/{theme.id}</span>
+                    </div>
+                  </>
+                )}
+                {deviceView !== 'desktop' && (
+                  <div className="w-16 h-1.5 sm:w-20 sm:h-2 bg-muted-foreground/20 rounded-full mx-auto" />
+                )}
+              </div>
+
+              {/* Scrollable Preview Area */}
+              <div className="flex-grow overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent hover:scrollbar-thumb-primary/40 transition-colors">
+                <div className="w-full relative">
+                  <ProgressiveImg
+                    src={theme.previewUrl}
+                    alt={`${theme.name} Full Page Preview`}
+                    className="w-full h-auto block"
+                    loading="eager"
+                  />
+
+                  {/* Bottom indicator for device feel */}
+                  {deviceView === 'mobile' && (
+                    <div className="sticky bottom-2 mx-auto w-24 h-1 bg-foreground/20 rounded-full z-10 hidden sm:block" />
+                  )}
+                </div>
+              </div>
             </div>
 
-            {/* THE ACTUAL PREVIEW IMAGE */}
-            <div className="relative w-full bg-background border-x border-b border-border/50 rounded-b-xl overflow-hidden shadow-2xl shadow-black/5 min-h-[500px]">
-              {/* Note: Not setting a fixed height allows the image to stretch its natural height, 
-                  and the user relies on normal browser scrolling to view it. 
-                  This is best for very long 'go full page' screenshots. */}
-              <ProgressiveImg
-                src={theme.previewUrl}
-                alt={`${theme.name} Full Page Preview`}
-                className="w-full h-auto block"
-                loading="eager" // Eager since it's the main focus of this page
-              />
+            {/* Viewport Info Overlay */}
+            <div className="mt-4 flex justify-between items-center px-2">
+              <div className="text-[10px] sm:text-xs font-medium text-muted-foreground/60 uppercase tracking-widest">
+                Interactive Preview Mode
+              </div>
+              <div className="text-[10px] sm:text-xs font-bold text-primary/60">
+                Scroll to explore full details
+              </div>
             </div>
           </motion.div>
         </div>
@@ -194,9 +224,9 @@ export default function ThemePreview() {
                 {category?.name || theme.category}
               </div>
               <h2 className="text-2xl font-black text-foreground mb-2">{theme.name}</h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {theme.description}
-              </p>
+              <div className="text-sm text-muted-foreground leading-relaxed prose prose-sm dark:prose-invert max-w-none" 
+                   dangerouslySetInnerHTML={{ __html: theme.description }} 
+              />
             </div>
 
             <div className="space-y-4">

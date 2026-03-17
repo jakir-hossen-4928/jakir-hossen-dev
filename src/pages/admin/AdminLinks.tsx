@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,18 +33,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const AdminLinks = () => {
-    const [folders, setFolders] = useState<BookmarkFolder[]>([]);
-    const [links, setLinks] = useState<BookmarkLink[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+    const [folders, setFolders] = React.useState<BookmarkFolder[]>([]);
+    const [links, setLinks] = React.useState<BookmarkLink[]>([]);
+    const [loading, setLoading] = React.useState(true);
+    const [searchQuery, setSearchQuery] = React.useState('');
+    const [currentFolderId, setCurrentFolderId] = React.useState<string | null>(null);
+    const location = useLocation();
+
+    // Deep link handling - navigate to folder from query param
+    React.useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const folderId = params.get('folderId');
+        if (folderId) {
+            setCurrentFolderId(folderId);
+        }
+    }, [location.search]);
 
     // Dialog states
-    const [isFolderDialogOpen, setIsFolderDialogOpen] = useState(false);
-    const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
-    const [editingFolder, setEditingFolder] = useState<Partial<BookmarkFolder> | null>(null);
-    const [editingLink, setEditingLink] = useState<Partial<BookmarkLink> | null>(null);
-    const [isSaving, setIsSaving] = useState(false);
+    const [isFolderDialogOpen, setIsFolderDialogOpen] = React.useState(false);
+    const [isLinkDialogOpen, setIsLinkDialogOpen] = React.useState(false);
+    const [editingFolder, setEditingFolder] = React.useState<Partial<BookmarkFolder> | null>(null);
+    const [editingLink, setEditingLink] = React.useState<Partial<BookmarkLink> | null>(null);
+    const [isSaving, setIsSaving] = React.useState(false);
 
     const handleExport = () => {
         try {
@@ -205,7 +216,7 @@ const AdminLinks = () => {
         reader.readAsText(file);
     };
 
-    useEffect(() => {
+    React.useEffect(() => {
         setLoading(true);
 
         // Use individual unsubs to ensure they are cleaned up correctly

@@ -100,3 +100,50 @@ export interface BookmarkLink {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface ThemeCategory {
+    id: string;
+    name: string;
+    description: string;
+    themeIds?: string[];
+}
+
+export interface WebTheme {
+    id: string;
+    name: string;
+    tagline: string;
+    description: string;
+    imageUrl: string;
+    previewUrl: string;
+    category: string;
+    tags: string[];
+    colorPalette: {
+        primary: string;
+        secondary: string;
+        accent: string;
+        background: string;
+        text: string;
+    };
+    typography: {
+        heading: string;
+        body: string;
+    };
+    features: string[];
+    bestFor: string[];
+    complexity: 'low' | 'medium' | 'high';
+    popularity: number;
+    pricing: {
+        tier: string;
+        basePrice: number;
+        currency: string;
+    };
+    meetingBooking: {
+        enabled: boolean;
+        calendlyLink: string;
+        duration: number;
+        requiresDeposit: boolean;
+        depositAmount?: number;
+    };
+    createdAt?: string;
+    updatedAt?: string;
+}

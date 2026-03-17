@@ -5,12 +5,12 @@ import SkillsSection from "@/components/SkillsSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
-import { usePageTitle } from "@/hooks/usePageTitle";
+import { SEO, seoConfig } from "@/components/SEO";
 
 const Index = () => {
-  usePageTitle("Jakir Hossen - Frontend Developer & App Creator");
   return (
     <div className="min-h-screen bg-background">
+      <SEO {...seoConfig.home} />
       <Header />
       <main>
         <HeroSection />

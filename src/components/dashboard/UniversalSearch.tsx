@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Search, Smartphone, Users, Mail, NotebookPen, BookMarked } from 'lucide-react';
-import { AppEntry, Tester, Subscriber, BlogPost, Note } from '@/lib/types';
+import { Search, Smartphone, Users, Mail, NotebookPen, BookMarked, Folder, Link as LinkIcon, LayoutDashboard } from 'lucide-react';
+import { AppEntry, Tester, Subscriber, BlogPost, Note, BookmarkFolder, BookmarkLink, WebTheme } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 interface UniversalSearchProps {
@@ -12,17 +12,20 @@ interface UniversalSearchProps {
     subscribers: Subscriber[];
     blogs: BlogPost[];
     notes: Note[];
+    bookmarkFolders: BookmarkFolder[];
+    bookmarkLinks: BookmarkLink[];
+    themes: WebTheme[];
 }
 
 interface SearchResult {
-    type: 'app' | 'tester' | 'subscriber' | 'blog' | 'note';
+    type: 'app' | 'tester' | 'subscriber' | 'blog' | 'note' | 'folder' | 'link' | 'theme';
     id: string;
     title: string;
     subtitle?: string;
     path: string;
 }
 
-export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers, subscribers, blogs, notes }) => {
+export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers, subscribers, blogs, notes, bookmarkFolders, bookmarkLinks, themes }) => {
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState('');
     const [results, setResults] = useState<SearchResult[]>([]);
@@ -62,7 +65,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
                     id: app.id,
                     title: app.appName,
                     subtitle: app.status,
-                    path: '/admin/settings'
+                    path: `/admin/settings?editApp=${app.id}`
                 });
             }
         });
@@ -76,7 +79,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
                     id: tester.uid,
                     title: tester.displayName,
                     subtitle: tester.email,
-                    path: '/admin/testers'
+                    path: `/admin/testers?search=${encodeURIComponent(tester.email)}`
                 });
             }
         });
@@ -90,7 +93,7 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
                     id: blog.id,
                     title: blog.title,
                     subtitle: blog.date,
-                    path: '/admin/blogs'
+                    path: `/admin/blogs?editBlog=${blog.id}`
                 });
             }
         });
@@ -98,21 +101,74 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
         // Search notes
         notes.forEach(note => {
             if (note.title?.toLowerCase().includes(searchTerm) ||
-                note.content?.toLowerCase().includes(searchTerm) ||
-                note.tags?.some(tag => tag.toLowerCase().includes(searchTerm))) {
+                note.content?.toLowerCase().includes(searchTerm)) {
                 allResults.push({
                     type: 'note',
                     id: note.id,
                     title: note.title,
-                    subtitle: note.tags?.slice(0, 3).join(', ') || 'No tags',
-                    path: '/admin/notes'
+                    subtitle: 'Note',
+                    path: `/admin/notes?viewNote=${note.id}`
+                });
+            }
+        });
+
+        // Search subscribers
+        subscribers.forEach(sub => {
+            if (sub.email?.toLowerCase().includes(searchTerm)) {
+                allResults.push({
+                    type: 'subscriber',
+                    id: sub.uid,
+                    title: sub.email,
+                    subtitle: 'Subscriber',
+                    path: `/admin/subscribers?search=${encodeURIComponent(sub.email)}`
+                });
+            }
+        });
+
+        // Search bookmark folders
+        bookmarkFolders.forEach(folder => {
+            if (folder.name?.toLowerCase().includes(searchTerm)) {
+                allResults.push({
+                    type: 'folder',
+                    id: folder.id,
+                    title: folder.name,
+                    subtitle: 'Bookmark Folder',
+                    path: `/admin/links?folderId=${folder.id}` // Assuming links/folders are managed here
+                });
+            }
+        });
+
+        // Search bookmark links
+        bookmarkLinks.forEach(link => {
+            if (link.title?.toLowerCase().includes(searchTerm) ||
+                link.url?.toLowerCase().includes(searchTerm)) {
+                allResults.push({
+                    type: 'link',
+                    id: link.id,
+                    title: link.title,
+                    subtitle: link.url,
+                    path: link.url // Bookmarks will be opened directly
+                });
+            }
+        });
+
+        // Search themes
+        themes.forEach(theme => {
+            if (theme.name?.toLowerCase().includes(searchTerm) ||
+                theme.category?.toLowerCase().includes(searchTerm)) {
+                allResults.push({
+                    type: 'theme',
+                    id: theme.id,
+                    title: theme.name,
+                    subtitle: theme.category,
+                    path: `/admin/themes?editTheme=${theme.id}`
                 });
             }
         });
 
         setResults(allResults.slice(0, 10)); // Limit to 10 results
         setSelectedIndex(0);
-    }, [query, apps, testers, subscribers, blogs, notes]);
+    }, [query, apps, testers, subscribers, blogs, notes, bookmarkFolders, bookmarkLinks, themes]);
 
     // Handle keyboard navigation
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -131,7 +187,11 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
     };
 
     const handleSelect = (result: SearchResult) => {
-        navigate(result.path);
+        if (result.type === 'link') {
+            window.open(result.path, '_blank');
+        } else {
+            navigate(result.path);
+        }
         setOpen(false);
         setQuery('');
     };
@@ -143,6 +203,9 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
             case 'subscriber': return <Mail className="w-4 h-4 text-green-500" />;
             case 'blog': return <NotebookPen className="w-4 h-4 text-orange-500" />;
             case 'note': return <BookMarked className="w-4 h-4 text-yellow-500" />;
+            case 'folder': return <Folder className="w-4 h-4 text-purple-500" />;
+            case 'link': return <LinkIcon className="w-4 h-4 text-teal-500" />;
+            case 'theme': return <LayoutDashboard className="w-4 h-4 text-indigo-500" />;
             default: return <Search className="w-4 h-4" />;
         }
     };
@@ -154,6 +217,9 @@ export const UniversalSearch: React.FC<UniversalSearchProps> = ({ apps, testers,
             case 'subscriber': return 'Subscriber';
             case 'blog': return 'Blog';
             case 'note': return 'Note';
+            case 'folder': return 'Folder';
+            case 'link': return 'Link';
+            case 'theme': return 'Theme';
             default: return '';
         }
     };
