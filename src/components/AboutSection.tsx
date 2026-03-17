@@ -54,7 +54,7 @@ export default function AboutSection() {
                 whileHover={{ y: -5 }}
                 className="flex-1 bg-muted/50 border border-border p-4 sm:p-5 rounded-[1.25rem] text-center shadow-lg group transition-all"
               >
-                <div className="text-xl sm:text-2xl font-black text-blue-500 tracking-tight">5+</div>
+                <div className="text-xl sm:text-2xl font-black text-blue-500 tracking-tight">25+</div>
                 <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1 opacity-70">Projects</div>
               </motion.div>
 
@@ -62,7 +62,7 @@ export default function AboutSection() {
                 whileHover={{ y: -5 }}
                 className="flex-1 bg-muted/50 border border-border p-4 sm:p-5 rounded-[1.25rem] text-center shadow-lg group transition-all"
               >
-                <div className="text-xl sm:text-2xl font-black text-green-500 tracking-tight">1+</div>
+                <div className="text-xl sm:text-2xl font-black text-green-500 tracking-tight">8+</div>
                 <div className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1 opacity-70">Clients</div>
               </motion.div>
             </div>

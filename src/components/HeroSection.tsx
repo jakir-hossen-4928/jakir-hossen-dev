@@ -1,54 +1,48 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 const transition = { duration: 1, ease: [0.25, 0.1, 0.25, 1] };
 
-// Hacker text scramble effect
-const useTextScramble = (texts: string[], interval: number = 3000) => {
-  const [displayText, setDisplayText] = useState(texts[0]);
+// Developer-style typewriter effect with typing and deleting
+const useTypewriter = (texts: string[], typeSpeed: number = 100, deleteSpeed: number = 50, pauseTime: number = 2000) => {
+  const [displayText, setDisplayText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isScrambling, setIsScrambling] = useState(false);
-
-  const chars = "!@#$%^&*()_+-=[]{}|;:,.<>?/~`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const [isTyping, setIsTyping] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const cycleText = () => {
-      setIsScrambling(true);
-      const nextIndex = (currentIndex + 1) % texts.length;
-      const targetText = texts[nextIndex];
-      let iteration = 0;
-      const maxIterations = targetText.length * 3;
+    const currentText = texts[currentIndex];
+    let timer: NodeJS.Timeout;
 
-      const scrambleInterval = setInterval(() => {
-        setDisplayText(
-          targetText
-            .split("")
-            .map((char, index) => {
-              if (char === " ") return " ";
-              if (index < iteration / 3) {
-                return targetText[index];
-              }
-              return chars[Math.floor(Math.random() * chars.length)];
-            })
-            .join("")
-        );
+    if (isTyping && !isDeleting) {
+      // Typing phase
+      if (displayText.length < currentText.length) {
+        timer = setTimeout(() => {
+          setDisplayText(currentText.slice(0, displayText.length + 1));
+        }, typeSpeed);
+      } else {
+        // Finished typing, pause before deleting
+        timer = setTimeout(() => {
+          setIsDeleting(true);
+        }, pauseTime);
+      }
+    } else if (isDeleting) {
+      // Deleting phase
+      if (displayText.length > 0) {
+        timer = setTimeout(() => {
+          setDisplayText(displayText.slice(0, -1));
+        }, deleteSpeed);
+      } else {
+        // Finished deleting, move to next text
+        setIsDeleting(false);
+        setCurrentIndex((prev) => (prev + 1) % texts.length);
+      }
+    }
 
-        iteration++;
-
-        if (iteration >= maxIterations) {
-          clearInterval(scrambleInterval);
-          setDisplayText(targetText);
-          setIsScrambling(false);
-          setCurrentIndex(nextIndex);
-        }
-      }, 30);
-    };
-
-    const timer = setTimeout(cycleText, interval);
     return () => clearTimeout(timer);
-  }, [currentIndex, texts, interval]);
+  }, [displayText, isTyping, isDeleting, currentIndex, texts, typeSpeed, deleteSpeed, pauseTime]);
 
-  return { displayText, isScrambling };
+  return { displayText, isTyping: !isDeleting && displayText.length < texts[currentIndex].length };
 };
 
 export default function HeroSection() {
@@ -57,7 +51,7 @@ export default function HeroSection() {
   };
 
   const roles = ["Frontend Developer", "Shopify Developer"];
-  const { displayText, isScrambling } = useTextScramble(roles, 4000);
+  const { displayText, isTyping } = useTypewriter(roles, 100, 50, 2000);
 
   return (
     <section
@@ -94,25 +88,21 @@ export default function HeroSection() {
             Jakir Hossen
           </motion.h1>
 
-          {/* Subtitle / Role with Hacker Scramble Animation */}
+          {/* Subtitle / Role with Developer Typewriter Animation */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mb-10"
           >
-            <h2 className="text-xl sm:text-2xl font-bold flex items-center justify-center gap-3">
-              <motion.span 
-                className={`font-mono tracking-wider ${isScrambling ? 'text-primary' : 'text-muted-foreground'}`}
-                animate={isScrambling ? { opacity: [1, 0.8, 1] } : {}}
-                transition={{ duration: 0.1, repeat: isScrambling ? Infinity : 0 }}
-              >
+            <h2 className="text-xl sm:text-2xl font-bold flex items-center justify-center gap-1">
+              <span className="font-mono tracking-wider text-muted-foreground">
                 {displayText}
-              </motion.span>
+              </span>
               <motion.span
                 className="inline-block w-0.5 h-6 bg-primary"
                 animate={{ opacity: [1, 0] }}
-                transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+                transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
               />
             </h2>
           </motion.div>
