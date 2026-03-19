@@ -14,8 +14,10 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'react-toastify';
+import { DefaultTemplate } from '@/richtexteditor/DefaultTemplate';
 import {
     ChevronLeft,
+
     Download,
     MessageSquare,
     Send,
@@ -259,12 +261,18 @@ const AppDetails = () => {
 
                 {/* About Section */}
                 {app.description && (
-                    <Card className="border-none glassmorphism rounded-[32px] p-6 md:p-8">
-                        <h3 className="text-lg md:text-xl font-black mb-6 flex items-center gap-3">
-                            <Sparkles className="text-primary w-4 h-4 md:w-5 md:h-5" /> About Application
-                        </h3>
-                        <div className="prose prose-sm prose-invert max-w-none prose-p:text-muted-foreground prose-p:font-medium prose-p:leading-relaxed" dangerouslySetInnerHTML={{ __html: app.description }} />
-                    </Card>
+                    <div className="min-h-[400px] sm:min-h-[500px] border-2 border-primary/20 rounded-3xl overflow-hidden bg-background/50 shadow-xl relative">
+                        <DefaultTemplate
+                            readOnly={true}
+                            className="newspaper-article prose dark:prose-invert prose-slate max-w-none"
+                            onReady={(methods) => {
+                                if (app.description) {
+                                    setTimeout(() => methods.injectHTML(app.description), 100);
+                                }
+                            }}
+                        />
+                    </div>
+
                 )}
 
                 {/* Comments Section */}

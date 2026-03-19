@@ -81,6 +81,13 @@ export const AdminBlogs: React.FC = () => {
     const handleOpenDialog = (blog?: BlogPost) => {
         if (blog) {
             setEditingBlog({ ...blog });
+            // Backup injection for existing blog
+            setTimeout(() => {
+                if (editorRef.current && blog.description) {
+                    console.debug("[AdminBlogs] Backup injection for Edit dialog");
+                    editorRef.current.injectHTML(blog.description);
+                }
+            }, 200);
         } else {
             setEditingBlog({
                 status: 'draft',
@@ -89,6 +96,12 @@ export const AdminBlogs: React.FC = () => {
                 categories: [],
                 date: new Date().toISOString().split('T')[0]
             });
+            // Clear editor for new blog
+            setTimeout(() => {
+                if (editorRef.current) {
+                    editorRef.current.injectHTML('');
+                }
+            }, 200);
         }
         setIsDialogOpen(true);
     };
@@ -409,9 +422,12 @@ export const AdminBlogs: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Description</Label>
-                            <div className="min-h-[300px] sm:min-h-[400px] border border-border rounded-xl overflow-hidden bg-background/50">
+                        <div className="space-y-4">
+                            <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                                <Search size={14} className="text-primary" /> Storyboard / Content
+                            </Label>
+                            <div className="min-h-[400px] sm:min-h-[500px] border-2 border-primary/20 rounded-2xl overflow-hidden bg-background/50 shadow-inner">
+
                                 <DefaultTemplate
                                     ref={editorRef}
                                     onReady={(methods) => {

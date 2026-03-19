@@ -67,8 +67,21 @@ export const AdminApps: React.FC = () => {
     const handleOpenDialog = (app?: AppEntry) => {
         if (app) {
             setEditingApp({ ...app });
+            // Backup injection for existing app
+            setTimeout(() => {
+                if (editorRef.current && app.description) {
+                    console.debug("[AdminApps] Backup injection for Edit dialog");
+                    editorRef.current.injectHTML(app.description);
+                }
+            }, 200);
         } else {
             setEditingApp({ status: 'closed_testing', appName: '', slug: '', playStoreUrl: '' });
+            // Clear editor for new app
+            setTimeout(() => {
+                if (editorRef.current) {
+                    editorRef.current.injectHTML('');
+                }
+            }, 200);
         }
         setIsDialogOpen(true);
     };
@@ -351,9 +364,12 @@ export const AdminApps: React.FC = () => {
                             </p>
                         </div>
 
-                        <div className="space-y-2">
-                            <Label>Description</Label>
-                            <div className="min-h-[200px] border rounded-xl overflow-hidden">
+                        <div className="space-y-4">
+                            <Label className="text-sm font-black flex items-center gap-2 text-primary">
+                                <Smartphone size={18} /> Detailed App Description
+                            </Label>
+                            <div className="min-h-[400px] sm:min-h-[500px] border-2 border-primary/20 rounded-3xl overflow-hidden bg-background/50 shadow-xl">
+
                                 <DefaultTemplate
                                     ref={editorRef}
                                     onReady={(methods) => {

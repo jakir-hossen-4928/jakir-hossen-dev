@@ -481,6 +481,13 @@ function EditorContent({
     commandsRef.current = commands;
   }, [commands]);
 
+  useEffect(() => {
+    if (editor) {
+      editor.setEditable(!readOnly);
+    }
+  }, [editor, readOnly]);
+
+
   const methods = useMemo<DefaultTemplateRef>(
     () => ({
       injectMarkdown: (content: string) => {
@@ -607,7 +614,7 @@ function EditorContent({
           )}
         </div>
       )}
-      <div className={`lexkit-editor ${readOnly ? "read-only" : ""}`}>
+      <div className={`lexkit-editor ${readOnly ? "read-only" : ""} ${className || ""}`}>
         <div className="flex flex-col flex-1" style={{ display: mode === "visual" ? "flex" : "none" }}>
           {/* Non-flex wrapper to resolve Chrome focusing behavior warning */}
           <div className="lexkit-editor-content-wrapper">
@@ -616,7 +623,8 @@ function EditorContent({
               placeholder={!readOnly ? <div className="lexkit-placeholder">Start typing...</div> : null}
               ErrorBoundary={ErrorBoundary}
             />
-            <MarkdownShortcutPlugin transformers={ALL_MARKDOWN_TRANSFORMERS} />
+            {!readOnly && <MarkdownShortcutPlugin transformers={ALL_MARKDOWN_TRANSFORMERS} />}
+
           </div>
           {!readOnly && <FloatingToolbarRenderer />}
         </div>
@@ -636,19 +644,34 @@ interface DefaultTemplateProps {
   onReady?: (m: DefaultTemplateRef) => void;
   onChange?: (markdown: string) => void;
   readOnly?: boolean;
+  forceTheme?: "light" | "dark";
 }
 
-export const DefaultTemplate = forwardRef<DefaultTemplateRef, DefaultTemplateProps>(({ className, onReady, onChange, readOnly = false }, ref) => {
-  const { theme: globalTheme } = useTheme();
+export const DefaultTemplate = forwardRef<DefaultTemplateRef, DefaultTemplateProps>(({ className, onReady, onChange, readOnly = false, forceTheme }, ref) => {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [editorTheme, setEditorTheme] = useState<"light" | "dark">("light");
 
+  // Handle hydration
   useEffect(() => {
-    if (globalTheme === "dark" || globalTheme === "light") {
-      setEditorTheme(globalTheme);
+    setMounted(true);
+  }, []);
+
+  // Sync theme
+  useEffect(() => {
+    if (forceTheme) {
+      setEditorTheme(forceTheme);
+      return;
     }
-  }, [globalTheme]);
+    if (resolvedTheme === "dark" || resolvedTheme === "light") {
+      setEditorTheme(resolvedTheme);
+    }
+  }, [resolvedTheme, forceTheme]);
 
   const isDark = editorTheme === "dark";
+  const currentTheme = forceTheme || (mounted ? editorTheme : "light");
+
+
 
   useEffect(() => {
     imageExtension.configure({
@@ -672,12 +695,13 @@ export const DefaultTemplate = forwardRef<DefaultTemplateRef, DefaultTemplatePro
   };
 
   return (
-    <div className={`lexkit-editor-wrapper ${className || ""} ${readOnly ? "read-only" : ""}`} data-editor-theme={editorTheme}>
+    <div className={`lexkit-editor-wrapper ${className || ""} ${readOnly ? "read-only" : ""}`} data-editor-theme={currentTheme}>
       <Provider extensions={extensions} config={{ theme: defaultTheme }}>
         <EditorContent className={className} isDark={isDark} toggleTheme={toggleTheme} onReady={handleReady} onChange={onChange} readOnly={readOnly} />
       </Provider>
     </div>
   );
+
 });
 
 DefaultTemplate.displayName = "DefaultTemplate";

@@ -11,6 +11,8 @@ import Footer from '@/components/Footer';
 import { toast } from 'react-toastify';
 import { useBlogs } from '@/hooks/useBlogs';
 import { usePageTitle } from '@/hooks/usePageTitle';
+import { DefaultTemplate } from '@/richtexteditor/DefaultTemplate';
+
 
 import { BlogDetailSkeleton } from '@/components/skeletons/ContentSkeletons';
 
@@ -127,23 +129,21 @@ const BlogDetails = () => {
                         </div>
 
                         {/* Main Content - Reduced padding */}
-                        <div className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] md:rounded-[3rem] p-6 sm:p-10 md:p-14 relative overflow-hidden shadow-inner">
+                        <div className="relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-80 h-80 bg-primary/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
                             <div className="absolute bottom-0 left-0 w-60 h-60 bg-primary/5 blur-[100px] rounded-full translate-y-1/2 -translate-x-1/2" />
 
-                            <div
-                                className="prose prose-invert prose-orange max-w-none 
-                                prose-h1:text-3xl md:prose-h1:text-5xl prose-h1:font-black prose-h1:tracking-tighter prose-h1:uppercase prose-h1:italic prose-h1:mb-8
-                                prose-h2:text-2xl md:prose-h2:text-4xl prose-h2:font-black prose-h2:tracking-tighter prose-h2:uppercase prose-h2:mt-12 prose-h2:mb-6
-                                prose-h3:text-xl md:prose-h3:text-2xl prose-h3:font-black prose-h3:tracking-tight
-                                prose-p:text-muted-foreground/90 prose-p:leading-[1.7] prose-p:text-base md:prose-p:text-lg prose-p:mb-6
-                                prose-img:rounded-[1.5rem] md:prose-img:rounded-[2rem] prose-img:shadow-2xl prose-img:my-10
-                                prose-strong:text-foreground prose-strong:font-black
-                                prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-a:font-black
-                                prose-ul:space-y-3 prose-li:text-base md:prose-li:text-lg
-                                selection:bg-primary/30"
-                                dangerouslySetInnerHTML={{ __html: blog.description }}
-                            />
+                            <div className="min-h-[400px] sm:min-h-[500px] border-2 border-primary/20 rounded-2xl overflow-hidden bg-background/50 shadow-inner relative">
+                                <DefaultTemplate
+                                    readOnly={true}
+                                    className="newspaper-article prose dark:prose-invert prose-slate max-w-none"
+                                    onReady={(methods) => {
+                                        if (blog.description) {
+                                            setTimeout(() => methods.injectHTML(blog.description), 100);
+                                        }
+                                    }}
+                                />
+                            </div>
 
                             {/* Footer Tags */}
                             <div className="mt-12 pt-10 border-t border-white/5 flex flex-col gap-5">
