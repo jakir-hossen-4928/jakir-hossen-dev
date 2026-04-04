@@ -6,6 +6,9 @@ import { ProgressiveImg } from '@/components/ProgressiveImg';
 import { FloatingWhatsApp } from '@digicroz/react-floating-whatsapp';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useWebThemeById, useThemeCategories } from '@/hooks/useWebThemes';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { SEO } from '@/components/SEO';
 
 const BOOKING_URL = import.meta.env.VITE_MEETTING_URL;
 
@@ -23,7 +26,7 @@ export default function ThemePreview() {
   const navigate = useNavigate();
   const [deviceView, setDeviceView] = useState<DeviceView>('desktop');
   const [isScrolled, setIsScrolled] = useState(false);
-  
+
   // Use optimized hook with O(1) Map lookup instead of O(n) find
   const { theme, isLoading: themeLoading } = useWebThemeById(id);
   const { categories, isLoading: categoriesLoading } = useThemeCategories();
@@ -84,15 +87,17 @@ export default function ThemePreview() {
 
   return (
     <div className="min-h-screen bg-muted/20">
-      {/* Sticky Top Navigation Bar */}
+      <SEO title={`${theme.name} - Theme Preview`} description={theme.tagline} />
+      <Header />
+
+      {/* Sticky Theme Toolbar Below Header */}
       <div
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-          ? 'bg-background/95 backdrop-blur-md shadow-md border-b border-border py-2.5'
-          : 'bg-background border-b border-border/30 py-4'
+        className={`fixed top-16 md:top-20 left-0 right-0 z-40 transition-all duration-300 ${isScrolled
+          ? 'bg-background/95 backdrop-blur-md shadow-md border-b border-border py-2'
+          : 'bg-background border-b border-border/30 py-3'
           }`}
       >
         <div className="section-container flex items-center justify-between gap-3 md:gap-4">
-
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <button
               onClick={() => navigate('/themes')}
@@ -108,7 +113,7 @@ export default function ThemePreview() {
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-            {/* Device Toggle - Visible on lg+ */}
+            {/* Device Toggle */}
             <div className="hidden lg:flex items-center p-1 bg-muted rounded-lg border border-border/50">
               <button
                 onClick={() => setDeviceViewCallback('desktop')}
@@ -133,7 +138,6 @@ export default function ThemePreview() {
               </button>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex items-center gap-2">
               <span className="hidden md:inline-flex px-3 py-1 bg-muted rounded-md text-sm font-bold border border-border/50">
                 {theme.pricing.currency} {theme.pricing.basePrice}
@@ -150,23 +154,19 @@ export default function ThemePreview() {
               </a>
             </div>
           </div>
-
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="pt-28 pb-20 px-4 md:px-8 max-w-[1920px] mx-auto flex flex-col lg:flex-row gap-8">
-
+      {/* Main Content Area - Corrected padding to account for dynamic Header + Toolbar height */}
+      <div className="pt-[140px] md:pt-[160px] pb-20 px-4 md:px-8 max-w-[1920px] mx-auto flex flex-col lg:flex-row gap-8">
         {/* Left Column: Device Perspective Preview */}
         <div className="w-full lg:w-[70%] xl:w-[75%] flex justify-center order-2 lg:order-1">
           <motion.div
             layout
             className={`w-full transition-all duration-500 ease-in-out ${containerWidthClass}`}
           >
-            {/* The Main Device Frame */}
             <div className="relative bg-background border border-border pb-1 rounded-2xl overflow-hidden shadow-2xl shadow-primary/5 flex flex-col h-[70vh] sm:h-[75vh] lg:h-[80vh]">
-
-              {/* STICKY Browser/Device Header */}
+              {/* STICKY Browser Header */}
               <div className="sticky top-0 left-0 right-0 z-20 bg-card/95 backdrop-blur-md border-b border-border/50 p-2.5 sm:p-3 flex items-center gap-2 shadow-sm shrink-0">
                 {deviceView === 'desktop' && (
                   <>
@@ -186,7 +186,6 @@ export default function ThemePreview() {
                 )}
               </div>
 
-              {/* Scrollable Preview Area */}
               <div className="flex-grow overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent hover:scrollbar-thumb-primary/40 transition-colors">
                 <div className="w-full relative">
                   <ProgressiveImg
@@ -195,8 +194,6 @@ export default function ThemePreview() {
                     className="w-full h-auto block"
                     loading="eager"
                   />
-
-                  {/* Bottom indicator for device feel */}
                   {deviceView === 'mobile' && (
                     <div className="sticky bottom-2 mx-auto w-24 h-1 bg-foreground/20 rounded-full z-10 hidden sm:block" />
                   )}
@@ -204,7 +201,6 @@ export default function ThemePreview() {
               </div>
             </div>
 
-            {/* Viewport Info Overlay */}
             <div className="mt-4 flex justify-between items-center px-2">
               <div className="text-[10px] sm:text-xs font-medium text-muted-foreground/60 uppercase tracking-widest">
                 Interactive Preview Mode
@@ -216,17 +212,16 @@ export default function ThemePreview() {
           </motion.div>
         </div>
 
-        {/* Right Column: Theme Details Sticky Sidebar */}
+        {/* Right Column: Theme Details Sidebar */}
         <div className="w-full lg:w-[30%] xl:w-[25%] order-1 lg:order-2">
-          <div className="sticky top-[100px] md:top-[120px] bg-card border border-border/50 rounded-2xl p-5 sm:p-6 shadow-sm shadow-black/5 flex flex-col gap-6">
-
+          <div className="sticky top-[160px] md:top-[180px] bg-card border border-border/50 rounded-2xl p-5 sm:p-6 shadow-sm shadow-black/5 flex flex-col gap-6">
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-primary mb-1">
                 {category?.name || theme.category}
               </div>
               <h2 className="text-2xl font-black text-foreground mb-2">{theme.name}</h2>
-              <div className="text-sm text-muted-foreground leading-relaxed prose prose-sm dark:prose-invert max-w-none" 
-                   dangerouslySetInnerHTML={{ __html: theme.description }} 
+              <div className="text-sm text-muted-foreground leading-relaxed prose prose-sm dark:prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: theme.description }}
               />
             </div>
 
@@ -280,12 +275,10 @@ export default function ThemePreview() {
                 Typically a {theme.meetingBooking.duration}-minute consultation to discuss your specific needs.
               </p>
             </div>
-
           </div>
         </div>
-
       </div>
-
+      <Footer />
       {/* WhatsApp Floating Button */}
       <FloatingWhatsApp
         phoneNumber="8801864091946"

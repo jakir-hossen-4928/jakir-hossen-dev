@@ -360,7 +360,7 @@ export const AdminApps: React.FC = () => {
                             </div>
                             <p className="text-[10px] text-muted-foreground">
                                 {editingApp.status === 'production' && "Visible to everyone on the Play Store."}
-                                {editingApp.status === 'closed_testing' && "Only visible to users in the 'sajuriya-tester' Google Group."}
+                                {editingApp.status === 'closed_testing' && "Only visible to users in the 'jakir-tester' Google Group."}
                             </p>
                         </div>
 

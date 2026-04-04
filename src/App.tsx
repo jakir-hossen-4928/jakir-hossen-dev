@@ -1,4 +1,5 @@
 import { Suspense, lazy } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/toaster";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -25,13 +26,36 @@ const BlogDetails = lazy(() => import("./pages/BlogDetails"));
 const Contact = lazy(() => import("./pages/Contact"));
 const ThemesGallery = lazy(() => import("./pages/ThemesGallery"));
 const ThemePreview = lazy(() => import("./pages/ThemePreview"));
+const Services = lazy(() => import("./pages/Services"));
 
 const queryClient = new QueryClient();
 
-// Minimal loading fallback
+
+// Refined Skeleton Loading fallback
 const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center bg-background">
-    <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+  <div className="min-h-screen bg-background p-8 pt-32 animate-in fade-in duration-500">
+    <div className="max-w-6xl mx-auto space-y-12">
+      {/* Hero Section Skeleton */}
+      <div className="space-y-6 text-center">
+        <Skeleton className="h-16 w-[70%] max-w-xl mx-auto rounded-2xl" />
+        <Skeleton className="h-6 w-[50%] max-w-sm mx-auto" />
+      </div>
+
+      {/* Content Grid Skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-12">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="space-y-6 p-6 border border-border/40 rounded-3xl">
+            <Skeleton className="h-48 w-full rounded-2xl" />
+            <div className="space-y-3">
+              <Skeleton className="h-8 w-3/4" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
+            </div>
+            <Skeleton className="h-12 w-full rounded-xl" />
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 );
 
@@ -58,6 +82,7 @@ const App = () => {
                     <Route path="/blogs/:slug" element={<BlogDetails />} />
                     <Route path="/themes" element={<ThemesGallery />} />
                     <Route path="/themes/:id" element={<ThemePreview />} />
+                    <Route path="/services" element={<Services />} />
                     <Route
                       path="/admin/*"
                       element={

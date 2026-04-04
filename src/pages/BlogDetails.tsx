@@ -21,7 +21,7 @@ const BlogDetails = () => {
     const { blogs, isLoading } = useBlogs();
 
     const blog = blogs.find(b => b.slug === slug);
-    const pageTitle = blog?.title || (isLoading ? "Loading Article..." : "Article Not Found | Sajuriya Studio");
+    const pageTitle = blog?.title || (isLoading ? "Loading Article..." : "Article Not Found | Jakir Hossen");
     usePageTitle(pageTitle);
 
     if (isLoading && !blog) {

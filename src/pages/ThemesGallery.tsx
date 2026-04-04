@@ -7,6 +7,8 @@ import { ProgressiveImg } from '@/components/ProgressiveImg';
 import { useWebThemes, useThemeCategories, useFilteredThemes } from '@/hooks/useWebThemes';
 import { WebTheme, ThemeCategory } from '@/lib/types';
 import { SEO, seoConfig } from '@/components/SEO';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 // Memoized ThemeCard with optimized re-render prevention
 const ThemeCard = memo(({ theme, categoryName }: { theme: WebTheme; categoryName: string }) => {
@@ -212,6 +214,7 @@ export default function ThemesGallery() {
   return (
     <div className="min-h-screen bg-background pt-24 pb-20">
       <SEO {...seoConfig.themes} />
+      <Header />
       <div className="section-container">
         {/* Header Section */}
         <div className="max-w-3xl mx-auto text-center mb-16">
@@ -265,7 +268,7 @@ export default function ThemesGallery() {
         {/* Themes Grid with Virtualization */}
         <div 
           ref={parentRef}
-          className="overflow-auto"
+          className="overflow-auto scroll-smooth"
           style={{ height: '800px' }}
         >
           <div
@@ -318,6 +321,7 @@ export default function ThemesGallery() {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

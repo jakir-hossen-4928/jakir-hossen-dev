@@ -45,7 +45,7 @@ const AppDetails = () => {
     const { comments, isLoading: isCommentsLoading } = useComments(app?.id);
     const { showLogin } = useAuth();
 
-    const pageTitle = app?.appName || (isAppLoading ? "Loading App..." : "App Not Found | Sajuriya Studio");
+    const pageTitle = app?.appName || (isAppLoading ? "Loading App..." : "App Not Found | Jakir Hossen");
     usePageTitle(pageTitle);
 
     const postComment = async () => {
@@ -189,7 +189,7 @@ const AppDetails = () => {
                                     <div className="flex flex-col sm:flex-row gap-3 w-full">
                                         {app.status === 'closed_testing' && (
                                             <Button size="lg" className="h-14 md:h-16 px-8 md:px-10 text-base md:text-lg font-black rounded-2xl bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-600/20 group w-full lg:flex-[1.5]" asChild>
-                                                <a href="https://groups.google.com/g/sajuriya-tester" target="_blank" rel="noopener noreferrer">
+                                                <a href="https://groups.google.com/g/jakir-tester" target="_blank" rel="noopener noreferrer">
                                                     <div className="mr-2 md:mr-3 w-8 h-8 md:w-9 md:h-9 bg-white rounded-full flex items-center justify-center p-1.5 shadow-sm shrink-0">
                                                         <img
                                                             src="/google.png"

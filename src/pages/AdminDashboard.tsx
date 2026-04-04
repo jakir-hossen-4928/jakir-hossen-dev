@@ -28,13 +28,13 @@ const AdminDashboard = () => {
 
   const getAdminTitle = () => {
     const path = location.pathname;
-    if (path === '/admin/testers') return "Manage Users | Admin Portal";
+    if (path === '/admin/users') return "Manage Users | Admin Portal";
     if (path === '/admin/subscribers') return "Manage Subscribers | Admin Portal";
     if (path === '/admin/blogs') return "Manage Articles | Admin Portal";
     if (path === '/admin/themes') return "Web Themes | Admin Portal";
     if (path === '/admin/notes') return "My Notebook | Admin Portal";
     if (path === '/admin/links') return "Link Manager | Admin Portal";
-    if (path === '/admin/settings') return "Settings | Admin Portal";
+    if (path === '/admin/mobile-apps') return "Mobile Apps | Admin Portal";
     return "Overview | Admin Portal";
   };
 
@@ -136,7 +136,7 @@ const AdminDashboard = () => {
     const path = location.pathname;
 
     switch (path) {
-      case '/admin/testers':
+      case '/admin/users':
         return (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <AdminTesters exportTesters={exportTesters} />
@@ -167,7 +167,12 @@ const AdminDashboard = () => {
           </motion.div>
         );
       case '/admin/links':
-      case '/admin/settings':
+        return (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <AdminLinks />
+          </motion.div>
+        );
+      case '/admin/mobile-apps':
         return (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <AdminApps />

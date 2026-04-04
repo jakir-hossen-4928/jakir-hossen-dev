@@ -26,13 +26,13 @@ interface SidebarProps {
 
 const sidebarItems = [
     { icon: LayoutDashboard, label: 'Overview', href: '/admin' },
-    { icon: Users, label: 'Users', href: '/admin/testers' },
+    { icon: Users, label: 'Users', href: '/admin/users' },
     { icon: Users, label: 'Subscribers', href: '/admin/subscribers' },
     { icon: NotebookPen, label: 'Notebook', href: '/admin/notes' },
     { icon: NotebookPen, label: 'Blogs', href: '/admin/blogs' },
     { icon: LayoutDashboard, label: 'Web Themes', href: '/admin/themes' },
     { icon: Link2, label: 'Link Manager', href: '/admin/links' },
-    { icon: Smartphone, label: 'Sajuriya Studio', href: '/admin/settings' },
+    { icon: Smartphone, label: 'Mobile Apps', href: '/admin/mobile-apps' },
 ];
 
 export const AppSidebar: React.FC<SidebarProps> = ({
@@ -73,8 +73,8 @@ export const AppSidebar: React.FC<SidebarProps> = ({
                         </div>
                         {!collapsed && (
                             <div className="flex flex-col animate-in fade-in slide-in-from-left-4 duration-500">
-                                <span className="font-black text-xl tracking-tighter leading-none">Sajuriya</span>
-                                <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground mt-0.5">Studio</span>
+                                <span className="font-black text-xl tracking-tighter leading-none">Jakir</span>
+                                <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground mt-0.5">Hossen</span>
                             </div>
                         )}
                     </div>

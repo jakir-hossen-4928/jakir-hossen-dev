@@ -612,6 +612,98 @@ export function subscribeToBookmarkLinks(callback: (links: BookmarkLink[]) => vo
     });
 }
 
+// Add a new bookmark folder
+export async function addBookmarkFolder(folder: Omit<BookmarkFolder, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
+    try {
+        const now = new Date();
+        const folderData = {
+            ...folder,
+            createdAt: Timestamp.fromDate(now),
+            updatedAt: Timestamp.fromDate(now)
+        };
+        const docRef = await addDoc(collection(firestore, 'bookmarkFolders'), folderData);
+        return docRef.id;
+    } catch (error) {
+        console.error('[SyncService] Error adding bookmark folder:', error);
+        throw error;
+    }
+}
+
+// Update a bookmark folder
+export async function updateBookmarkFolder(id: string, updates: Partial<Omit<BookmarkFolder, 'id' | 'createdAt' | 'updatedAt'>>): Promise<void> {
+    try {
+        const ref = doc(firestore, 'bookmarkFolders', id);
+        await setDoc(ref, {
+            ...updates,
+            updatedAt: Timestamp.fromDate(new Date())
+        }, { merge: true });
+    } catch (error) {
+        console.error('[SyncService] Error updating bookmark folder:', error);
+        throw error;
+    }
+}
+
+// Delete a bookmark folder
+export async function deleteBookmarkFolder(id: string): Promise<void> {
+    try {
+        await deleteDoc(doc(firestore, 'bookmarkFolders', id));
+        await db.bookmarkFolders.delete(id);
+
+        // Also delete all links in this folder
+        const linksRef = collection(firestore, 'bookmarkLinks');
+        const q = query(linksRef, where('folderId', '==', id));
+        const snapshot = await getDocs(q);
+        const linkDeletions = snapshot.docs.map(doc => deleteDoc(doc.ref));
+        await Promise.all(linkDeletions);
+        await db.bookmarkLinks.where('folderId').equals(id).delete();
+    } catch (error) {
+        console.error('[SyncService] Error deleting bookmark folder:', error);
+        throw error;
+    }
+}
+
+// Add a new bookmark link
+export async function addBookmarkLink(link: Omit<BookmarkLink, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
+    try {
+        const now = new Date();
+        const linkData = {
+            ...link,
+            createdAt: Timestamp.fromDate(now),
+            updatedAt: Timestamp.fromDate(now)
+        };
+        const docRef = await addDoc(collection(firestore, 'bookmarkLinks'), linkData);
+        return docRef.id;
+    } catch (error) {
+        console.error('[SyncService] Error adding bookmark link:', error);
+        throw error;
+    }
+}
+
+// Update a bookmark link
+export async function updateBookmarkLink(id: string, updates: Partial<Omit<BookmarkLink, 'id' | 'createdAt' | 'updatedAt'>>): Promise<void> {
+    try {
+        const ref = doc(firestore, 'bookmarkLinks', id);
+        await setDoc(ref, {
+            ...updates,
+            updatedAt: Timestamp.fromDate(new Date())
+        }, { merge: true });
+    } catch (error) {
+        console.error('[SyncService] Error updating bookmark link:', error);
+        throw error;
+    }
+}
+
+// Delete a bookmark link
+export async function deleteBookmarkLink(id: string): Promise<void> {
+    try {
+        await deleteDoc(doc(firestore, 'bookmarkLinks', id));
+        await db.bookmarkLinks.delete(id);
+    } catch (error) {
+        console.error('[SyncService] Error deleting bookmark link:', error);
+        throw error;
+    }
+}
+
 // Sync themes from Firestore to Dexie
 export async function syncThemes(force: boolean = false): Promise<WebTheme[]> {
     const cacheKey = 'themes';

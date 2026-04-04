@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon, LogOut, LogIn, LayoutDashboard, User, Settings, Shield, Home, Briefcase, Code, Mail, Gamepad2, Newspaper, Facebook, Instagram, Github, MessageSquare, Phone } from "lucide-react";
+import { Zap as ZapIcon, Menu, X, Sun, Moon, LogOut, LogIn, LayoutDashboard, User, Settings, Shield, Home, Briefcase, Code, Mail, Gamepad2, Newspaper, Facebook, Instagram, Github, MessageSquare, Phone } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
@@ -25,18 +25,20 @@ const navItems = [
   { label: "About", href: "/", isHash: true, targetId: "#about", icon: User },
   { label: "Experience", href: "/", isHash: true, targetId: "#about", icon: Briefcase },
   { label: "Projects", href: "/", isHash: true, targetId: "#projects", icon: Code },
+  { label: "Services", href: "/services", isHash: false, icon: ZapIcon },
   { label: "Themes", href: "/themes", isHash: false, icon: LayoutDashboard },
   { label: "Blog", href: "/blogs", isHash: false, icon: Newspaper },
-  { label: "Play Store Apps", href: "/apps", isHash: false, icon: Gamepad2 },
+  { label: "Mobile Apps", href: "/apps", isHash: false, icon: Gamepad2 },
   { label: "Contact", href: "/contact", isHash: false, icon: Mail },
 ];
 
 // Mobile nav items - excludes About, Experience, Projects
 const mobileNavItems = [
   { label: "Home", href: "/", isHash: true, targetId: "#home", icon: Home },
+  { label: "Services", href: "/services", isHash: false, icon: ZapIcon },
   { label: "Themes", href: "/themes", isHash: false, icon: LayoutDashboard },
   { label: "Blog", href: "/blogs", isHash: false, icon: Newspaper },
-  { label: "Play Store Apps", href: "/apps", isHash: false, icon: Gamepad2 },
+  { label: "Mobile Apps", href: "/apps", isHash: false, icon: Gamepad2 },
   { label: "Contact", href: "/contact", isHash: false, icon: Mail },
 ];
 

@@ -6,7 +6,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { Shield, Lock, Eye, Server, Globe } from 'lucide-react';
 
 const PrivacyPolicy = () => {
-    usePageTitle("Privacy Policy | Sajuriya Studio");
+    usePageTitle("Privacy Policy | Jakir Hossen");
 
     return (
         <div className="min-h-screen bg-background text-foreground">
@@ -28,7 +28,7 @@ const PrivacyPolicy = () => {
                                 <Shield className="text-primary" /> 1. Introduction
                             </h2>
                             <p className="text-muted-foreground leading-relaxed">
-                                This Privacy Policy applies to the apps and services offered by Sajuriya Studio ("we," "our," or "us").
+                                This Privacy Policy applies to the apps and services offered by Jakir Hossen ("we," "our," or "us").
                                 By downloading, installing, or using our applications, you agree to the collection and use of information in accordance with this policy.
                                 We are committed to ensuring that your privacy is protected and respected.
                             </p>

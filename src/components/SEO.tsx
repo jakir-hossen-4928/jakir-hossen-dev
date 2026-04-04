@@ -88,8 +88,8 @@ export const seoConfig = {
     ogUrl: "/blogs",
   },
   apps: {
-    title: "Play Store Apps",
-    description: "Official Google Play Store apps developed by Jakir Hossen. Download Android applications for productivity and lifestyle.",
+    title: "Mobile Apps",
+    description: "Official Android apps developed by Jakir Hossen. Download mobile applications for productivity and lifestyle.",
     ogUrl: "/apps",
   },
   contact: {
