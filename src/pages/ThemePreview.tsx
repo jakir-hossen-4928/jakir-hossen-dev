@@ -57,6 +57,9 @@ export default function ThemePreview() {
     setDeviceView(view);
   }, []);
 
+  // Memoized derived values
+  const containerWidthClass = useMemo(() => DEVICE_WIDTHS[deviceView], [deviceView]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background pt-32 pb-20 flex flex-col items-center justify-center">
@@ -78,8 +81,6 @@ export default function ThemePreview() {
     );
   }
 
-  // Memoized derived values
-  const containerWidthClass = useMemo(() => DEVICE_WIDTHS[deviceView], [deviceView]);
 
   return (
     <div className="min-h-screen bg-muted/20">

@@ -641,7 +641,7 @@ export async function syncThemes(force: boolean = false): Promise<WebTheme[]> {
 export function subscribeToThemes(callback: (themes: WebTheme[]) => void, onError?: (error: any) => void): () => void {
     const ref = collection(firestore, 'themes');
     const q = query(ref, orderBy('createdAt', 'desc'), limit(100));
-    return onSnapshot(q, 
+    return onSnapshot(q,
         async (snapshot) => {
             const themes = snapshot.docs.map(doc => mapWebTheme(doc.id, doc.data()));
             await db.transaction('rw', db.themes, db.metadata, async () => {

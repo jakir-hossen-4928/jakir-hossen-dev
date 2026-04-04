@@ -137,6 +137,15 @@
 
 
 
+/* Toolbar Container */
+.lexkit-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+}
+
 /* Toolbar Sections */
 .lexkit-toolbar-section {
   display: flex;
