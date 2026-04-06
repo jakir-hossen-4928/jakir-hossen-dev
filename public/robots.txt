@@ -16,4 +16,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://jakirhossen.netlify.app/sitemap.xml
+Sitemap: http://jakirhossen.xyz/sitemap.xml

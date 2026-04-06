@@ -12,7 +12,7 @@ interface SEOProps {
   noIndex?: boolean;
 }
 
-const defaultKeywords = "Jakir Hossen, Frontend Developer, Shopify Developer, Landing Page Designer, Portfolio Designer, React Developer, TypeScript, Firebase, Web Developer Bangladesh, Shopify Expert, E-commerce Developer";
+const defaultKeywords = "Jakir Hossen, Frontend Developer, Shopify Store Designer, Shopify Store Builder, Portfolio Builder, React, Supabase, Firebase, Expo App, Landing Page Designer, TypeScript, Web Developer Bangladesh, Shopify Expert, E-commerce Developer";
 
 export function SEO({
   title,
@@ -25,9 +25,9 @@ export function SEO({
   canonical,
   noIndex = false,
 }: SEOProps) {
-  const siteUrl = "https://jakirhossen.netlify.app";
+  const siteUrl = "http://jakirhossen.xyz";
   const fullTitle = `${title} | Jakir Hossen`;
-  const fullOgUrl = ogUrl ? `${siteUrl}${ogUrl}` : siteUrl;
+  const fullOgUrl = ogUrl ? `${siteUrl}${ogUrl}` : `${siteUrl}/`;
   const fullCanonical = canonical ? `${siteUrl}${canonical}` : fullOgUrl;
 
   return (
@@ -73,28 +73,28 @@ export function SEO({
 // Predefined SEO configurations for common pages
 export const seoConfig = {
   home: {
-    title: "Frontend, Shopify & Landing Page Designer",
-    description: "Jakir Hossen - Expert Frontend Developer, Shopify Developer & Landing Page Designer specializing in React, TypeScript, Firebase, portfolio design, and high-performance e-commerce solutions.",
+    title: "Jakir Hossen | Shopify Store Designer & Builder",
+    description: "Jakir Hossen - Professional Shopify Store Designer, Builder & Portfolio Expert. Specializing in high-performance web solutions using React, Supabase, Firebase, and Expo Apps.",
     ogUrl: "/",
   },
   themes: {
     title: "Premium Web Themes & Portfolio Templates",
-    description: "Explore premium web themes, portfolio templates, and landing page designs for modern businesses. Custom Shopify themes and React applications.",
+    description: "Explore premium web themes, portfolio templates, and landing page designs. Custom Shopify themes and React applications built with React & Supabase.",
     ogUrl: "/themes",
   },
   blogs: {
-    title: "Development Blog",
-    description: "Insights on frontend development, Shopify customization, landing page design, portfolio creation, React best practices, and modern web technologies.",
+    title: "Development Blog | React & Shopify Insights",
+    description: "Insights on frontend development, Shopify store building, portfolio creation, React, Supabase, and Expo app development.",
     ogUrl: "/blogs",
   },
   apps: {
-    title: "Mobile Apps",
-    description: "Official Android apps developed by Jakir Hossen. Download mobile applications for productivity and lifestyle.",
+    title: "Mobile Apps | React Native & Expo",
+    description: "Official Android apps developed with Expo and React Native by Jakir Hossen. High-performance mobile solutions.",
     ogUrl: "/apps",
   },
   contact: {
-    title: "Get In Touch",
-    description: "Contact Jakir Hossen for web development projects, Shopify store design, landing page creation, portfolio design, and frontend consulting services.",
+    title: "Get In Touch | Project Inquiry",
+    description: "Contact Jakir Hossen for web development, Shopify store building, portfolio creation, and custom software using Firebase & Supabase.",
     ogUrl: "/contact",
   },
   admin: {
@@ -103,3 +103,4 @@ export const seoConfig = {
     noIndex: true,
   },
 };
+
