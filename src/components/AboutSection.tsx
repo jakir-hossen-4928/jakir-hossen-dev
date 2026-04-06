@@ -162,7 +162,8 @@ export default function AboutSection() {
         </div>
 
         {/* Experience Section */}
-        <div className="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-border/30">
+        <div id="experience" className="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-border/30" itemScope itemType="https://schema.org/Person">
+          <meta itemProp="name" content="Jakir Hossen" />
           <div className="text-center mb-12 sm:mb-16">
             <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-3">Professional Path</h3>
             <h2 className="text-2xl sm:text-5xl font-black text-foreground tracking-tighter">Work <span className="text-primary italic">Experience</span></h2>
@@ -173,24 +174,35 @@ export default function AboutSection() {
             <motion.div
               whileHover={{ y: -8 }}
               className="p-6 sm:p-8 rounded-[2rem] bg-card border border-border transition-all hover:shadow-2xl hover:shadow-primary/10 group text-left flex flex-col items-start"
+              itemScope
+              itemType="https://schema.org/Organization"
             >
+              <meta itemProp="name" content="Softvance Delta" />
+              <meta itemProp="description" content="Frontend Developer - Leading frontend development and crafting high-converting Shopify store designs" />
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white flex items-center justify-center p-2 mb-5 sm:mb-6 border border-primary/10 transition-all duration-500 overflow-hidden shadow-sm">
                 <img
                   src="softvance.png"
                   alt="Softvance Delta Logo"
                   className="w-full h-full object-contain"
+                  itemProp="logo"
                 />
               </div>
-              <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight">Frontend Developer</h4>
+              <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight" itemProp="jobTitle">Frontend Developer</h4>
               <div className="flex flex-col gap-1 mb-4">
                 <p className="font-bold text-muted-foreground flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest">
-                  <Calendar size={12} className="text-primary" /> Feb 2026 - Present
+                  <Calendar size={12} className="text-primary" /> 
+                  <time itemProp="startDate" dateTime="2026-02">Feb 2026</time> - <time itemProp="endDate" dateTime="Present">Present</time>
                 </p>
                 <h5 className="text-[11px] sm:text-sm font-bold text-muted-foreground flex items-center gap-1">
-                  Softvance Delta <ChevronRight size={14} className="text-primary" /> Onsite, Dhaka
+                  Softvance Delta <ChevronRight size={14} className="text-primary" /> 
+                  <span itemProp="location" itemScope itemType="https://schema.org/Place">
+                    <span itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
+                      Onsite, <span itemProp="addressLocality">Dhaka</span>
+                    </span>
+                  </span>
                 </h5>
               </div>
-              <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed opacity-80 pt-1">
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed opacity-80 pt-1" itemProp="description">
                 Leading frontend development and crafting high-converting Shopify store designs with a focus on modern web standards.
               </p>
             </motion.div>
@@ -199,24 +211,35 @@ export default function AboutSection() {
             <motion.div
               whileHover={{ y: -8 }}
               className="p-6 sm:p-8 rounded-[2rem] bg-card border border-border transition-all hover:shadow-2xl hover:shadow-primary/10 group text-left flex flex-col items-start"
+              itemScope
+              itemType="https://schema.org/Organization"
             >
+              <meta itemProp="name" content="MySchool (মাইস্কুল)" />
+              <meta itemProp="description" content="Accountant - Managing administrative tasks, staff training, and leading digital transformation initiatives" />
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white flex items-center justify-center p-2 mb-5 sm:mb-6 border border-primary/10 transition-all duration-500 overflow-hidden shadow-sm">
                 <img
                   src="myschool.png"
                   alt="MySchool Logo"
                   className="w-full h-full object-contain"
+                  itemProp="logo"
                 />
               </div>
-              <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight">Accountant</h4>
+              <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight" itemProp="jobTitle">Accountant</h4>
               <div className="flex flex-col gap-1 mb-4">
                 <p className="font-bold text-muted-foreground flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest">
-                  <Calendar size={12} className="text-primary" /> Dec 2024 - Aug 2025
+                  <Calendar size={12} className="text-primary" /> 
+                  <time itemProp="startDate" dateTime="2024-12">Dec 2024</time> - <time itemProp="endDate" dateTime="2025-08">Aug 2025</time>
                 </p>
                 <h5 className="text-[11px] sm:text-sm font-bold text-muted-foreground flex items-center gap-1">
-                  MySchool (মাইস্কুল) <ChevronRight size={14} className="text-primary" /> Cheora, Cumilla
+                  MySchool (মাইস্কুল) <ChevronRight size={14} className="text-primary" /> 
+                  <span itemProp="location" itemScope itemType="https://schema.org/Place">
+                    <span itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
+                      <span itemProp="addressLocality">Cheora, Cumilla</span>
+                    </span>
+                  </span>
                 </h5>
               </div>
-              <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed opacity-80 pt-1">
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed opacity-80 pt-1" itemProp="description">
                 Managing administrative tasks, staff training, and leading digital transformation initiatives for school management.
               </p>
             </motion.div>
@@ -234,40 +257,56 @@ export default function AboutSection() {
             <motion.div
               whileHover={{ y: -8 }}
               className="p-6 sm:p-8 rounded-[2rem] bg-card border border-border transition-all hover:shadow-2xl hover:shadow-primary/10 group text-left"
+              itemScope
+              itemType="https://schema.org/EducationalOrganization"
             >
+              <meta itemProp="name" content="Feni Computer Institute" />
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white flex items-center justify-center p-2 mb-5 sm:mb-6 border border-primary/10 transition-all duration-500 overflow-hidden">
                 <img
                   src="fci.jpg"
                   alt="FCI Logo"
                   className="w-full h-full object-contain"
+                  itemProp="logo"
                 />
               </div>
-              <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight">Computer Science & Tech</h4>
+              <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight" itemProp="description">Computer Science & Tech</h4>
               <p className="font-bold text-muted-foreground mb-3 flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest">
-                <Calendar size={12} className="text-primary" /> 2022 - 2026
+                <Calendar size={12} className="text-primary" /> 
+                <time itemProp="startDate" dateTime="2022">2022</time> - <time itemProp="endDate" dateTime="2026">2026</time>
               </p>
               <p className="text-sm sm:text-muted-foreground font-medium text-base leading-relaxed opacity-80">
                 Feni Computer Institute. Deepening technical knowledge and engineering principles in computing and software development.
+                <span itemProp="address" itemScope itemType="https://schema.org/PostalAddress" className="hidden">
+                  <span itemProp="addressLocality">Ranir Hat, Feni</span>
+                </span>
               </p>
             </motion.div>
 
             <motion.div
               whileHover={{ y: -8 }}
               className="p-6 sm:p-8 rounded-[2rem] bg-card border border-border transition-all hover:shadow-2xl hover:shadow-primary/10 group text-left"
+              itemScope
+              itemType="https://schema.org/EducationalOrganization"
             >
+              <meta itemProp="name" content="Ibn Taimiya School & College" />
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white flex items-center justify-center p-2 mb-5 sm:mb-6 border border-primary/10 transition-all duration-500 overflow-hidden">
                 <img
                   src="ibne-taimiya-school.jpg"
                   alt="ITSC Logo"
                   className="w-full h-full object-contain scale-110"
+                  itemProp="logo"
                 />
               </div>
-              <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight">Secondary Education</h4>
+              <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight" itemProp="description">Secondary Education</h4>
               <p className="font-bold text-muted-foreground mb-3 flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest">
-                <Calendar size={12} className="text-primary" /> 2016 - 2021
+                <Calendar size={12} className="text-primary" /> 
+                <time itemProp="startDate" dateTime="2016">2016</time> - <time itemProp="endDate" dateTime="2021">2021</time>
               </p>
               <p className="text-sm sm:text-muted-foreground font-medium text-base leading-relaxed opacity-80">
                 Ibn Taimiya School & College, Comilla. Establishing a strong foundational education through excellence in academic achievement.
+                <span itemProp="address" itemScope itemType="https://schema.org/PostalAddress" className="hidden">
+                  <span itemProp="addressLocality">Tomsom Bridge, Cumilla</span>
+                </span>
               </p>
             </motion.div>
           </div>

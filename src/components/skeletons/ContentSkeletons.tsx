@@ -161,3 +161,46 @@ export const BlogDetailSkeleton: React.FC = () => {
         </article>
     );
 };
+
+export const ThemeCardSkeleton: React.FC = () => {
+    return (
+        <div className="group flex flex-col bg-card border border-border/50 rounded-2xl overflow-hidden">
+            {/* Image skeleton */}
+            <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                <Skeleton className="w-full h-full" />
+            </div>
+
+            {/* Content skeleton */}
+            <div className="p-6 flex flex-col flex-grow space-y-3">
+                {/* Category and complexity */}
+                <div className="flex items-center justify-between">
+                    <Skeleton className="h-3 w-20" />
+                    <Skeleton className="h-3 w-24" />
+                </div>
+                {/* Title */}
+                <Skeleton className="h-6 w-3/4" />
+                {/* Description */}
+                <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-5/6" />
+                </div>
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1 mt-auto">
+                    <Skeleton className="h-5 w-12 rounded-md" />
+                    <Skeleton className="h-5 w-16 rounded-md" />
+                    <Skeleton className="h-5 w-14 rounded-md" />
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export const ThemeGallerySkeleton: React.FC<{ count?: number }> = ({ count = 6 }) => {
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {Array.from({ length: count }).map((_, index) => (
+                <ThemeCardSkeleton key={index} />
+            ))}
+        </div>
+    );
+};

@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { label: "Home", href: "/", isHash: true, targetId: "#home", icon: Home },
   { label: "About", href: "/", isHash: true, targetId: "#about", icon: User },
-  { label: "Experience", href: "/", isHash: true, targetId: "#about", icon: Briefcase },
+  { label: "Experience", href: "/", isHash: true, targetId: "#experience", icon: Briefcase },
   { label: "Projects", href: "/", isHash: true, targetId: "#projects", icon: Code },
   { label: "Services", href: "/services", isHash: false, icon: ZapIcon },
   { label: "Themes", href: "/themes", isHash: false, icon: LayoutDashboard },

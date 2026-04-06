@@ -50,7 +50,7 @@ export default function HeroSection() {
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const roles = ["Frontend Developer", "Shopify Developer"];
+  const roles = ["Shopify Store Designer", "React Developer", "Portfolio Designer", "Landing Page Designer"];
   const { displayText, isTyping } = useTypewriter(roles, 100, 50, 2000);
 
   return (
@@ -84,8 +84,10 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-6xl lg:text-7xl font-black text-foreground leading-[1.1] mb-8 tracking-tighter"
+            itemScope
+            itemType="https://schema.org/Person"
           >
-            Jakir Hossen
+            <span itemProp="name">Jakir Hossen</span>
           </motion.h1>
 
           {/* Subtitle / Role with Developer Typewriter Animation */}
@@ -96,7 +98,7 @@ export default function HeroSection() {
             className="mb-10"
           >
             <h2 className="text-xl sm:text-2xl font-bold flex items-center justify-center gap-1">
-              <span className="font-mono tracking-wider text-muted-foreground">
+              <span className="font-mono tracking-wider text-muted-foreground" itemProp="jobTitle">
                 {displayText}
               </span>
               <motion.span
@@ -113,9 +115,9 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-base sm:text-lg text-muted-foreground mb-12 leading-relaxed max-w-3xl mx-auto font-medium px-4 opacity-80"
+            itemProp="description"
           >
-            Specializing in React, TypeScript, Shopify, and Firebase to build high-performance,
-            <br className="hidden sm:block" /> UI-integrated web applications and scalable automation solutions.
+            Award-winning <strong>Shopify Store Designer</strong> & <strong>React Developer</strong> specializing in high-converting e-commerce solutions, stunning portfolios, and landing pages. Expert in React, TypeScript, Shopify customization, and Firebase.
           </motion.p>
 
           {/* Buttons */}

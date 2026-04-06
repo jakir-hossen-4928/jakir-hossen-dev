@@ -215,7 +215,11 @@ const Services = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SEO title="Services | Jakir Hossen" description="Professional React development and Shopify store services by Jakir Hossen." />
+      <SEO 
+        title="Web Development Services | Shopify, React, Portfolio & Landing Pages" 
+        description="Professional Shopify store design, React web development, portfolio creation, and landing page design services by Jakir Hossen. High-quality, affordable web solutions."
+        keywords="Shopify Store Design Service, React Development Service, Portfolio Website Design, Landing Page Design, Web Developer Services, E-commerce Development, Frontend Development Service, Jakir Hossen Services"
+      />
       <Header />
 
       <main className="pt-32 pb-20">

@@ -9,6 +9,7 @@ import { WebTheme, ThemeCategory } from '@/lib/types';
 import { SEO, seoConfig } from '@/components/SEO';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { ThemeGallerySkeleton } from '@/components/skeletons/ContentSkeletons';
 
 // Memoized ThemeCard with optimized re-render prevention
 const ThemeCard = memo(({ theme, categoryName }: { theme: WebTheme; categoryName: string }) => {
@@ -204,9 +205,29 @@ export default function ThemesGallery() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background pt-32 pb-20 flex flex-col items-center justify-center">
-        <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
-        <p className="mt-4 text-muted-foreground font-medium animate-pulse">Loading Web Themes Portfolio...</p>
+      <div className="min-h-screen bg-background pt-32 pb-20">
+        <SEO {...seoConfig.themes} />
+        <Header />
+        <div className="section-container">
+          {/* Header Section Skeleton */}
+          <div className="max-w-3xl mx-auto text-center mb-16 space-y-4">
+            <div className="h-12 w-80 mx-auto bg-muted rounded-lg animate-pulse" />
+            <div className="h-6 w-96 mx-auto bg-muted rounded-lg animate-pulse" />
+          </div>
+          
+          {/* Filters Skeleton */}
+          <div className="flex flex-col md:flex-row gap-6 mb-12 items-center justify-between">
+            <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="h-9 w-24 bg-muted rounded-full animate-pulse" />
+              ))}
+            </div>
+            <div className="h-10 w-64 bg-muted rounded-full animate-pulse" />
+          </div>
+
+          {/* Theme Cards Skeleton */}
+          <ThemeGallerySkeleton count={6} />
+        </div>
       </div>
     );
   }

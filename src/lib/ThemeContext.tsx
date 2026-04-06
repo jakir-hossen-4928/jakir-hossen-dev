@@ -15,9 +15,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("theme") as Theme | null;
       if (stored === "light" || stored === "dark") return stored;
-      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "dark";
     }
-    return "light";
+    return "dark";
   });
 
   useEffect(() => {
