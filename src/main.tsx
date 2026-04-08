@@ -1,18 +1,16 @@
-import { createRoot } from "react-dom/client";
-import { HelmetProvider } from "react-helmet-async";
-import App from "./App.tsx";
+import { ViteReactSSG } from 'vite-react-ssg'
+import { routes } from './routes'
 import "./index.css";
 
 // Disable console logs in production
 if (import.meta.env.PROD) {
-    console.log = () => { };
-    console.error = () => { };
-    console.warn = () => { };
-    console.info = () => { };
+  console.log = () => { };
+  console.error = () => { };
+  console.warn = () => { };
+  console.info = () => { };
 }
 
-createRoot(document.getElementById("root")!).render(
-    <HelmetProvider>
-        <App />
-    </HelmetProvider>
-);
+export const createRoot = ViteReactSSG(
+  { routes },
+  () => { }
+)

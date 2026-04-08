@@ -5,6 +5,8 @@ import { componentTagger } from "lovable-tagger";
 import { VitePWA } from 'vite-plugin-pwa';
 import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
+import ViteSitemap from 'vite-plugin-sitemap';
+import { createHtmlPlugin } from 'vite-plugin-html';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -60,6 +62,28 @@ export default defineConfig(({ mode }) => ({
       gzipSize: true,
       brotliSize: true,
     }),
+    ViteSitemap({
+      hostname: 'https://jakirhossen.dev',
+      dynamicRoutes: [
+        '/',
+        '/apps',
+        '/blogs',
+        '/themes',
+        '/services',
+        '/privacy-policy',
+        '/contact'
+      ],
+      generateRobotsTxt: true,
+    }),
+    createHtmlPlugin({
+      minify: true,
+      inject: {
+        data: {
+          title: 'Jakir Hossen - Frontend Developer',
+          description: 'Portfolio of Jakir Hossen, a Frontend Developer specialized in React and AI.',
+        },
+      },
+    }),
   ].filter(Boolean),
   resolve: {
     alias: {
@@ -72,20 +96,18 @@ export default defineConfig(({ mode }) => ({
     // Increase chunk size warning limit
     chunkSizeWarningLimit: 600,
     rollupOptions: {
-      output: {
-        manualChunks: {
-          // Core React runtime
-          'vendor-react': ['react', 'react-dom'],
-          // Routing
-          'vendor-router': ['react-router-dom'],
-          // Firebase (typically the largest dependency)
-          'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
-          // Animation library
-          'vendor-framer': ['framer-motion'],
-          // UI utilities
-          'vendor-ui': ['@tanstack/react-query', 'lucide-react'],
-        },
-      },
+      // output: {
+      //   manualChunks: {
+      //     // Core React runtime
+      //     'react': ['react', 'react-dom', 'react-router-dom'],
+      //     // Firebase (typically the largest dependency)
+      //     'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
+      //     // Animation library
+      //     'vendor-framer': ['framer-motion'],
+      //     // UI utilities
+      //     'vendor-ui': ['@tanstack/react-query', 'lucide-react'],
+      //   },
+      // },
     },
     // Minification options
     minify: 'terser',
@@ -94,6 +116,22 @@ export default defineConfig(({ mode }) => ({
         drop_console: mode === 'production',
         drop_debugger: true,
       },
+    },
+  },
+  // @ts-ignore
+  ssgOptions: {
+    script: 'async',
+    formatting: 'minify',
+    includedRoutes() {
+      return [
+        '/',
+        '/apps',
+        '/blogs',
+        '/themes',
+        '/services',
+        '/privacy-policy',
+        '/contact'
+      ]
     },
   },
 }));

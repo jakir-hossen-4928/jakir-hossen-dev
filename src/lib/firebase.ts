@@ -29,7 +29,7 @@ export const auth = getAuth(app);
 
 // Use new cache settings to avoid deprecation warning
 export const db = initializeFirestore(app, {
-    localCache: persistentLocalCache({
+    localCache: (typeof window !== 'undefined') ? persistentLocalCache({
         tabManager: persistentMultipleTabManager()
-    })
+    }) : undefined
 });

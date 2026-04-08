@@ -1,23 +1,8 @@
-User-agent: Googlebot
-Allow: /
-Disallow: /admin
-Crawl-delay: 1
-
-User-agent: Bingbot
-Allow: /
-Disallow: /admin
-Crawl-delay: 1
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /private/
-Disallow: /tmp/
 
-Sitemap: https://jakirhossen.xyz/sitemap.xml
+Sitemap: https://jakirhossen.dev/sitemap.xml
+
+User-agent: Googlebot
+Disallow: /admin
+Disallow: /private
