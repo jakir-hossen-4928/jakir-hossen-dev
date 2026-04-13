@@ -3,18 +3,24 @@ import { useState, useEffect } from "react";
 
 const transition = { duration: 1, ease: [0.25, 0.1, 0.25, 1] };
 
+const ROLES = ["Shopify Store Designer", "React Developer", "Portfolio Designer", "Landing Page Designer"] as const;
+
 // Developer-style typewriter effect with typing and deleting
-const useTypewriter = (texts: string[], typeSpeed: number = 100, deleteSpeed: number = 50, pauseTime: number = 2000) => {
+const useTypewriter = (texts: readonly string[], typeSpeed: number = 100, deleteSpeed: number = 50, pauseTime: number = 2000) => {
   const [displayText, setDisplayText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isTyping, setIsTyping] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const currentText = texts[currentIndex];
-    let timer: NodeJS.Timeout;
+    const currentText = texts[currentIndex] ?? "";
+    let timer: ReturnType<typeof setTimeout> | undefined;
 
-    if (isTyping && !isDeleting) {
+    if (!currentText) {
+      if (displayText !== "") setDisplayText("");
+      return;
+    }
+
+    if (!isDeleting) {
       // Typing phase
       if (displayText.length < currentText.length) {
         timer = setTimeout(() => {
@@ -35,14 +41,17 @@ const useTypewriter = (texts: string[], typeSpeed: number = 100, deleteSpeed: nu
       } else {
         // Finished deleting, move to next text
         setIsDeleting(false);
-        setCurrentIndex((prev) => (prev + 1) % texts.length);
+        setCurrentIndex((prev) => (texts.length === 0 ? 0 : (prev + 1) % texts.length));
       }
     }
 
-    return () => clearTimeout(timer);
-  }, [displayText, isTyping, isDeleting, currentIndex, texts, typeSpeed, deleteSpeed, pauseTime]);
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [displayText, isDeleting, currentIndex, texts, typeSpeed, deleteSpeed, pauseTime]);
 
-  return { displayText, isTyping: !isDeleting && displayText.length < texts[currentIndex].length };
+  const currentText = texts[currentIndex] ?? "";
+  return { displayText, isTyping: !isDeleting && !!currentText && displayText.length < currentText.length };
 };
 
 export default function HeroSection() {
@@ -50,8 +59,7 @@ export default function HeroSection() {
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const roles = ["Shopify Store Designer", "React Developer", "Portfolio Designer", "Landing Page Designer"];
-  const { displayText, isTyping } = useTypewriter(roles, 100, 50, 2000);
+  const { displayText, isTyping } = useTypewriter(ROLES, 100, 50, 2000);
 
   return (
     <section
