@@ -60,7 +60,7 @@ const projects = [
 ];
 
 const container = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   show: {
     opacity: 1,
     transition: {
@@ -70,7 +70,7 @@ const container = {
 };
 
 const item = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 1, y: 0 },
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
@@ -83,22 +83,25 @@ export default function ProjectsSection() {
       <div className="section-container relative z-10">
         <div className="text-center mb-8">
           <motion.h3
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 1, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             className="text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-3"
           >
             Featured Work
           </motion.h3>
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             className="text-3xl sm:text-5xl font-black text-foreground tracking-tighter"
           >
             Creative <span className="text-primary italic">Projects</span>
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             className="text-muted-foreground text-lg mt-4 max-w-2xl mx-auto font-medium opacity-80"
           >
             Exploring the intersection of design and technology through practical implementation.

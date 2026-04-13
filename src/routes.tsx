@@ -2,7 +2,7 @@ import { lazy } from "react";
 import type { RouteRecord } from 'vite-react-ssg';
 import ProtectedRoute from "./components/ProtectedRoute";
 
-const Index = lazy(() => import("./pages/Index"));
+import Index from "./pages/Index";
 const AppPromo = lazy(() => import("./pages/AppPromo"));
 const AppDetails = lazy(() => import("./pages/AppDetails"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));

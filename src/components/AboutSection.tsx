@@ -71,8 +71,9 @@ export default function AboutSection() {
           {/* Right Side: Content */}
           <div className="lg:col-span-6 xl:col-span-7 text-left space-y-6 sm:space-y-8">
             <motion.h2
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 1, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
               className="text-3xl sm:text-4xl md:text-6xl font-black text-foreground leading-[1.1] tracking-tighter"
             >
               Transforming Ideas into <br />
@@ -80,8 +81,9 @@ export default function AboutSection() {
             </motion.h2>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 1, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               className="text-base sm:text-lg text-muted-foreground leading-relaxed font-medium opacity-80 max-w-2xl"
             >
               I am a passionate Frontend Developer based in Dhaka, Bangladesh.
@@ -89,7 +91,7 @@ export default function AboutSection() {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 1, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}

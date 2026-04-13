@@ -28,22 +28,25 @@ export default function SkillsSection() {
       <div className="section-container relative z-10">
         <div className="text-center mb-8">
           <motion.h3
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 1, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             className="text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-3"
           >
             Technical Expertise
           </motion.h3>
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             className="text-3xl sm:text-5xl font-black text-foreground tracking-tighter"
           >
             My <span className="text-primary italic">Tech Stack</span>
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             className="text-muted-foreground text-sm sm:text-lg mt-4 max-w-2xl mx-auto font-medium opacity-80"
           >
             A curated list of technologies and tools I've mastered to deliver high-quality digital products.
@@ -54,7 +57,7 @@ export default function SkillsSection() {
           {skills.map((skill, i) => (
             <motion.div
               key={skill.name}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 1, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.02 }}

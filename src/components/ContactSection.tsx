@@ -63,7 +63,7 @@ export default function ContactSection() {
       <section id="contact" className="py-8 md:py-10 bg-background">
         <div className="section-container">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 1, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="max-w-md mx-auto text-center p-8 rounded-[2rem] bg-card border border-border shadow-2xl"
           >
@@ -120,7 +120,7 @@ export default function ContactSection() {
               {contactInfo.map((info, i) => (
                 <motion.div
                   key={info.label}
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 1, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
