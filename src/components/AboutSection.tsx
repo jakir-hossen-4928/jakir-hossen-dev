@@ -9,7 +9,7 @@ export default function AboutSection() {
     <section id="about" className="pt-0 pb-8 bg-background relative overflow-hidden group">
       {/* Smooth gradient transition from Hero */}
       <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background via-background to-transparent pointer-events-none" />
-      
+
       <div className="section-container relative z-10 pt-8">
 
         {/* Section Header */}
@@ -192,11 +192,11 @@ export default function AboutSection() {
               <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight" itemProp="jobTitle">Frontend Developer</h4>
               <div className="flex flex-col gap-1 mb-4">
                 <p className="font-bold text-muted-foreground flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest">
-                  <Calendar size={12} className="text-primary" /> 
+                  <Calendar size={12} className="text-primary" />
                   <time itemProp="startDate" dateTime="2026-02">Feb 2026</time> - <time itemProp="endDate" dateTime="Present">Present</time>
                 </p>
                 <h5 className="text-[11px] sm:text-sm font-bold text-muted-foreground flex items-center gap-1">
-                  Softvance Delta <ChevronRight size={14} className="text-primary" /> 
+                  Softvance Delta <ChevronRight size={14} className="text-primary" />
                   <span itemProp="location" itemScope itemType="https://schema.org/Place">
                     <span itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
                       Onsite, <span itemProp="addressLocality">Dhaka</span>
@@ -229,11 +229,11 @@ export default function AboutSection() {
               <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight" itemProp="jobTitle">Accountant</h4>
               <div className="flex flex-col gap-1 mb-4">
                 <p className="font-bold text-muted-foreground flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest">
-                  <Calendar size={12} className="text-primary" /> 
+                  <Calendar size={12} className="text-primary" />
                   <time itemProp="startDate" dateTime="2024-12">Dec 2024</time> - <time itemProp="endDate" dateTime="2025-08">Aug 2025</time>
                 </p>
                 <h5 className="text-[11px] sm:text-sm font-bold text-muted-foreground flex items-center gap-1">
-                  MySchool (মাইস্কুল) <ChevronRight size={14} className="text-primary" /> 
+                  MySchool (মাইস্কুল) <ChevronRight size={14} className="text-primary" />
                   <span itemProp="location" itemScope itemType="https://schema.org/Place">
                     <span itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
                       <span itemProp="addressLocality">Cheora, Cumilla</span>
@@ -273,7 +273,7 @@ export default function AboutSection() {
               </div>
               <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight" itemProp="description">Computer Science & Tech</h4>
               <p className="font-bold text-muted-foreground mb-3 flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest">
-                <Calendar size={12} className="text-primary" /> 
+                <Calendar size={12} className="text-primary" />
                 <time itemProp="startDate" dateTime="2022">2022</time> - <time itemProp="endDate" dateTime="2026">2026</time>
               </p>
               <p className="text-sm sm:text-muted-foreground font-medium text-base leading-relaxed opacity-80">
@@ -301,7 +301,7 @@ export default function AboutSection() {
               </div>
               <h4 className="text-lg sm:text-xl font-black text-foreground mb-2 tracking-tight" itemProp="description">Secondary Education</h4>
               <p className="font-bold text-muted-foreground mb-3 flex items-center gap-2 text-[10px] sm:text-xs uppercase tracking-widest">
-                <Calendar size={12} className="text-primary" /> 
+                <Calendar size={12} className="text-primary" />
                 <time itemProp="startDate" dateTime="2016">2016</time> - <time itemProp="endDate" dateTime="2021">2021</time>
               </p>
               <p className="text-sm sm:text-muted-foreground font-medium text-base leading-relaxed opacity-80">
