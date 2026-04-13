@@ -61,7 +61,7 @@ export default function HeroSection() {
       {/* Background glow effects - adaptive for light/dark */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-6xl opacity-[0.03] dark:opacity-[0.1] pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary blur-[140px] rounded-full animate-pulse" />
-        <div className="absolute top-1/2 right-1/4 w-[500px] h-[500px] bg-orange-500 blur-[140px] rounded-full animate-pulse delay-700" />
+        <div className="absolute top-1/2 right-1/4 w-[500px] h-[500px] bg-orange-500 blur-[140px] rounded-full animate-pulse [animation-delay:700ms]" />
       </div>
 
       {/* Gradient transition to About section */}
@@ -78,7 +78,7 @@ export default function HeroSection() {
 
           {/* Name */}
           <h1
-            className="text-4xl sm:text-6xl lg:text-7xl font-black text-foreground leading-[1.1] mb-8 tracking-tighter animate-in fade-in slide-in-from-bottom-6 duration-700 delay-150 fill-mode-both"
+            className="text-4xl sm:text-6xl lg:text-7xl font-black text-foreground leading-[1.1] mb-8 tracking-tighter animate-in fade-in slide-in-from-bottom-6 duration-700 [animation-delay:150ms] fill-mode-both"
             itemScope
             itemType="https://schema.org/Person"
           >
@@ -87,7 +87,7 @@ export default function HeroSection() {
 
           {/* Subtitle / Role with Developer Typewriter Animation */}
           <div
-            className="mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both"
+            className="mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 [animation-delay:300ms] fill-mode-both"
           >
             <h2 className="text-xl sm:text-2xl font-bold flex items-center justify-center gap-1">
               <span className="font-mono tracking-wider text-muted-foreground" itemProp="jobTitle">
@@ -103,7 +103,7 @@ export default function HeroSection() {
 
           {/* Description */}
           <p
-            className="text-base sm:text-lg text-muted-foreground mb-12 leading-relaxed max-w-3xl mx-auto font-medium px-4 opacity-80 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-[400ms] fill-mode-both"
+            className="text-base sm:text-lg text-muted-foreground mb-12 leading-relaxed max-w-3xl mx-auto font-medium px-4 opacity-80 animate-in fade-in slide-in-from-bottom-6 duration-700 [animation-delay:400ms] fill-mode-both"
             itemProp="description"
           >
             Specializing in Shopify store design, React, and Firebase, as well as Supabase to build high-performance,
@@ -112,7 +112,7 @@ export default function HeroSection() {
 
           {/* Buttons */}
           <div
-            className="flex flex-wrap justify-center gap-6 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-[500ms] fill-mode-both"
+            className="flex flex-wrap justify-center gap-6 animate-in fade-in slide-in-from-bottom-6 duration-700 [animation-delay:500ms] fill-mode-both"
           >
             <button
               onClick={() => scrollTo("#projects")}
@@ -130,7 +130,7 @@ export default function HeroSection() {
 
           {/* Play Store Developer Link */}
           <div
-            className="mt-8 flex items-center justify-center gap-2 text-muted-foreground/60 hover:text-primary transition-colors cursor-pointer group animate-in fade-in duration-1000 delay-[1000ms] fill-mode-both"
+            className="mt-8 flex items-center justify-center gap-2 text-muted-foreground/60 hover:text-primary transition-colors cursor-pointer group animate-in fade-in duration-1000 [animation-delay:1000ms] fill-mode-both"
           >
             <a
               href="https://play.google.com/store/apps/dev?id=6495908705399463745"
