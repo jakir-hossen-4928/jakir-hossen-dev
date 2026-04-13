@@ -70,31 +70,21 @@ export default function AboutSection() {
 
           {/* Right Side: Content */}
           <div className="lg:col-span-6 xl:col-span-7 text-left space-y-6 sm:space-y-8">
-            <motion.h2
-              initial={{ opacity: 1, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+            <h2
               className="text-3xl sm:text-4xl md:text-6xl font-black text-foreground leading-[1.1] tracking-tighter"
             >
               Transforming Ideas into <br />
               <span className="text-primary italic">Digital Reality</span>
-            </motion.h2>
+            </h2>
 
-            <motion.p
-              initial={{ opacity: 1, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+            <p
               className="text-base sm:text-lg text-muted-foreground leading-relaxed font-medium opacity-80 max-w-2xl"
             >
               I am a passionate Frontend Developer based in Dhaka, Bangladesh.
               My expertise lies in building high-performance web applications using React, TypeScript, and Firebase, often integrating automation and AI solutions to solve complex problems.
-            </motion.p>
+            </p>
 
-            <motion.div
-              initial={{ opacity: 1, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
+            <div
               className="pt-2"
             >
               <Button
@@ -111,7 +101,7 @@ export default function AboutSection() {
                   Download My Resume
                 </a>
               </Button>
-            </motion.div>
+            </div>
 
             {/* Icon Cards (Responsive stack) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 w-full">

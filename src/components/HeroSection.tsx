@@ -70,32 +70,24 @@ export default function HeroSection() {
       <div className="section-container relative z-10 w-full pt-20">
         <div className="flex flex-col items-center text-center">
           {/* Greeting */}
-          <motion.p
-            initial={{ opacity: 1, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-primary font-black mb-6 text-xs sm:text-sm tracking-[0.3em] uppercase"
+          <p
+            className="text-primary font-black mb-6 text-xs sm:text-sm tracking-[0.3em] uppercase animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both"
           >
             Hello, I'm
-          </motion.p>
+          </p>
 
           {/* Name */}
-          <motion.h1
-            initial={{ opacity: 1, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-black text-foreground leading-[1.1] mb-8 tracking-tighter"
+          <h1
+            className="text-4xl sm:text-6xl lg:text-7xl font-black text-foreground leading-[1.1] mb-8 tracking-tighter animate-in fade-in slide-in-from-bottom-6 duration-700 delay-150 fill-mode-both"
             itemScope
             itemType="https://schema.org/Person"
           >
             <span itemProp="name">Jakir Hossen</span>
-          </motion.h1>
+          </h1>
 
           {/* Subtitle / Role with Developer Typewriter Animation */}
-          <motion.div
-            initial={{ opacity: 1, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-10"
+          <div
+            className="mb-10 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300 fill-mode-both"
           >
             <h2 className="text-xl sm:text-2xl font-bold flex items-center justify-center gap-1">
               <span className="font-mono tracking-wider text-muted-foreground" itemProp="jobTitle">
@@ -107,26 +99,20 @@ export default function HeroSection() {
                 transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
               />
             </h2>
-          </motion.div>
+          </div>
 
           {/* Description */}
-          <motion.p
-            initial={{ opacity: 1, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-base sm:text-lg text-muted-foreground mb-12 leading-relaxed max-w-3xl mx-auto font-medium px-4 opacity-80"
+          <p
+            className="text-base sm:text-lg text-muted-foreground mb-12 leading-relaxed max-w-3xl mx-auto font-medium px-4 opacity-80 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-[400ms] fill-mode-both"
             itemProp="description"
           >
             Specializing in Shopify store design, React, and Firebase, as well as Supabase to build high-performance,
             <br className="hidden sm:block" /> UI-integrated web applications and scalable automation solutions.
-          </motion.p>
+          </p>
 
           {/* Buttons */}
-          <motion.div
-            initial={{ opacity: 1, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-wrap justify-center gap-6"
+          <div
+            className="flex flex-wrap justify-center gap-6 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-[500ms] fill-mode-both"
           >
             <button
               onClick={() => scrollTo("#projects")}
@@ -140,14 +126,11 @@ export default function HeroSection() {
             >
               Get In Touch
             </button>
-          </motion.div>
+          </div>
 
           {/* Play Store Developer Link */}
-          <motion.div
-            initial={{ opacity: 1 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="mt-8 flex items-center justify-center gap-2 text-muted-foreground/60 hover:text-primary transition-colors cursor-pointer group"
+          <div
+            className="mt-8 flex items-center justify-center gap-2 text-muted-foreground/60 hover:text-primary transition-colors cursor-pointer group animate-in fade-in duration-1000 delay-[1000ms] fill-mode-both"
           >
             <a
               href="https://play.google.com/store/apps/dev?id=6495908705399463745"
@@ -157,7 +140,7 @@ export default function HeroSection() {
             >
               Official Developer on Google Play Store
             </a>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
